@@ -1,12 +1,17 @@
 import { Program, Provider } from '@project-serum/anchor';
-import { Keypair, Transaction } from '@solana/web3.js';
+import { Keypair, PublicKey, SystemProgram, Transaction } from '@solana/web3.js';
 import { Configs } from '../config';
 import { DcaVault } from '../idl/type';
 import DcaVaultIDL from '../idl/idl.json';
 import { DripAdmin } from '../interfaces';
 import { InitVaultProtoConfigParams, InitVaultParams } from '../interfaces/drip-admin/params';
 import { Network } from '../models';
-import { InitVaultProtoConfigPreview } from '../interfaces/drip-admin/previews';
+import {
+  InitVaultProtoConfigPreview,
+  isInitVaultProtoConfigPreview,
+} from '../interfaces/drip-admin/previews';
+import { TransactionWithMetadata } from '../types';
+import { BN } from 'bn.js';
 
 export class DripAdminImpl implements DripAdmin {
   private readonly vaultProgram: Program<DcaVault>;
@@ -24,14 +29,38 @@ export class DripAdminImpl implements DripAdmin {
 
     return {
       ...params,
-      vaultProtoConfigKeypair
+      vaultProtoConfigKeypair,
     };
   }
 
-  getInitVaultProtoConfigTx(
+  async getInitVaultProtoConfigTx(
     params: InitVaultProtoConfigParams | InitVaultProtoConfigPreview
-  ): Promise<Transaction> {
-    throw new Error('Method not implemented.');
+  ): Promise<TransactionWithMetadata<{ vaultProtoConfigPubkey: PublicKey }>> {
+    const { granularity, triggerDcaSpread, baseWithdrawalSpread } = params;
+    const vaultProtoConfigKeypair = isInitVaultProtoConfigPreview(params)
+      ? params.vaultProtoConfigKeypair
+      : Keypair.generate();
+
+    const tx = await this.vaultProgram.methods
+      .initVaultProtoConfig({
+        granularity: new BN(granularity.toString()),
+        triggerDcaSpread,
+        baseWithdrawalSpread,
+      })
+      .accounts({
+        vaultProtoConfig: vaultProtoConfigKeypair.publicKey,
+        creator: this.provider.wallet.publicKey,
+        systemProgram: SystemProgram.programId,
+      })
+      .signers([vaultProtoConfigKeypair])
+      .transaction();
+
+    return {
+      tx,
+      metadata: {
+        vaultProtoConfigPubkey: vaultProtoConfigKeypair.publicKey,
+      },
+    };
   }
 
   getInitVaultTx(params: InitVaultParams): Promise<Transaction> {
