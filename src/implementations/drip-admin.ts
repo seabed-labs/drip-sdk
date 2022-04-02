@@ -91,6 +91,27 @@ export class DripAdminImpl implements DripAdmin {
       throw new VaultAlreadyExistsError(vaultPubkey);
     }
 
+    const vaultGenesisPeriodId = ZERO;
+    const vaultGenesisPeriodPubkey = findVaultPeriodPubkey(this.vaultProgram.programId, {
+      vault: vaultPubkey,
+      periodId: vaultGenesisPeriodId,
+    });
+
+    const initVaultPeriodIxPromise = this.vaultProgram.methods
+      .initVaultPeriod({
+        periodId: vaultGenesisPeriodId,
+      })
+      .accounts({
+        vaultPeriod: vaultGenesisPeriodPubkey,
+        vault: vaultPubkey,
+        tokenAMint: params.tokenAMint,
+        tokenBMint: params.tokenBMint,
+        vaultProtoConfig: params.protoConfig,
+        creator: this.provider.wallet.publicKey,
+        systemProgram: SystemProgram.programId,
+      })
+      .instruction();
+
     const [tokenAAccount, tokenBAccount] = await Promise.all([
       getAssociatedTokenAddress(
         toPubkey(params.tokenAMint),
@@ -126,26 +147,7 @@ export class DripAdminImpl implements DripAdmin {
       })
       .instruction();
 
-    const vaultGenesisPeriodId = ZERO;
-    const vaultGenesisPeriodPubkey = findVaultPeriodPubkey(this.vaultProgram.programId, {
-      vault: vaultPubkey,
-      periodId: vaultGenesisPeriodId,
-    });
-
-    const initVaultPeriodIx = await this.vaultProgram.methods
-      .initVaultPeriod({
-        periodId: vaultGenesisPeriodId,
-      })
-      .accounts({
-        vaultPeriod: vaultGenesisPeriodPubkey,
-        vault: vaultPubkey,
-        tokenAMint: params.tokenAMint,
-        tokenBMint: params.tokenBMint,
-        vaultProtoConfig: params.protoConfig,
-        creator: this.provider.wallet.publicKey,
-        systemProgram: SystemProgram.programId,
-      })
-      .instruction();
+    const initVaultPeriodIx = await initVaultPeriodIxPromise;
 
     const tx = new Transaction().add(initVaultIx).add(initVaultPeriodIx);
 
