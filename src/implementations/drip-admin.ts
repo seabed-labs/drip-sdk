@@ -1,5 +1,11 @@
 import { Program, Provider } from '@project-serum/anchor';
-import { Keypair, PublicKey, SystemProgram, Transaction } from '@solana/web3.js';
+import {
+  Keypair,
+  PublicKey,
+  SystemProgram,
+  SYSVAR_RENT_PUBKEY,
+  Transaction,
+} from '@solana/web3.js';
 import { Configs } from '../config';
 import { DcaVault } from '../idl/type';
 import DcaVaultIDL from '../idl/idl.json';
@@ -10,8 +16,17 @@ import {
   InitVaultProtoConfigPreview,
   isInitVaultProtoConfigPreview,
 } from '../interfaces/drip-admin/previews';
-import { TransactionWithMetadata } from '../types';
+import { PDA, TransactionWithMetadata } from '../types';
 import { BN } from 'bn.js';
+import { findProgramAddressSync } from '@project-serum/anchor/dist/cjs/utils/pubkey';
+import { CONSTANT_SEEDS } from '../constants';
+import { toPubkey, toPubkeyBuffer } from '../utils';
+import { VaultAlreadyExistsError } from '../errors';
+import {
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  getAssociatedTokenAddress,
+  TOKEN_PROGRAM_ID,
+} from '@solana/spl-token';
 
 export class DripAdminImpl implements DripAdmin {
   private readonly vaultProgram: Program<DcaVault>;
@@ -24,7 +39,9 @@ export class DripAdminImpl implements DripAdmin {
     this.vaultProgram = new Program(DcaVaultIDL as DcaVault, config.vaultProgramId, provider);
   }
 
-  getInitVaultProtoConfigPreview(params: InitVaultProtoConfigParams): InitVaultProtoConfigPreview {
+  public getInitVaultProtoConfigPreview(
+    params: InitVaultProtoConfigParams
+  ): InitVaultProtoConfigPreview {
     const vaultProtoConfigKeypair = Keypair.generate();
 
     return {
@@ -33,7 +50,7 @@ export class DripAdminImpl implements DripAdmin {
     };
   }
 
-  async getInitVaultProtoConfigTx(
+  public async getInitVaultProtoConfigTx(
     params: InitVaultProtoConfigParams | InitVaultProtoConfigPreview
   ): Promise<TransactionWithMetadata<{ vaultProtoConfigPubkey: PublicKey }>> {
     const { granularity, triggerDcaSpread, baseWithdrawalSpread } = params;
@@ -63,7 +80,73 @@ export class DripAdminImpl implements DripAdmin {
     };
   }
 
-  getInitVaultTx(params: InitVaultParams): Promise<Transaction> {
-    throw new Error('Method not implemented.');
+  public async getInitVaultTx(
+    params: InitVaultParams
+  ): Promise<TransactionWithMetadata<{ vaultPubkey: PublicKey }>> {
+    const { publicKey: vaultPubkey } = this.getVaultPDA(params);
+    const vaultAccount = await this.vaultProgram.account.vault.fetchNullable(vaultPubkey);
+
+    if (vaultAccount) {
+      throw new VaultAlreadyExistsError(vaultPubkey);
+    }
+
+    const [tokenAAccount, tokenBAccount] = await Promise.all([
+      getAssociatedTokenAddress(
+        toPubkey(params.tokenAMint),
+        vaultPubkey,
+        true,
+        TOKEN_PROGRAM_ID,
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      ),
+      getAssociatedTokenAddress(
+        toPubkey(params.tokenBMint),
+        vaultPubkey,
+        true,
+        TOKEN_PROGRAM_ID,
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      ),
+    ]);
+
+    const tx = await this.vaultProgram.methods
+      .initVault()
+      .accounts({
+        vault: vaultPubkey,
+        vaultProtoConfig: params.protoConfig,
+        tokenAAccount,
+        tokenBAccount,
+        treasuryTokenBAccount: params.tokenBFeeTreasury,
+        tokenAMint: params.tokenAMint,
+        tokenBMint: params.tokenBMint,
+        creator: this.provider.wallet.publicKey,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+        systemProgram: SystemProgram.programId,
+        rent: SYSVAR_RENT_PUBKEY,
+      })
+      .transaction();
+
+    return {
+      tx,
+      metadata: {
+        vaultPubkey,
+      },
+    };
+  }
+
+  public getVaultPDA(params: InitVaultParams): PDA {
+    const [publicKey, bump] = findProgramAddressSync(
+      [
+        Buffer.from(CONSTANT_SEEDS.vault),
+        toPubkeyBuffer(params.protoConfig),
+        toPubkeyBuffer(params.tokenAMint),
+        toPubkeyBuffer(params.tokenBMint),
+      ],
+      this.vaultProgram.programId
+    );
+
+    return {
+      publicKey,
+      bump,
+    };
   }
 }

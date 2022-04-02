@@ -7,7 +7,7 @@ export enum Granularity {
   Daily = 24 * 60 * 60,
   Weekly = 7 * 24 * 60 * 60,
   Monthly = 30 * 24 * 60 * 60,
-  Yearly = 365.25 * 24 * 60 * 60
+  Yearly = 365.25 * 24 * 60 * 60,
 }
 
 export interface InitVaultProtoConfigParams {
@@ -29,4 +29,5 @@ export interface InitVaultParams {
   protoConfig: Address;
   tokenAMint: Address;
   tokenBMint: Address;
+  tokenBFeeTreasury: Address;
 }
