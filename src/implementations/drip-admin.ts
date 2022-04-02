@@ -19,7 +19,7 @@ import {
 import { PDA, TransactionWithMetadata } from '../types';
 import { BN } from 'bn.js';
 import { findProgramAddressSync } from '@project-serum/anchor/dist/cjs/utils/pubkey';
-import { CONSTANT_SEEDS } from '../constants';
+import { CONSTANT_SEEDS, ZERO } from '../constants';
 import { toPubkey, toPubkeyBuffer } from '../utils';
 import { VaultAlreadyExistsError } from '../errors';
 import {
@@ -27,6 +27,7 @@ import {
   getAssociatedTokenAddress,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
+import { findVaultPeriodPubkey, findVaultPubkey } from '../helpers';
 
 export class DripAdminImpl implements DripAdmin {
   private readonly vaultProgram: Program<DcaVault>;
@@ -83,7 +84,7 @@ export class DripAdminImpl implements DripAdmin {
   public async getInitVaultTx(
     params: InitVaultParams
   ): Promise<TransactionWithMetadata<{ vaultPubkey: PublicKey }>> {
-    const { publicKey: vaultPubkey } = this.getVaultPDA(params);
+    const vaultPubkey = findVaultPubkey(this.vaultProgram.programId, params);
     const vaultAccount = await this.vaultProgram.account.vault.fetchNullable(vaultPubkey);
 
     if (vaultAccount) {
@@ -107,7 +108,7 @@ export class DripAdminImpl implements DripAdmin {
       ),
     ]);
 
-    const tx = await this.vaultProgram.methods
+    const initVaultIx = await this.vaultProgram.methods
       .initVault()
       .accounts({
         vault: vaultPubkey,
@@ -123,30 +124,36 @@ export class DripAdminImpl implements DripAdmin {
         systemProgram: SystemProgram.programId,
         rent: SYSVAR_RENT_PUBKEY,
       })
-      .transaction();
+      .instruction();
+
+    const vaultGenesisPeriodId = ZERO;
+    const vaultGenesisPeriodPubkey = findVaultPeriodPubkey(this.vaultProgram.programId, {
+      vault: vaultPubkey,
+      periodId: vaultGenesisPeriodId,
+    });
+
+    const initVaultPeriodIx = await this.vaultProgram.methods
+      .initVaultPeriod({
+        periodId: vaultGenesisPeriodId,
+      })
+      .accounts({
+        vaultPeriod: vaultGenesisPeriodPubkey,
+        vault: vaultPubkey,
+        tokenAMint: params.tokenAMint,
+        tokenBMint: params.tokenBMint,
+        vaultProtoConfig: params.protoConfig,
+        creator: this.provider.wallet.publicKey,
+        systemProgram: SystemProgram.programId,
+      })
+      .instruction();
+
+    const tx = new Transaction().add(initVaultIx).add(initVaultPeriodIx);
 
     return {
       tx,
       metadata: {
         vaultPubkey,
       },
-    };
-  }
-
-  public getVaultPDA(params: InitVaultParams): PDA {
-    const [publicKey, bump] = findProgramAddressSync(
-      [
-        Buffer.from(CONSTANT_SEEDS.vault),
-        toPubkeyBuffer(params.protoConfig),
-        toPubkeyBuffer(params.tokenAMint),
-        toPubkeyBuffer(params.tokenBMint),
-      ],
-      this.vaultProgram.programId
-    );
-
-    return {
-      publicKey,
-      bump,
     };
   }
 }

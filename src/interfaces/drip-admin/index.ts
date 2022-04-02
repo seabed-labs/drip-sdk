@@ -11,5 +11,4 @@ export interface DripAdmin {
   getInitVaultTx(
     params: InitVaultParams
   ): Promise<TransactionWithMetadata<{ vaultPubkey: PublicKey }>>;
-  getVaultPDA(params: InitVaultParams): PDA;
 }
