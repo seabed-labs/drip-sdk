@@ -16,11 +16,10 @@ import {
   InitVaultProtoConfigPreview,
   isInitVaultProtoConfigPreview,
 } from '../interfaces/drip-admin/previews';
-import { PDA, TransactionWithMetadata } from '../types';
+import { BroadcastTransactionWithMetadata, TransactionWithMetadata } from '../types';
 import { BN } from 'bn.js';
-import { findProgramAddressSync } from '@project-serum/anchor/dist/cjs/utils/pubkey';
-import { CONSTANT_SEEDS, ZERO } from '../constants';
-import { toPubkey, toPubkeyBuffer } from '../utils';
+import { ZERO } from '../constants';
+import { toPubkey } from '../utils';
 import { VaultAlreadyExistsError } from '../errors';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -28,6 +27,7 @@ import {
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 import { findVaultPeriodPubkey, findVaultPubkey } from '../helpers';
+import { makeSolscanUrl } from '../utils/transaction';
 
 export class DripAdminImpl implements DripAdmin {
   private readonly vaultProgram: Program<DcaVault>;
@@ -35,7 +35,7 @@ export class DripAdminImpl implements DripAdmin {
   // For now we can do this, but we should transition to taking in a read-only connection here instead and
   // letting users only pass in signer at the end if they choose to else sign and broadcast the tx themselves
   // We should also decouple anchor from this to make it an actual SDK
-  constructor(private readonly provider: Provider, network: Network) {
+  constructor(private readonly provider: Provider, private readonly network: Network) {
     const config = Configs[network];
     this.vaultProgram = new Program(DcaVaultIDL as DcaVault, config.vaultProgramId, provider);
   }
@@ -78,6 +78,19 @@ export class DripAdminImpl implements DripAdmin {
       metadata: {
         vaultProtoConfigPubkey: vaultProtoConfigKeypair.publicKey,
       },
+    };
+  }
+
+  public async initVaultProtoConfig(
+    params: InitVaultProtoConfigParams | InitVaultProtoConfigPreview
+  ): Promise<BroadcastTransactionWithMetadata<{ vaultProtoConfigPubkey: PublicKey }>> {
+    const { tx, metadata } = await this.getInitVaultProtoConfigTx(params);
+    const txHash = await this.provider.send(tx);
+
+    return {
+      id: txHash,
+      solscan: makeSolscanUrl(txHash, this.network),
+      metadata,
     };
   }
 
@@ -156,6 +169,19 @@ export class DripAdminImpl implements DripAdmin {
       metadata: {
         vaultPubkey,
       },
+    };
+  }
+
+  public async initVault(
+    params: InitVaultParams
+  ): Promise<BroadcastTransactionWithMetadata<{ vaultPubkey: PublicKey }>> {
+    const { tx, metadata } = await this.getInitVaultTx(params);
+    const txHash = await this.provider.send(tx);
+
+    return {
+      id: txHash,
+      solscan: makeSolscanUrl(txHash, this.network),
+      metadata,
     };
   }
 }
