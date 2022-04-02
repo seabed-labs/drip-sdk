@@ -34,7 +34,7 @@ export class DripVaultImpl implements DripVault {
     this.vaultPubkey = toPubkey(vaultPubkey);
   }
 
-  public static async fromVaultParams(
+  public static async fromVaultSeeds(
     vaultSeeds: { protoConfig: Address; tokenAMint: Address; tokenBMint: Address },
     provider: Provider,
     network: Network
@@ -46,6 +46,22 @@ export class DripVaultImpl implements DripVault {
     const vault = await vaultProgram.account.vault.fetchNullable(vaultPubkey);
     if (!vault) {
       throw new VaultDoesNotExistError(vaultPubkey);
+    }
+
+    return new DripVaultImpl(provider, network, vaultPubkey);
+  }
+
+  public static async fromVaultPubkey(
+    vaultPubkey: Address,
+    provider: Provider,
+    network: Network
+  ): Promise<DripVaultImpl> {
+    const config = Configs[network];
+    const vaultProgram = new Program(DcaVaultIDL as DcaVault, config.vaultProgramId, provider);
+
+    const vault = await vaultProgram.account.vault.fetchNullable(vaultPubkey);
+    if (!vault) {
+      throw new VaultDoesNotExistError(toPubkey(vaultPubkey));
     }
 
     return new DripVaultImpl(provider, network, vaultPubkey);
