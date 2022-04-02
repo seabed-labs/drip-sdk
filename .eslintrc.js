@@ -10,5 +10,7 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: ['@typescript-eslint'],
-  rules: {},
+  rules: {
+    'no-unused-vars': 'warn',
+  },
 };
