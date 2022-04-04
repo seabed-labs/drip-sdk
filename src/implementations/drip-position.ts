@@ -1,4 +1,4 @@
-import { Address, Program, Provider } from '@project-serum/anchor';
+import { Address, BN, Program, Provider } from '@project-serum/anchor';
 import { PublicKey, Transaction } from '@solana/web3.js';
 import { Configs } from '../config';
 import { DcaVault } from '../idl/type';
@@ -6,7 +6,11 @@ import { DripPosition } from '../interfaces';
 import { Network } from '../models';
 import DcaVaultIDL from '../idl/idl.json';
 import { toPubkey } from '../utils';
-import { findVaultPositionPubkey } from '../helpers';
+import {
+  calculateWithdrawTokenBAmount,
+  findVaultPeriodPubkey,
+  findVaultPositionPubkey,
+} from '../helpers';
 import { PositionDoesNotExistError } from '../errors';
 import { WithdrawBPreview, ClosePositionPreview } from '../interfaces/drip-position/previews';
 
@@ -54,8 +58,57 @@ export class DripPositionImpl implements DripPosition {
     return new DripPositionImpl(provider, network, positionPubkey);
   }
 
-  getWithdrawBPreview(): Promise<WithdrawBPreview> {
-    throw new Error('Method not implemented.');
+  public async getWithdrawBPreview(): Promise<WithdrawBPreview> {
+    const position = await this.vaultProgram.account.position.fetch(this.positionPubkey);
+    const dcaStartPeriodId = position.dcaPeriodIdBeforeDeposit;
+    const dcaEndPeriodId = position.dcaPeriodIdBeforeDeposit.add(position.numberOfSwaps);
+
+    const vault = await this.vaultProgram.account.vault.fetch(position.vault);
+    const vaultProtoConfig = await this.vaultProgram.account.vaultProtoConfig.fetch(
+      vault.protoConfig
+    );
+    const currentVaultPeriodId = vault.periodId;
+
+    const periodIdI = dcaStartPeriodId;
+    const periodIdJ = BN.min(dcaEndPeriodId, currentVaultPeriodId);
+
+    const periodIdIPubkey = findVaultPeriodPubkey(this.vaultProgram.programId, {
+      vault: position.vault,
+      periodId: periodIdI,
+    });
+
+    const periodIdJPubkey = findVaultPeriodPubkey(this.vaultProgram.programId, {
+      vault: position.vault,
+      periodId: periodIdI,
+    });
+
+    const [periodI, periodJ] = await Promise.all([
+      this.vaultProgram.account.vaultPeriod.fetch(periodIdIPubkey),
+      this.vaultProgram.account.vaultPeriod.fetch(periodIdJPubkey),
+    ]);
+
+    const maxWithdrawableTokenBAmount = calculateWithdrawTokenBAmount(
+      periodIdI,
+      periodIdJ,
+      periodI.twap,
+      periodJ.twap,
+      vault.periodicDripAmount,
+      new BN(vault.triggerDcaSpread)
+    );
+
+    const withdrawableTokenBAmountBeforeFees = maxWithdrawableTokenBAmount.sub(
+      position.withdrawnTokenBAmount
+    );
+
+    const withdrawalFees = withdrawableTokenBAmountBeforeFees
+      .muln(vaultProtoConfig.baseWithdrawalSpread)
+      .divn(1e4);
+
+    const withdrawableTokenBAmount = withdrawableTokenBAmountBeforeFees.sub(withdrawalFees);
+
+    return {
+      tokenBAmountBeingWithdrawn: withdrawableTokenBAmount,
+    };
   }
 
   getWithdrawBTx(): Promise<Transaction> {
