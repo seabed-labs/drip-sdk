@@ -24,11 +24,19 @@ export class DripPositionImpl implements DripPosition {
     this.positionPubkey = toPubkey(positionPubkey);
   }
 
-  public static fromPosition(
+  public static async fromPosition(
     positionPubkey: Address,
     provider: Provider,
     network: Network
-  ): DripPositionImpl {
+  ): Promise<DripPositionImpl> {
+    const config = Configs[network];
+    const vaultProgram = new Program(DcaVaultIDL as DcaVault, config.vaultProgramId, provider);
+
+    const position = await vaultProgram.account.position.fetchNullable(positionPubkey);
+    if (!position) {
+      throw new PositionDoesNotExistError(toPubkey(positionPubkey));
+    }
+
     return new DripPositionImpl(provider, network, positionPubkey);
   }
 
@@ -38,15 +46,10 @@ export class DripPositionImpl implements DripPosition {
     network: Network
   ): Promise<DripPositionImpl> {
     const config = Configs[network];
+
     const positionPubkey = findVaultPositionPubkey(config.vaultProgramId, {
       positionNftMint: positionNftMintPubkey,
     });
-    const vaultProgram = new Program(DcaVaultIDL as DcaVault, config.vaultProgramId, provider);
-
-    const position = await vaultProgram.account.position.fetchNullable(positionPubkey);
-    if (!position) {
-      throw new PositionDoesNotExistError(positionPubkey);
-    }
 
     return new DripPositionImpl(provider, network, positionPubkey);
   }
