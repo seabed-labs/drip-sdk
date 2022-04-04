@@ -98,7 +98,7 @@ export class DripVaultImpl implements DripVault {
     };
   }
 
-  async getDepositTx(
+  public async getDepositTx(
     params: DepositParams | DepositPreview
   ): Promise<TransactionWithMetadata<{ positionNftMint: PublicKey; position: PublicKey }>> {
     const preview = isDepositPreview(params) ? params : await this.getDepositPreview(params);
@@ -200,7 +200,7 @@ export class DripVaultImpl implements DripVault {
     };
   }
 
-  async getInitVaultPeriodTx(params: InitVaultPeriodParams): Promise<Transaction> {
+  public async getInitVaultPeriodTx(params: InitVaultPeriodParams): Promise<Transaction> {
     const { periodId } = params;
 
     const vault = await this.vaultProgram.account.vault.fetch(this.vaultPubkey);
