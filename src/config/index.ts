@@ -7,9 +7,9 @@ export interface Config {
 
 export const Configs: Record<Network, Config> = {
   [Network.Mainnet]: {
-    vaultProgramId: PublicKey.default
+    vaultProgramId: PublicKey.default,
   },
   [Network.Devnet]: {
-    vaultProgramId: new PublicKey('3Q1eJ9m3jYJ3F32gcJYL7gMPn9kj87MzzjgoAL7VSN6E')
-  }
+    vaultProgramId: new PublicKey('3Q1eJ9m3jYJ3F32gcJYL7gMPn9kj87MzzjgoAL7VSN6E'),
+  },
 };
