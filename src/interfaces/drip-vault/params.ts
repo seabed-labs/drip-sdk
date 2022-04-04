@@ -34,11 +34,3 @@ export interface DepositParams {
 export interface InitVaultPeriodParams {
   periodId: BN;
 }
-
-export type GetPositionParams =
-  | {
-      positionMintPublicKey: Address;
-    }
-  | {
-      positionPublicKey: Address;
-    };

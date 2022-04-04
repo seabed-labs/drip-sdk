@@ -1,7 +1,7 @@
 import { Address, BN, Program, Provider } from '@project-serum/anchor';
 import { Configs } from '../config';
 import { DcaVault } from '../idl/type';
-import { DripPosition, DripVault } from '../interfaces';
+import { DripVault } from '../interfaces';
 import { Network } from '../models';
 import DcaVaultIDL from '../idl/idl.json';
 import {
@@ -14,7 +14,6 @@ import {
 import {
   DepositParams,
   InitVaultPeriodParams,
-  GetPositionParams,
   isDcaCyclesParam,
   expiryToDcaCycles,
 } from '../interfaces/drip-vault/params';
@@ -235,9 +234,5 @@ export class DripVaultImpl implements DripVault {
       .transaction();
 
     return tx;
-  }
-
-  getPosition(params: GetPositionParams): Promise<DripPosition> {
-    throw new Error('Method not implemented.');
   }
 }
