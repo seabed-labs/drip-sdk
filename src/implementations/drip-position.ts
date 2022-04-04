@@ -1,5 +1,11 @@
 import { Address, BN, Program, Provider } from '@project-serum/anchor';
 import { PublicKey, Transaction } from '@solana/web3.js';
+import {
+  createAssociatedTokenAccountInstruction,
+  getAccount,
+  TokenAccountNotFoundError,
+  TokenInvalidAccountOwnerError,
+} from '@solana/spl-token';
 import { Configs } from '../config';
 import { DcaVault } from '../idl/type';
 import { DripPosition } from '../interfaces';
@@ -13,6 +19,11 @@ import {
 } from '../helpers';
 import { PositionDoesNotExistError } from '../errors';
 import { WithdrawBPreview, ClosePositionPreview } from '../interfaces/drip-position/previews';
+import {
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  getAssociatedTokenAddress,
+  TOKEN_PROGRAM_ID,
+} from '@solana/spl-token';
 
 export class DripPositionImpl implements DripPosition {
   private readonly vaultProgram: Program<DcaVault>;
@@ -111,8 +122,97 @@ export class DripPositionImpl implements DripPosition {
     };
   }
 
-  getWithdrawBTx(): Promise<Transaction> {
-    throw new Error('Method not implemented.');
+  public async getWithdrawBTx(): Promise<Transaction> {
+    const position = await this.vaultProgram.account.position.fetch(this.positionPubkey);
+    const dcaStartPeriodId = position.dcaPeriodIdBeforeDeposit;
+    const dcaEndPeriodId = position.dcaPeriodIdBeforeDeposit.add(position.numberOfSwaps);
+
+    const vault = await this.vaultProgram.account.vault.fetch(position.vault);
+    const vaultProtoConfig = await this.vaultProgram.account.vaultProtoConfig.fetch(
+      vault.protoConfig
+    );
+    const currentVaultPeriodId = vault.periodId;
+
+    const periodIdI = dcaStartPeriodId;
+    const periodIdJ = BN.min(dcaEndPeriodId, currentVaultPeriodId);
+
+    const periodIdIPubkey = findVaultPeriodPubkey(this.vaultProgram.programId, {
+      vault: position.vault,
+      periodId: periodIdI,
+    });
+
+    const periodIdJPubkey = findVaultPeriodPubkey(this.vaultProgram.programId, {
+      vault: position.vault,
+      periodId: periodIdI,
+    });
+
+    const userTokenBAccountPubkey = await getAssociatedTokenAddress(
+      vault.tokenBMint,
+      this.provider.wallet.publicKey,
+      true,
+      TOKEN_PROGRAM_ID,
+      ASSOCIATED_TOKEN_PROGRAM_ID
+    );
+
+    let tx = new Transaction({
+      recentBlockhash: (await this.provider.connection.getLatestBlockhash()).blockhash,
+      feePayer: this.provider.wallet.publicKey,
+    });
+
+    const userTokenBAccount = await getAccount(
+      this.provider.connection,
+      userTokenBAccountPubkey
+    ).catch((e: unknown) => {
+      if (e instanceof TokenAccountNotFoundError || e instanceof TokenInvalidAccountOwnerError) {
+        return null;
+      } else {
+        throw e;
+      }
+    });
+    if (!userTokenBAccount) {
+      tx = tx.add(
+        createAssociatedTokenAccountInstruction(
+          this.provider.wallet.publicKey,
+          userTokenBAccountPubkey,
+          this.provider.wallet.publicKey,
+          vault.tokenBMint,
+          TOKEN_PROGRAM_ID,
+          ASSOCIATED_TOKEN_PROGRAM_ID
+        )
+      );
+    }
+
+    const userPositionNftAccount = await getAssociatedTokenAddress(
+      position.positionAuthority,
+      this.provider.wallet.publicKey,
+      true,
+      TOKEN_PROGRAM_ID,
+      ASSOCIATED_TOKEN_PROGRAM_ID
+    );
+
+    tx.add(
+      await this.vaultProgram.methods
+        .withdrawB()
+        .accounts({
+          vault: position.vault,
+          vaultProtoConfig: vault.protoConfig,
+          vaultPeriodI: periodIdIPubkey,
+          vaultPeriodJ: periodIdJPubkey,
+          userPosition: this.positionPubkey,
+          userPositionNftAccount,
+          vaultTokenBAccount: vault.tokenBAccount,
+          userTokenBAccount: userTokenBAccountPubkey,
+          vaultTreasuryTokenBAccount: vault.treasuryTokenBAccount,
+          userPositionNftMint: position.positionAuthority,
+          tokenBMint: vault.tokenBMint,
+          withdrawer: this.provider.wallet.publicKey,
+          tokenProgram: TOKEN_PROGRAM_ID,
+          associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+        })
+        .instruction()
+    );
+
+    return tx;
   }
 
   getClosePositionPreview(): Promise<ClosePositionPreview> {
