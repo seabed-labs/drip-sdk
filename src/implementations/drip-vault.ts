@@ -237,14 +237,6 @@ export class DripVaultImpl implements DripVault {
     return tx;
   }
 
-  getTriggerDCAPreview(): Promise<DepositPreview> {
-    throw new Error('Method not implemented.');
-  }
-
-  getTriggerDCATx(): Promise<Transaction> {
-    throw new Error('Method not implemented.');
-  }
-
   getPosition(params: GetPositionParams): Promise<DripPosition> {
     throw new Error('Method not implemented.');
   }
