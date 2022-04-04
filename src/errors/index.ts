@@ -4,6 +4,7 @@ export enum ErrorCode {
   VaultAlreadyExists = 1,
   VaultDoesNotExist,
   VaultPeriodAlreadyExists,
+  PositionDoesNotExist,
 }
 
 export abstract class DripError extends Error {
@@ -35,5 +36,13 @@ export class VaultPeriodAlreadyExistsError extends DripError {
 
   public constructor(vaultPeriodPubkey: PublicKey) {
     super(`Vault period ${vaultPeriodPubkey.toBase58()} already exists`);
+  }
+}
+
+export class PositionDoesNotExistError extends DripError {
+  public readonly code = ErrorCode.PositionDoesNotExist;
+
+  public constructor(positionPubkey: PublicKey) {
+    super(`Vault position ${positionPubkey.toBase58()} does not exist`);
   }
 }
