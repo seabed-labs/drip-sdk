@@ -7,6 +7,10 @@ export interface DepositPreview {
   dcaCycles: number;
 }
 
+export function isDepositPreview(obj: any): obj is DepositPreview {
+  return Boolean(obj.dcaCycles);
+}
+
 export interface TriggerDCA {
   vault: Address;
   amount: BN;

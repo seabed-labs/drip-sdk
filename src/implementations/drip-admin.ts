@@ -162,7 +162,12 @@ export class DripAdminImpl implements DripAdmin {
 
     const initVaultPeriodIx = await initVaultPeriodIxPromise;
 
-    const tx = new Transaction().add(initVaultIx).add(initVaultPeriodIx);
+    const tx = new Transaction({
+      recentBlockhash: (await this.provider.connection.getLatestBlockhash()).blockhash,
+      feePayer: this.provider.wallet.publicKey,
+    })
+      .add(initVaultIx)
+      .add(initVaultPeriodIx);
 
     return {
       tx,

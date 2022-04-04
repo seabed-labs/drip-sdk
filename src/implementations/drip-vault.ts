@@ -1,10 +1,16 @@
-import { Address, Program, Provider } from '@project-serum/anchor';
+import { Address, BN, Program, Provider } from '@project-serum/anchor';
 import { Configs } from '../config';
 import { DcaVault } from '../idl/type';
 import { DripPosition, DripVault } from '../interfaces';
 import { Network } from '../models';
 import DcaVaultIDL from '../idl/idl.json';
-import { PublicKey, Transaction } from '@solana/web3.js';
+import {
+  Keypair,
+  PublicKey,
+  SystemProgram,
+  SYSVAR_RENT_PUBKEY,
+  Transaction,
+} from '@solana/web3.js';
 import {
   DepositParams,
   InitVaultPeriodParams,
@@ -12,10 +18,16 @@ import {
   isDcaCyclesParam,
   expiryToDcaCycles,
 } from '../interfaces/drip-vault/params';
-import { DepositPreview } from '../interfaces/drip-vault/previews';
+import { DepositPreview, isDepositPreview } from '../interfaces/drip-vault/previews';
 import { toPubkey } from '../utils';
-import { findVaultPubkey } from '../helpers';
-import { VaultDoesNotExistError } from '../errors';
+import { findVaultPeriodPubkey, findVaultPositionPubkey, findVaultPubkey } from '../helpers';
+import { VaultDoesNotExistError, VaultPeriodAlreadyExistsError } from '../errors';
+import { TransactionWithMetadata } from '../types';
+import {
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  getAssociatedTokenAddress,
+  TOKEN_PROGRAM_ID,
+} from '@solana/spl-token';
 
 export class DripVaultImpl implements DripVault {
   private readonly vaultProgram: Program<DcaVault>;
@@ -87,12 +99,142 @@ export class DripVaultImpl implements DripVault {
     };
   }
 
-  getDepositTx(params: DepositParams | DepositPreview): Promise<Transaction> {
-    throw new Error('Method not implemented.');
+  async getDepositTx(
+    params: DepositParams | DepositPreview
+  ): Promise<TransactionWithMetadata<{ positionNftMint: PublicKey; position: PublicKey }>> {
+    const preview = isDepositPreview(params) ? params : await this.getDepositPreview(params);
+    const vault = await this.vaultProgram.account.vault.fetchNullable(preview.vault);
+
+    if (!vault) {
+      throw new VaultDoesNotExistError(toPubkey(preview.vault));
+    }
+
+    const currentPeriodId = vault.periodId;
+    const depositExpiryPeriodId = vault.periodId.addn(preview.dcaCycles);
+
+    const currentPeriodPubkey = findVaultPeriodPubkey(this.vaultProgram.programId, {
+      vault: preview.vault,
+      periodId: currentPeriodId,
+    });
+
+    const depositExpiryPeriodPubkey = findVaultPeriodPubkey(this.vaultProgram.programId, {
+      vault: preview.vault,
+      periodId: depositExpiryPeriodId,
+    });
+
+    const [currentPeriod, depositExpiryPeriod] = await Promise.all([
+      this.vaultProgram.account.vaultPeriod.fetchNullable(currentPeriodPubkey),
+      this.vaultProgram.account.vaultPeriod.fetchNullable(depositExpiryPeriodPubkey),
+    ]);
+
+    let tx = new Transaction({
+      recentBlockhash: (await this.provider.connection.getLatestBlockhash()).blockhash,
+      feePayer: this.provider.wallet.publicKey,
+    });
+
+    if (!currentPeriod) {
+      const initCurrentPeriodTx = await this.getInitVaultPeriodTx({ periodId: currentPeriodId });
+      tx = tx.add(...initCurrentPeriodTx.instructions);
+    }
+
+    if (!depositExpiryPeriod) {
+      const initExpiryPeriodTx = await this.getInitVaultPeriodTx({
+        periodId: depositExpiryPeriodId,
+      });
+      tx = tx.add(...initExpiryPeriodTx.instructions);
+    }
+
+    const positionMintKeypair = Keypair.generate();
+    const positionPubkey = findVaultPositionPubkey(this.vaultProgram.programId, {
+      positionNftMint: positionMintKeypair.publicKey,
+    });
+
+    const [userTokenAAccount, userPositionNftAccount] = await Promise.all([
+      // TODO: For now, we'll assume the caller has an ATA with enough Token A for the deposit
+      getAssociatedTokenAddress(
+        toPubkey(vault.tokenAMint),
+        this.provider.wallet.publicKey,
+        true,
+        TOKEN_PROGRAM_ID,
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      ),
+      getAssociatedTokenAddress(
+        positionMintKeypair.publicKey,
+        this.provider.wallet.publicKey,
+        true,
+        TOKEN_PROGRAM_ID,
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      ),
+    ]);
+
+    const depositIx = await this.vaultProgram.methods
+      .deposit({
+        tokenADepositAmount: preview.amount,
+        dcaCycles: new BN(preview.dcaCycles),
+      })
+      .accounts({
+        vault: this.vaultPubkey,
+        vaultPeriodEnd: depositExpiryPeriodPubkey,
+        userPosition: positionPubkey,
+        tokenAMint: vault.tokenAMint,
+        userPositionNftMint: positionMintKeypair.publicKey,
+        vaultTokenAAccount: vault.tokenAAccount,
+        userTokenAAccount,
+        userPositionNftAccount,
+        depositor: this.provider.wallet.publicKey,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+        rent: SYSVAR_RENT_PUBKEY,
+        systemProgram: SystemProgram.programId,
+      })
+      .instruction();
+
+    tx = tx.add(depositIx);
+    tx.partialSign(positionMintKeypair);
+
+    return {
+      tx,
+      metadata: {
+        positionNftMint: positionMintKeypair.publicKey,
+        position: positionPubkey,
+      },
+    };
   }
 
-  getInitVaultPeriodTx(params: InitVaultPeriodParams): Promise<Transaction> {
-    throw new Error('Method not implemented.');
+  async getInitVaultPeriodTx(params: InitVaultPeriodParams): Promise<Transaction> {
+    const { periodId } = params;
+
+    const vault = await this.vaultProgram.account.vault.fetch(this.vaultPubkey);
+
+    const vaultPeriodPubkey = findVaultPeriodPubkey(this.vaultProgram.programId, {
+      vault: this.vaultPubkey,
+      periodId,
+    });
+
+    const vaultPeriod = await this.vaultProgram.account.vaultPeriod.fetchNullable(
+      vaultPeriodPubkey
+    );
+
+    if (vaultPeriod) {
+      throw new VaultPeriodAlreadyExistsError(vaultPeriodPubkey);
+    }
+
+    const tx = await this.vaultProgram.methods
+      .initVaultPeriod({
+        periodId,
+      })
+      .accounts({
+        vaultPeriod: vaultPeriodPubkey,
+        vault: this.vaultPubkey,
+        tokenAMint: vault.tokenAMint,
+        tokenBMint: vault.tokenBMint,
+        vaultProtoConfig: vault.protoConfig,
+        creator: this.provider.wallet.publicKey,
+        systemProgram: SystemProgram.programId,
+      })
+      .transaction();
+
+    return tx;
   }
 
   getTriggerDCAPreview(): Promise<DepositPreview> {
