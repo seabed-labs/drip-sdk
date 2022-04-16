@@ -21,12 +21,13 @@ import { DepositPreview, isDepositPreview } from '../interfaces/drip-vault/previ
 import { toPubkey } from '../utils';
 import { findVaultPeriodPubkey, findVaultPositionPubkey, findVaultPubkey } from '../helpers';
 import { VaultDoesNotExistError, VaultPeriodAlreadyExistsError } from '../errors';
-import { TransactionWithMetadata } from '../types';
+import { BroadcastTransactionWithMetadata, TransactionWithMetadata } from '../types';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   getAssociatedTokenAddress,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
+import { makeSolscanUrl } from '../utils/transaction';
 
 export class DripVaultImpl implements DripVault {
   private readonly vaultProgram: Program<DcaVault>;
@@ -132,12 +133,14 @@ export class DripVaultImpl implements DripVault {
     });
 
     if (!currentPeriod) {
-      const initCurrentPeriodTx = await this.getInitVaultPeriodTx({ periodId: currentPeriodId });
+      const { tx: initCurrentPeriodTx } = await this.getInitVaultPeriodTx({
+        periodId: currentPeriodId,
+      });
       tx = tx.add(...initCurrentPeriodTx.instructions);
     }
 
     if (!depositExpiryPeriod) {
-      const initExpiryPeriodTx = await this.getInitVaultPeriodTx({
+      const { tx: initExpiryPeriodTx } = await this.getInitVaultPeriodTx({
         periodId: depositExpiryPeriodId,
       });
       tx = tx.add(...initExpiryPeriodTx.instructions);
@@ -200,7 +203,24 @@ export class DripVaultImpl implements DripVault {
     };
   }
 
-  public async getInitVaultPeriodTx(params: InitVaultPeriodParams): Promise<Transaction> {
+  async deposit(
+    params: DepositParams | DepositPreview
+  ): Promise<
+    BroadcastTransactionWithMetadata<{ positionNftMint: PublicKey; position: PublicKey }>
+  > {
+    const { tx, metadata } = await this.getDepositTx(params);
+    const txHash = await this.provider.send(tx);
+
+    return {
+      id: txHash,
+      solscan: makeSolscanUrl(txHash, this.network),
+      metadata,
+    };
+  }
+
+  public async getInitVaultPeriodTx(
+    params: InitVaultPeriodParams
+  ): Promise<TransactionWithMetadata<{ vaultPeriodPubkey: PublicKey }>> {
     const { periodId } = params;
 
     const vault = await this.vaultProgram.account.vault.fetch(this.vaultPubkey);
@@ -233,6 +253,26 @@ export class DripVaultImpl implements DripVault {
       })
       .transaction();
 
-    return tx;
+    return {
+      tx,
+      metadata: {
+        vaultPeriodPubkey,
+      },
+    };
+  }
+
+  async initVaultPeriod(params: InitVaultPeriodParams): Promise<
+    BroadcastTransactionWithMetadata<{
+      vaultPeriodPubkey: PublicKey;
+    }>
+  > {
+    const { tx, metadata } = await this.getInitVaultPeriodTx(params);
+    const txHash = await this.provider.send(tx);
+
+    return {
+      id: txHash,
+      solscan: makeSolscanUrl(txHash, this.network),
+      metadata,
+    };
   }
 }

@@ -11,6 +11,7 @@ export interface DripAdmin {
   initVaultProtoConfig(
     params: InitVaultProtoConfigParams | InitVaultProtoConfigPreview
   ): Promise<BroadcastTransactionWithMetadata<{ vaultProtoConfigPubkey: PublicKey }>>;
+
   getInitVaultTx(
     params: InitVaultParams
   ): Promise<TransactionWithMetadata<{ vaultPubkey: PublicKey }>>;

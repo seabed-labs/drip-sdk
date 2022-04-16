@@ -1,6 +1,21 @@
 import BN from 'bn.js';
 import { ZERO } from '../constants';
 
+export function calculateWithdrawTokenAAmount(
+  i: BN,
+  j: BN,
+  numberOfSwaps: BN,
+  periodicDripAmount: BN
+): BN {
+  const completedSwaps = j.sub(i);
+  if (numberOfSwaps <= completedSwaps) {
+    return ZERO;
+  }
+
+  const remainingSwaps = numberOfSwaps.sub(completedSwaps);
+  return remainingSwaps.mul(periodicDripAmount);
+}
+
 export function calculateWithdrawTokenBAmount(
   i: BN,
   j: BN,
