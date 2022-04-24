@@ -24,7 +24,9 @@ import { VaultDoesNotExistError, VaultPeriodAlreadyExistsError } from '../errors
 import { BroadcastTransactionWithMetadata, TransactionWithMetadata } from '../types';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
+  createApproveCheckedInstruction,
   getAssociatedTokenAddress,
+  getMint,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 import { makeSolscanUrl } from '../utils/transaction';
@@ -101,7 +103,7 @@ export class DripVaultImpl implements DripVault {
 
   public async getDepositTx(
     params: DepositParams | DepositPreview
-  ): Promise<TransactionWithMetadata<{ positionNftMint: PublicKey; position: PublicKey }>> {
+  ): Promise<TransactionWithMetadata<{ positionNftMint: Keypair; position: PublicKey }>> {
     const preview = isDepositPreview(params) ? params : await this.getDepositPreview(params);
     const vault = await this.vaultProgram.account.vault.fetchNullable(preview.vault);
 
@@ -169,6 +171,18 @@ export class DripVaultImpl implements DripVault {
       ),
     ]);
 
+    const tokenAMintInfo = await getMint(this.vaultProgram.provider.connection, vault.tokenAMint);
+    tx = tx.add(
+      createApproveCheckedInstruction(
+        userTokenAAccount,
+        vault.tokenAMint,
+        this.vaultPubkey,
+        this.vaultProgram.provider.wallet.publicKey,
+        BigInt(params.amount.toString()),
+        tokenAMintInfo.decimals
+      )
+    );
+
     const depositIx = await this.vaultProgram.methods
       .deposit({
         tokenADepositAmount: preview.amount,
@@ -192,12 +206,12 @@ export class DripVaultImpl implements DripVault {
       .instruction();
 
     tx = tx.add(depositIx);
-    tx.partialSign(positionMintKeypair);
+    // tx.sign(positionMintKeypair);
 
     return {
       tx,
       metadata: {
-        positionNftMint: positionMintKeypair.publicKey,
+        positionNftMint: positionMintKeypair,
         position: positionPubkey,
       },
     };
@@ -205,11 +219,9 @@ export class DripVaultImpl implements DripVault {
 
   async deposit(
     params: DepositParams | DepositPreview
-  ): Promise<
-    BroadcastTransactionWithMetadata<{ positionNftMint: PublicKey; position: PublicKey }>
-  > {
+  ): Promise<BroadcastTransactionWithMetadata<{ positionNftMint: Keypair; position: PublicKey }>> {
     const { tx, metadata } = await this.getDepositTx(params);
-    const txHash = await this.provider.send(tx);
+    const txHash = await this.provider.send(tx, [metadata.positionNftMint]);
 
     return {
       id: txHash,

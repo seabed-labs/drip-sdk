@@ -1,4 +1,4 @@
-import { PublicKey, Transaction } from '@solana/web3.js';
+import { Keypair, PublicKey, Transaction } from '@solana/web3.js';
 import { DepositPreview } from './previews';
 import { DepositParams, InitVaultPeriodParams } from './params';
 import { BroadcastTransactionWithMetadata, TransactionWithMetadata } from '../../types';
@@ -9,10 +9,10 @@ export interface DripVault {
   // Might need to return an abstraction that holds multiple TXs if TX is too big
   getDepositTx(
     params: DepositParams | DepositPreview
-  ): Promise<TransactionWithMetadata<{ positionNftMint: PublicKey; position: PublicKey }>>;
+  ): Promise<TransactionWithMetadata<{ positionNftMint: Keypair; position: PublicKey }>>;
   deposit(params: DepositParams | DepositPreview): Promise<
     BroadcastTransactionWithMetadata<{
-      positionNftMint: PublicKey;
+      positionNftMint: Keypair;
       position: PublicKey;
     }>
   >;
