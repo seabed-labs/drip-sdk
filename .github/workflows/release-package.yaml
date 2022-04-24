@@ -1,0 +1,52 @@
+name: Node.js Package
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Cache Modules
+        id: cache-modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ matrix.node-version }}-${{ runner.OS }}-build-${{ hashFiles('package.json') }}
+      
+      - name: Setup Node
+        uses: actions/setup-node@v3
+          with:
+            node-version: 16
+      
+      - name: Install
+        if: steps.cache-modules.outputs.cache-hit != 'true'
+        run: yarn
+      
+      - name: Build
+        run: yarn build
+
+  publish-gpr:
+    name: Publish
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node
+        uses: actions/setup-node@v3
+          with:
+            node-version: 16
+            registry-url: https://npm.pkg.github.com/
+          
+      - run: yarn
+      - run: yarn publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
