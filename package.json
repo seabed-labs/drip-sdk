@@ -4,7 +4,7 @@
   "description": "SDK to interact with Drip smart contracts",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "repository": "https://github.com/dcaf-protocol/drip-sdk.git",
+  "repository": "git://github.com/dcaf-protocol/drip-sdk.git",
   "author": "Dcaf",
   "license": "MIT",
   "private": false,
