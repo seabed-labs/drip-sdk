@@ -10,4 +10,8 @@ export const tokens: Record<string, Token> = {
     mint: new PublicKey('31nFDfb3b4qw8JPx4FaXGgEk8omt7NuHpPkwWCSym5rC'),
     symbol: 'USDC',
   },
+  '9gAMFwMubEvQi6Tts5ePezJp6BqD72FVWECVgaNh9BpG': {
+    mint: new PublicKey('9gAMFwMubEvQi6Tts5ePezJp6BqD72FVWECVgaNh9BpG'),
+    symbol: 'ETH',
+  },
 };

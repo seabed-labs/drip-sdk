@@ -19,3 +19,5 @@ export const Configs: Record<Network, Config> = {
   },
   [Network.Devnet]: devnet,
 };
+
+export * from './types';
