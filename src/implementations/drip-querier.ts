@@ -20,7 +20,7 @@ import { findVaultPositionPubkey } from '../helpers';
 export class DripQuerierImpl implements DripQuerier {
   private readonly vaultProgram: Program<DcaVault>;
 
-  private constructor(provider: Provider, private readonly network: Network) {
+  constructor(provider: Provider, private readonly network: Network) {
     const config = Configs[network];
     this.vaultProgram = new Program(DcaVaultIDL as DcaVault, config.vaultProgramId, provider);
   }
