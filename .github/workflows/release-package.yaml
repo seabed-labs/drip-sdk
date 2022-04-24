@@ -1,8 +1,10 @@
-name: Node.js Package
+name: Publish SDK
 
-on:
-  release:
-    types: [created]
+# on:
+#   release:
+#     types: [created]
+
+on: workflow_dispatch
 
 jobs:
   build:
@@ -20,8 +22,8 @@ jobs:
       
       - name: Setup Node
         uses: actions/setup-node@v3
-          with:
-            node-version: 16
+        with:
+          node-version: 16
       
       - name: Install
         if: steps.cache-modules.outputs.cache-hit != 'true'
@@ -42,9 +44,9 @@ jobs:
       
       - name: Setup Node
         uses: actions/setup-node@v3
-          with:
-            node-version: 16
-            registry-url: https://npm.pkg.github.com/
+        with:
+          node-version: 16
+          registry-url: https://npm.pkg.github.com/
           
       - run: yarn
       - run: yarn publish
