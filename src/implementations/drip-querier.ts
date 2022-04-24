@@ -11,11 +11,15 @@ import {
   VaultPositionAccount,
 } from '../interfaces/drip-querier/results';
 import { Network } from '../models';
+import { toPubkey } from '../utils';
+import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { ONE } from '../constants';
+import { findVaultPositionPubkey } from '../helpers';
 
 export class DripQuerierImpl implements DripQuerier {
   private readonly vaultProgram: Program<DcaVault>;
 
-  private constructor(private readonly provider: Provider, private readonly network: Network) {
+  private constructor(provider: Provider, private readonly network: Network) {
     const config = Configs[network];
     this.vaultProgram = new Program(DcaVaultIDL as DcaVault, config.vaultProgramId, provider);
   }
@@ -24,8 +28,39 @@ export class DripQuerierImpl implements DripQuerier {
     return Configs[this.network].vaults;
   }
 
-  public async getAllPositions(): Promise<Record<string, VaultPositionAccount>> {
-    throw new Error('Method not implemented.');
+  public async getAllPositions(user: Address): Promise<Record<string, VaultPositionAccount>> {
+    const userPubkey = toPubkey(user);
+    const userTokenAccounts =
+      await this.vaultProgram.provider.connection.getParsedTokenAccountsByOwner(userPubkey, {
+        programId: TOKEN_PROGRAM_ID,
+      });
+
+    const userPossibleNftAccounts = userTokenAccounts.value.filter((tokenAccountData) => {
+      const tokenAmount = tokenAccountData.account.data.parsed.info.token;
+      return tokenAmount.equals(ONE);
+    });
+
+    const userPossibleNftMints: PublicKey[] = userPossibleNftAccounts.map((nftAccount) =>
+      toPubkey(nftAccount.account.data.parsed.info.mint)
+    );
+
+    const userPossiblePositionAccounts = userPossibleNftMints.map((mintPubkey) =>
+      findVaultPositionPubkey(this.vaultProgram.programId, {
+        positionNftMint: mintPubkey,
+      })
+    );
+
+    const userPositionAccounts = (await this.vaultProgram.account.position.fetchMultiple(
+      userPossiblePositionAccounts
+    )) as (VaultPositionAccount | null)[];
+
+    return userPositionAccounts.reduce(
+      (map, position, i) => ({
+        ...map,
+        ...(position ? { [userPossiblePositionAccounts[i].toBase58()]: position } : {}),
+      }),
+      {}
+    );
   }
 
   public async getAllTokenAs(givenTokenB?: PublicKey): Promise<Record<string, Token>> {

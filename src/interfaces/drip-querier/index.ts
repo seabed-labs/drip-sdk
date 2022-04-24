@@ -4,7 +4,7 @@ import { Token, Vault, VaultAccount, VaultPeriodAccount, VaultPositionAccount } 
 
 export interface DripQuerier {
   getAllVaults(): Promise<Record<string, Vault>>;
-  getAllPositions(): Promise<Record<string, VaultPositionAccount>>;
+  getAllPositions(user: Address): Promise<Record<string, VaultPositionAccount>>;
   getAllTokenAs(givenTokenB?: PublicKey): Promise<Record<string, Token>>;
   getAllTokenBs(givenTokenA?: PublicKey): Promise<Record<string, Token>>;
 
