@@ -9,6 +9,7 @@ import {
   VaultAccount,
   VaultPeriodAccount,
   VaultPositionAccount,
+  VaultProtoConfigAccount,
 } from '../interfaces/drip-querier/results';
 import { Network } from '../models';
 import { toPubkey } from '../utils';
@@ -97,19 +98,33 @@ export class DripQuerierImpl implements DripQuerier {
     );
   }
 
-  fetchVaultProtoConfigAccounts(...pubkeys: Address[]): Promise<VaultAccount[]> {
-    throw new Error('Method not implemented.');
+  public async fetchVaultProtoConfigAccounts(
+    ...pubkeys: Address[]
+  ): Promise<(VaultProtoConfigAccount | null)[]> {
+    return (await this.vaultProgram.account.vaultProtoConfig.fetchMultiple(
+      pubkeys
+    )) as (VaultProtoConfigAccount | null)[];
   }
 
-  fetchVaultAccounts(...pubkeys: Address[]): Promise<VaultAccount[]> {
-    throw new Error('Method not implemented.');
+  public async fetchVaultAccounts(...pubkeys: Address[]): Promise<(VaultAccount | null)[]> {
+    return (await this.vaultProgram.account.vault.fetchMultiple(
+      pubkeys
+    )) as (VaultAccount | null)[];
   }
 
-  fetchVaultPeriodAccounts(...pubkeys: Address[]): Promise<VaultPeriodAccount[]> {
-    throw new Error('Method not implemented.');
+  public async fetchVaultPeriodAccounts(
+    ...pubkeys: Address[]
+  ): Promise<(VaultPeriodAccount | null)[]> {
+    return (await this.vaultProgram.account.vaultPeriod.fetchMultiple(
+      pubkeys
+    )) as (VaultPeriodAccount | null)[];
   }
 
-  fetchVaultPositionAccounts(...pubkeys: Address[]): Promise<VaultPositionAccount[]> {
-    throw new Error('Method not implemented.');
+  public async fetchVaultPositionAccounts(
+    ...pubkeys: Address[]
+  ): Promise<(VaultPositionAccount | null)[]> {
+    return (await this.vaultProgram.account.position.fetchMultiple(
+      pubkeys
+    )) as (VaultPositionAccount | null)[];
   }
 }
