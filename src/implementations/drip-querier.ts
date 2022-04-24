@@ -37,8 +37,8 @@ export class DripQuerierImpl implements DripQuerier {
       });
 
     const userPossibleNftAccounts = userTokenAccounts.value.filter((tokenAccountData) => {
-      const tokenAmount = tokenAccountData.account.data.parsed.info.token;
-      return tokenAmount.equals(ONE);
+      const tokenAmount = tokenAccountData.account.data.parsed.info.tokenAmount.amount;
+      return tokenAmount === '1';
     });
 
     const userPossibleNftMints: PublicKey[] = userPossibleNftAccounts.map((nftAccount) =>
