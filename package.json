@@ -1,5 +1,5 @@
 {
-  "name": "@dcaf/drip-sdk",
+  "name": "@dcaf-protocol/drip-sdk",
   "version": "0.0.1",
   "description": "SDK to interact with Drip smart contracts",
   "main": "dist/index.js",
@@ -32,6 +32,6 @@
     "bn.js": "^5.2.0"
   },
   "publishConfig": {
-    "@dcaf:registry": "https://npm.pkg.github.com"
+    "@dcaf-protocol:registry": "https://npm.pkg.github.com"
   }
 }
