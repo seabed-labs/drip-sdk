@@ -1,5 +1,5 @@
 import { Address, BN, Program, Provider } from '@project-serum/anchor';
-import { PublicKey, SystemInstruction, SystemProgram, Transaction } from '@solana/web3.js';
+import { PublicKey, SystemProgram, Transaction } from '@solana/web3.js';
 import {
   createAssociatedTokenAccountInstruction,
   getAccount,
