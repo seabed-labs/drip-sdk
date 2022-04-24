@@ -6,8 +6,8 @@
   "types": "dist/index.d.ts",
   "repository": "https://github.com/dcaf-protocol/drip-sdk.git",
   "author": "Dcaf",
-  "license": "UNLICENSED",
-  "private": true,
+  "license": "MIT",
+  "private": false,
   "scripts": {
     "build": "tsc"
   },
@@ -30,5 +30,8 @@
     "@solana/spl-token": "^0.2.0",
     "@solana/web3.js": "^1.37.0",
     "bn.js": "^5.2.0"
+  },
+  "publishConfig": {
+    "@dcaf:registry": "https://npm.pkg.github.com"
   }
 }
