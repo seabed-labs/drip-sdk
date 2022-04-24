@@ -109,8 +109,8 @@ export class DripVaultImpl implements DripVault {
       throw new VaultDoesNotExistError(toPubkey(preview.vault));
     }
 
-    const currentPeriodId = vault.periodId;
-    const depositExpiryPeriodId = vault.periodId.addn(preview.dcaCycles);
+    const currentPeriodId = vault.lastDcaPeriod;
+    const depositExpiryPeriodId = vault.lastDcaPeriod.addn(preview.dcaCycles);
 
     const currentPeriodPubkey = findVaultPeriodPubkey(this.vaultProgram.programId, {
       vault: preview.vault,
