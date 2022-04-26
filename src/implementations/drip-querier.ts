@@ -26,6 +26,7 @@ export class DripQuerierImpl implements DripQuerier {
   }
 
   public async getAllVaults(): Promise<Record<string, Vault>> {
+    // test
     return Configs[this.network].vaults;
   }
 
