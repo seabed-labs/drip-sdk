@@ -33,9 +33,9 @@ jobs:
           registry-url: https://npm.pkg.github.com/
 
       - name: Install dependencies
+        run: yarn
         env:
           NPM_TOKEN: ${{secrets.GITHUB_TOKEN}}}
-        run: yarn
 
       - name: Publish
         run: yarn publish --non-interactive --new-version ${{ steps.bump-semver.outputs.new_version }}
