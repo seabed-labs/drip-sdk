@@ -1,6 +1,6 @@
 {
   "name": "@dcaf-protocol/drip-sdk",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "SDK to interact with Drip smart contracts",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,7 +9,8 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "prepublish": "yarn build"
   },
   "devDependencies": {
     "@types/bn.js": "^5.1.0",
