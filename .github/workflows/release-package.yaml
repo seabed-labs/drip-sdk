@@ -3,6 +3,9 @@ name: Publish SDK
 on:
   push: { branches: main }
 
+env:
+  NPM_TOKEN: ${{secrets.GITHUB_TOKEN}}}
+
 jobs:
   publish-gpr:
     name: Publish
