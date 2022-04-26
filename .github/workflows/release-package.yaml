@@ -34,13 +34,10 @@ jobs:
 
       - name: Install dependencies
         run: yarn
-        env:
-          NPM_TOKEN: ${{secrets.GITHUB_TOKEN}}}
 
       - name: Publish
         run: yarn publish --non-interactive --new-version ${{ steps.bump-semver.outputs.new_version }}
         env:
-          NPM_TOKEN: ${{secrets.GITHUB_TOKEN}}}
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Push tag
