@@ -6,7 +6,6 @@ on:
 jobs:
   publish-gpr:
     name: Publish
-    needs: build
     runs-on: ubuntu-latest
     permissions:
       packages: write
