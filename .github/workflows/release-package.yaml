@@ -3,9 +3,6 @@ name: Publish SDK
 on:
   push: { branches: main }
 
-env:
-  NPM_TOKEN: ${{secrets.GITHUB_TOKEN}}}
-
 jobs:
   publish-gpr:
     name: Publish
@@ -36,11 +33,14 @@ jobs:
           registry-url: https://npm.pkg.github.com/
 
       - name: Install dependencies
+        env:
+          NPM_TOKEN: ${{secrets.GITHUB_TOKEN}}}
         run: yarn
 
       - name: Publish
         run: yarn publish --non-interactive --new-version ${{ steps.bump-semver.outputs.new_version }}
         env:
+          NPM_TOKEN: ${{secrets.GITHUB_TOKEN}}}
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Push tag
