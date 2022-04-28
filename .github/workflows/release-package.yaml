@@ -20,7 +20,7 @@ jobs:
         with:
           path: node_modules
           key: ${{ matrix.node-version }}-${{ runner.OS }}-build-${{ hashFiles('package.json') }}
-      
+
       - name: Setup node
         uses: actions/setup-node@v3
         with:
@@ -33,11 +33,11 @@ jobs:
 
       - name: Fetch tags
         uses: actions-ecosystem/action-get-latest-tag@v1
-      
+
       - name: Store latest tag
         run: echo "LAST_TAG=$(git tag  | grep -E '^[0-9]' | sort -V | tail -1)" >> $GITHUB_ENV
-      
-      - name: Current version 
+
+      - name: Current version
         run: echo $LAST_TAG
 
       - name: Bump version
@@ -48,16 +48,22 @@ jobs:
           level: prerelease
 
       - run: echo ${{ steps.bump-semver.outputs.new_version }}
-      
+
       - name: Setup dummy git config
         run: |
           git config --global user.name "Drip Dcaf"
           git config --global user.email "drip@dcaf.so"
-      
+
       - name: Publish
         run: yarn publish --non-interactive --new-version ${{ steps.bump-semver.outputs.new_version }}
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
 
       - name: Push tag
         uses: actions-ecosystem/action-push-tag@v1
