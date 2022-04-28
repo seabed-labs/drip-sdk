@@ -42,6 +42,8 @@ jobs:
           current_version: ${{ steps.get-latest-tag.outputs.tag }}
           level: prerelease
 
+      - run: echo ${{ steps.bump-semver.outputs.new_version }}
+      
       - name: Setup dummy git config
         run: |
           git config --global user.name "Drip Dcaf"
