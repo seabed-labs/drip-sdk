@@ -47,5 +47,6 @@ jobs:
       - name: Push tag
         uses: actions-ecosystem/action-push-tag@v1
         with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ steps.bump-semver.outputs.new_version }}
           message: 'New version: ${{ steps.bump-semver.outputs.new_version }}'
