@@ -36,7 +36,7 @@ jobs:
         id: get-latest-tag
       
       - name: Fetch latest tag
-        run: echo "LAST_TAG=$(git tag --sort=committerdate | tail -1)" >> $GITHUB_ENV
+        run: echo "LAST_TAG=$(git tag  | grep -E '^[0-9]' | sort -V | tail -1)" >> $GITHUB_ENV
       
       - name: Current version 
         run: echo $LAST_TAG
