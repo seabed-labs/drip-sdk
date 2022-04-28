@@ -14,23 +14,13 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      # - name: Fetch latest tag
-      #   uses: actions-ecosystem/action-get-latest-tag@v1
-      #   id: get-latest-tag
-
-      # - name: Bump version
-      #   uses: actions-ecosystem/action-bump-semver@v1
-      #   id: bump-semver
-      #   with:
-      #     current_version: ${{ steps.get-latest-tag.outputs.tag }}
-      #     level: preminor
       - name: Cache Modules
         id: cache-modules
         uses: actions/cache@v1
         with:
           path: node_modules
           key: ${{ matrix.node-version }}-${{ runner.OS }}-build-${{ hashFiles('package.json') }}
-
+      
       - name: Setup node
         uses: actions/setup-node@v3
         with:
@@ -38,30 +28,32 @@ jobs:
           registry-url: https://npm.pkg.github.com/
 
       - name: Install dependencies
+        if: steps.cache-modules.outputs.cache-hit != 'true'
         run: yarn
-      
+
+      - name: Fetch latest tag
+        uses: actions-ecosystem/action-get-latest-tag@v1
+        id: get-latest-tag
+
+      - name: Bump version
+        uses: actions-ecosystem/action-bump-semver@v1
+        id: bump-semver
+        with:
+          current_version: ${{ steps.get-latest-tag.outputs.tag }}
+          level: prerelease
+
       - name: Setup dummy git config
         run: |
           git config --global user.name "Drip Dcaf"
           git config --global user.email "drip@dcaf.so"
       
-      - name: Bump version and push tag
-        uses: anothrNick/github-tag-action@1.36.0
-        id: bump-tag
+      - name: Publish
+        run: yarn publish --non-interactive --new-version ${{ steps.bump-semver.outputs.new_version }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WITH_V: false
-          DEFAULT_BUMP: minor
-          VERBOSE: true
-      
-      - run: echo ${{ steps.bump-tag.outputs.new_tag }}
-      # - name: Publish
-      #   run: yarn publish --non-interactive --new-version ${{ steps.bump-tag.outputs.new_tag }}
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
-      # - name: Push tag
-      #   uses: actions-ecosystem/action-push-tag@v1
-      #   with:
-      #     tag: ${{ steps.bump-semver.outputs.new_version }}
-      #     message: 'New version: ${{ steps.bump-semver.outputs.new_version }}'
+      - name: Push tag
+        uses: actions-ecosystem/action-push-tag@v1
+        with:
+          tag: ${{ steps.bump-semver.outputs.new_version }}
+          message: 'New version: ${{ steps.bump-semver.outputs.new_version }}'
