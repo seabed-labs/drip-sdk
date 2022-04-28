@@ -39,10 +39,10 @@ jobs:
           git config --global user.name "Drip Dcaf"
           git config --global user.email "drip@dcaf.so"
       
-      # - name: Publish
-      #   run: yarn publish --non-interactive --new-version ${{ steps.bump-semver.outputs.new_version }}
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - name: Publish
+        run: yarn publish --non-interactive --new-version ${{ steps.bump-semver.outputs.new_version }}
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Push tag
         uses: actions-ecosystem/action-push-tag@v1
