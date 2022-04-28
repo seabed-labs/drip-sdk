@@ -18,12 +18,12 @@ jobs:
         uses: actions-ecosystem/action-get-latest-tag@v1
         id: get-latest-tag
 
-      - name: Bump version
-        uses: actions-ecosystem/action-bump-semver@v1
-        id: bump-semver
-        with:
-          current_version: ${{ steps.get-latest-tag.outputs.tag }}
-          level: preminor
+      # - name: Bump version
+      #   uses: actions-ecosystem/action-bump-semver@v1
+      #   id: bump-semver
+      #   with:
+      #     current_version: ${{ steps.get-latest-tag.outputs.tag }}
+      #     level: preminor
 
       - name: Setup node
         uses: actions/setup-node@v3
@@ -39,13 +39,23 @@ jobs:
           git config --global user.name "Drip Dcaf"
           git config --global user.email "drip@dcaf.so"
       
-      - name: Publish
-        run: yarn publish --non-interactive --new-version ${{ steps.bump-semver.outputs.new_version }}
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.36.0
+        id: bump-tag
         env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: false
+          DEFAULT_BUMP: minor
+          VERBOSE: true
+      
+      - run: echo ${{ steps.bump-tag.outputs.new_tag }}
+      # - name: Publish
+      #   run: yarn publish --non-interactive --new-version ${{ steps.bump-tag.outputs.new_tag }}
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
-      - name: Push tag
-        uses: actions-ecosystem/action-push-tag@v1
-        with:
-          tag: ${{ steps.bump-semver.outputs.new_version }}
-          message: 'New version: ${{ steps.bump-semver.outputs.new_version }}'
+      # - name: Push tag
+      #   uses: actions-ecosystem/action-push-tag@v1
+      #   with:
+      #     tag: ${{ steps.bump-semver.outputs.new_version }}
+      #     message: 'New version: ${{ steps.bump-semver.outputs.new_version }}'
