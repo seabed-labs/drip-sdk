@@ -33,7 +33,12 @@ jobs:
 
       - name: Install dependencies
         run: yarn
-
+      
+      - name: Setup dummy git config
+        run: |
+          git config --global user.name "Drip Dcaf"
+          git config --global user.email "drip@dcaf.so"
+      
       - name: Publish
         run: yarn publish --non-interactive --new-version ${{ steps.bump-semver.outputs.new_version }}
         env:
