@@ -34,12 +34,24 @@ jobs:
       - name: Fetch latest tag
         uses: actions-ecosystem/action-get-latest-tag@v1
         id: get-latest-tag
+      
+      - name: Fetch latest tag
+        run: git tag --sort=committerdate | tail -1
+        env:
+          LAST_TAG: $(git tag --sort=committerdate | tail -1)
+
+      # - name: Bump version
+      #   uses: actions-ecosystem/action-bump-semver@v1
+      #   id: bump-semver
+      #   with:
+      #     current_version: ${{ steps.get-latest-tag.outputs.tag }}
+      #     level: prerelease
 
       - name: Bump version
         uses: actions-ecosystem/action-bump-semver@v1
         id: bump-semver
         with:
-          current_version: ${{ steps.get-latest-tag.outputs.tag }}
+          current_version: ${{ env.LAST_TAG }}
           level: prerelease
 
       - run: echo ${{ steps.bump-semver.outputs.new_version }}
