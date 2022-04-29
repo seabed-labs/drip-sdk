@@ -81,7 +81,7 @@ export class DripPositionImpl implements DripPosition {
     const vaultProtoConfig = await this.vaultProgram.account.vaultProtoConfig.fetch(
       vault.protoConfig
     );
-    const currentVaultPeriodId = vault.periodId;
+    const currentVaultPeriodId = vault.lastDcaPeriod;
 
     const periodIdI = dcaStartPeriodId;
     const periodIdJ = BN.min(dcaEndPeriodId, currentVaultPeriodId);
@@ -142,7 +142,7 @@ export class DripPositionImpl implements DripPosition {
     const dcaEndPeriodId = position.dcaPeriodIdBeforeDeposit.add(position.numberOfSwaps);
 
     const vault = await this.vaultProgram.account.vault.fetch(position.vault);
-    const currentVaultPeriodId = vault.periodId;
+    const currentVaultPeriodId = vault.lastDcaPeriod;
 
     const periodIdI = dcaStartPeriodId;
     const periodIdJ = BN.min(dcaEndPeriodId, currentVaultPeriodId);
@@ -251,7 +251,7 @@ export class DripPositionImpl implements DripPosition {
     const dcaEndPeriodId = position.dcaPeriodIdBeforeDeposit.add(position.numberOfSwaps);
 
     const vault = await this.vaultProgram.account.vault.fetch(position.vault);
-    const currentVaultPeriodId = vault.periodId;
+    const currentVaultPeriodId = vault.lastDcaPeriod;
 
     const periodIdI = dcaStartPeriodId;
     const periodIdJ = BN.min(dcaEndPeriodId, currentVaultPeriodId);
@@ -285,7 +285,7 @@ export class DripPositionImpl implements DripPosition {
     const dcaEndPeriodId = position.dcaPeriodIdBeforeDeposit.add(position.numberOfSwaps);
 
     const vault = await this.vaultProgram.account.vault.fetch(position.vault);
-    const currentVaultPeriodId = vault.periodId;
+    const currentVaultPeriodId = vault.lastDcaPeriod;
 
     const periodIdI = dcaStartPeriodId;
     const periodIdJ = BN.min(dcaEndPeriodId, currentVaultPeriodId);
