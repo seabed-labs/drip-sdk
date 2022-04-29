@@ -106,7 +106,7 @@ export class DripPositionImpl implements DripPosition {
       periodIdJ,
       periodI.twap,
       periodJ.twap,
-      vault.periodicDripAmount,
+      vault.dripAmount,
       new BN(vault.triggerDcaSpread)
     );
 
