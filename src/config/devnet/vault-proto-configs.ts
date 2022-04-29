@@ -10,10 +10,6 @@ export const vaultProtoConfigs: Record<string, VaultProtoConfig> = {
     pubkey: new PublicKey('CjxcyivgP69qEvXvKFbsYjTxavPWwh5UEWwtzbjodwer'),
     granularity: 3600,
   },
-  J2ipdPYZSt6yCQoykFFmtce2dkX1GM4xpDXaKrTZwM2h: {
-    pubkey: new PublicKey('J2ipdPYZSt6yCQoykFFmtce2dkX1GM4xpDXaKrTZwM2h'),
-    granularity: 60,
-  },
   BWdfuPvDnXzaHSPV5i4zG7mToDrYeywZYxptx79hiwmn: {
     pubkey: new PublicKey('BWdfuPvDnXzaHSPV5i4zG7mToDrYeywZYxptx79hiwmn'),
     granularity: 86400,
