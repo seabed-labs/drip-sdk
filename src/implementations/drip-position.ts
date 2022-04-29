@@ -264,7 +264,7 @@ export class DripPositionImpl implements DripPosition {
     );
 
     const withdrawnToTokenAAccount = await getAssociatedTokenAddress(
-      vault.tokenAAccount,
+      vault.tokenAMint,
       this.provider.wallet.publicKey,
       true,
       TOKEN_PROGRAM_ID,
@@ -329,7 +329,7 @@ export class DripPositionImpl implements DripPosition {
           this.provider.wallet.publicKey,
           closePositionPreview.withdrawnToTokenAAccount,
           this.provider.wallet.publicKey,
-          vault.tokenBMint,
+          vault.tokenAMint,
           TOKEN_PROGRAM_ID,
           ASSOCIATED_TOKEN_PROGRAM_ID
         )
