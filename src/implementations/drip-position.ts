@@ -1,7 +1,7 @@
 import { Address, BN, Program, Provider } from '@project-serum/anchor';
 import { PublicKey, SystemProgram, Transaction } from '@solana/web3.js';
 import {
-  createApproveCheckedInstruction,
+  createApproveInstruction,
   createAssociatedTokenAccountInstruction,
   getAccount,
   TokenAccountNotFoundError,
@@ -369,13 +369,11 @@ export class DripPositionImpl implements DripPosition {
     );
 
     tx = tx.add(
-      createApproveCheckedInstruction(
+      createApproveInstruction(
         userPositionNftAccount,
-        position.positionAuthority,
         position.vault,
         this.provider.wallet.publicKey,
-        1,
-        0
+        1
       )
     );
 
