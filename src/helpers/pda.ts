@@ -11,9 +11,9 @@ export function findVaultPubkey(
   const [publicKey] = findProgramAddressSync(
     [
       Buffer.from(CONSTANT_SEEDS.vault),
-      toPubkeyBuffer(seeds.protoConfig),
       toPubkeyBuffer(seeds.tokenAMint),
       toPubkeyBuffer(seeds.tokenBMint),
+      toPubkeyBuffer(seeds.protoConfig),
     ],
     toPubkey(vaultProgramId)
   );

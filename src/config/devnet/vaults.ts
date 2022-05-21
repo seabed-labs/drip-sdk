@@ -73,7 +73,7 @@ export const vaults: Record<string, Vault> = {
     treasuryTokenBAccount: new PublicKey('E7oYHeM7v14tv7AjvsxD9tcXQMtLYvZRarTjQ1uqhjSW'),
   },
   CwVN7Ckq2GJ1UmyU62ByzwUycfh2uY8AMBehhdZBYvUM: {
-    // ETH -> USDC @ hourly
+    // SOL -> USDC @ hourly
     pubkey: new PublicKey('CwVN7Ckq2GJ1UmyU62ByzwUycfh2uY8AMBehhdZBYvUM'),
     protoConfig: new PublicKey('CjxcyivgP69qEvXvKFbsYjTxavPWwh5UEWwtzbjodwer'),
     tokenAMint: new PublicKey('ASuqwxvC4FXxJGT9XqZMXbCKDQBaRTApEhN2oN3VL3A8'),
