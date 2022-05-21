@@ -1,7 +1,7 @@
 import { Address, Program, Provider } from '@project-serum/anchor';
 import { PublicKey } from '@solana/web3.js';
 import { Configs } from '../config';
-import { Vault, Token } from '../config/types';
+import { Vault, Token, VaultProtoConfig } from '../config/types';
 import { DcaVault } from '../idl/type';
 import DcaVaultIDL from '../idl/idl.json';
 import { DripQuerier } from '../interfaces';
@@ -16,6 +16,7 @@ import { toPubkey } from '../utils';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { ONE } from '../constants';
 import { findVaultPositionPubkey } from '../helpers';
+import { Granularity } from '../interfaces/drip-admin/params';
 
 export class DripQuerierImpl implements DripQuerier {
   private readonly vaultProgram: Program<DcaVault>;
@@ -96,6 +97,31 @@ export class DripQuerierImpl implements DripQuerier {
         [tokenPubkey.toBase58()]: Configs[this.network].tokens[tokenPubkey.toBase58()],
       }),
       {} as Record<string, Token>
+    );
+  }
+
+  public async getSupportedVaultProtoConfigsForPair(
+    tokenA: Address,
+    tokenB: Address
+  ): Promise<VaultProtoConfig[]> {
+    const vaults = Configs[this.network].vaults;
+    const vaultsForPair = Object.values(vaults).filter(
+      (vault) =>
+        vault.tokenAMint.equals(toPubkey(tokenA)) && vault.tokenBMint.equals(toPubkey(tokenB))
+    );
+
+    const vaultProtoConfigKeysForPairMap = vaultsForPair.reduce(
+      (acc, vault) => ({
+        ...acc,
+        [vault.protoConfig.toBase58()]: true,
+      }),
+      {} as Partial<Record<string, boolean>>
+    );
+
+    const vaultProtoConfigs = Configs[this.network].vaultProtoConfigs;
+
+    return Object.values(vaultProtoConfigs).filter(
+      (vaultProtoConfig) => !!vaultProtoConfigKeysForPairMap[vaultProtoConfig.pubkey.toBase58()]
     );
   }
 
