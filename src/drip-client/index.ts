@@ -1,4 +1,6 @@
 import { Address, Provider } from '@project-serum/anchor';
+import { PublicKey } from '@solana/web3.js';
+import { Configs } from '../config';
 import {
   DripAdminImpl,
   DripPositionImpl,
@@ -27,5 +29,9 @@ export class Drip {
 
   public async getVault(pubkey: Address): Promise<DripVault> {
     return await DripVaultImpl.fromVaultPubkey(pubkey, this.provider, this.network);
+  }
+
+  public getProgramId(network: Network): PublicKey {
+    return Configs[network].vaultProgramId;
   }
 }
