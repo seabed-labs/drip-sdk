@@ -1,10 +1,10 @@
 {
-  "name": "@dcaf-protocol/drip-sdk",
+  "name": "@dcaf-labs/drip-sdk",
   "version": "0.0.0-alpha.17",
   "description": "SDK to interact with Drip smart contracts",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "repository": "git://github.com/dcaf-protocol/drip-sdk.git",
+  "repository": "git://github.com/dcaf-labs/drip-sdk.git",
   "author": "Dcaf",
   "license": "MIT",
   "private": false,
@@ -37,6 +37,6 @@
     "bn.js": "^5.2.0"
   },
   "publishConfig": {
-    "@dcaf-protocol:registry": "https://npm.pkg.github.com"
+    "@dcaf-labs:registry": "https://npm.pkg.github.com"
   }
 }
