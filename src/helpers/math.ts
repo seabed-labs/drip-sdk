@@ -8,7 +8,7 @@ export function calculateWithdrawTokenAAmount(
   periodicDripAmount: BN
 ): BN {
   const completedSwaps = j.sub(i);
-  if (numberOfSwaps <= completedSwaps) {
+  if (numberOfSwaps.lte(completedSwaps)) {
     return ZERO;
   }
 
