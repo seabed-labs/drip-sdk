@@ -6,7 +6,7 @@
   "types": "dist/index.d.ts",
   "repository": "git://github.com/dcaf-labs/drip-sdk.git",
   "author": "Dcaf",
-  "license": "MIT",
+  "license": "UNLICENSED",
   "private": false,
   "scripts": {
     "build": "tsc",
