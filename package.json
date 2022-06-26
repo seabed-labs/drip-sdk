@@ -4,7 +4,7 @@
   "types": "dist/main.d.ts",
   "scripts": {
     "sendBalanceUpdate": "node dist/scripts/sendBalanceUpdate.js",
-    "start": "node dist/main.js",
+    "start": "npm run sendBalanceUpdate",
     "start:dev": "nodemon --ext js,ts,json,env --exec 'node --experimental-specifier-resolution=node --loader ts-node/esm' src/main.ts",
     "prepare": "husky install",
     "build": "tsc",
