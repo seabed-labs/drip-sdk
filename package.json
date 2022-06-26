@@ -1,11 +1,14 @@
 {
   "name": "drip-alerts",
+  "main": "dist/main.js",
+  "types": "dist/main.d.ts",
   "scripts": {
-    "sendBalanceUpdate": "yarn run ts-node scripts/sendBalanceUpdate.ts",
+    "sendBalanceUpdate": "node dist/scripts/sendBalanceUpdate.js",
     "start": "node dist/main.js",
     "start:dev": "nodemon --ext js,ts,json,env --exec 'node --experimental-specifier-resolution=node --loader ts-node/esm' src/main.ts",
     "prepare": "husky install",
-    "build": "tsc --project tsconfig.build.json",
+    "build": "tsc",
+    "postinstall": "npm run build",
     "build:clean": "rm -rf tsconfig.build.tsbuildinfo && rm -rf ./dist",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --detectOpenHandles",
     "test:coverage": "npm run test -- --coverage",
@@ -16,6 +19,7 @@
   },
   "dependencies": {
     "@solana/web3.js": "^1.44.2",
+    "@types/mocha": "^9.1.1",
     "@types/node-cron": "^3.0.1",
     "@types/node-fetch": "2",
     "dotenv": "^16.0.0",

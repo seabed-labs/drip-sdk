@@ -11,7 +11,6 @@ export async function notifyDiscord(content: string, embeds?: unknown[]) {
     content,
     embeds,
   };
-  console.log(JSON.stringify(body, undefined, 2));
   await fetch(DISCORD_WEBHOOK_ALERTS_CHANNEL, {
     method: 'post',
     body: JSON.stringify(body),
