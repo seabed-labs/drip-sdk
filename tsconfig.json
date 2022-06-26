@@ -1,40 +1,10 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "Node",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "importHelpers": true,
-    "resolveJsonModule": true,
-    "sourceMap": true,
-    "declaration": true,
-
-    "alwaysStrict": true,
-    "forceConsistentCasingInFileNames": true,
-    "removeComments": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "noImplicitThis": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "noImplicitReturns": true,
-    "strict": true,
-    "noFallthroughCasesInSwitch": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "composite": true,
-    "skipLibCheck": true,
-    "noEmitHelpers": false,
-
-    "outDir": "dist",
-    "rootDir": "src",
-    "baseUrl": "."
-  },
-  "exclude": [
-    "dist",
-    "node_modules"
-  ],
-  "include": ["src"]
+    "types": ["mocha"],
+    "typeRoots": ["./node_modules/@types"],
+    "lib": ["es2015"],
+    "module": "commonjs",
+    "target": "es6",
+    "esModuleInterop": true
+  }
 }

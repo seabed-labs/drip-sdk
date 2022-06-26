@@ -1,6 +1,6 @@
-import 'dotenv/config'
+import 'dotenv/config';
 
-const isCI = process.env.CI === 'true'
+const isCI = process.env.CI === 'true';
 
 export default {
   verbose: true,
@@ -25,4 +25,4 @@ export default {
   coveragePathIgnorePatterns: ['<rootDir>/dist/', '/node_modules/', '<rootDir>/scripts', '<rootDir>/tools'],
   coverageProvider: 'v8',
   coverageReporters: isCI ? ['json'] : ['text'],
-}
+};

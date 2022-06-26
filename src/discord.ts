@@ -1,20 +1,20 @@
-import fetch from "node-fetch";
+import fetch from 'node-fetch';
 
-const DISCORD_WEBHOOK_ALERTS_CHANNEL = 'https://discord.com/api/webhooks/979236930388627496/dDcCroI7KiHEWVUnx0_svKBLfOlQ7pvRTH1jlFb9X11UB4g3NerOFOFBD-khu9C0CpE-';
+const DISCORD_WEBHOOK_ALERTS_CHANNEL = process.env.DISCORD_WEBHOOK_ALERTS_CHANNEL
+  ?? 'https://discord.com/api/webhooks/979236930388627496/dDcCroI7KiHEWVUnx0_svKBLfOlQ7pvRTH1jlFb9X11UB4g3NerOFOFBD-khu9C0CpE-';
 
-export async function notifyDiscord(msg: string) {
-
-    const body = {
-        name: 'Keeper Bot Balance Status',
-        content: msg,
-    }
-
-    const response = await fetch(DISCORD_WEBHOOK_ALERTS_CHANNEL, {
-	method: 'post',
-	body: JSON.stringify(body),
-	headers: {'Content-Type': 'application/json'}
- });
-
-    const data = await response.json();
-    console.log(data);
+// eslint-disable-next-line import/prefer-default-export
+export async function notifyDiscord(content: string, embeds?: unknown[]) {
+  const body = {
+    name: 'Keeper Bot Balance Status',
+    avatar_url: 'https://pbs.twimg.com/profile_images/1512938686702403603/DDObiFjj_400x400.jpg',
+    content,
+    embeds,
+  };
+  console.log(JSON.stringify(body, undefined, 2));
+  await fetch(DISCORD_WEBHOOK_ALERTS_CHANNEL, {
+    method: 'post',
+    body: JSON.stringify(body),
+    headers: { 'Content-Type': 'application/json' },
+  });
 }
