@@ -4,4 +4,4 @@ export * from './vaults';
 export * from './tokens';
 export * from './vault-proto-configs';
 
-export const vaultProgramId = new PublicKey('AahZjZGD5Lv9HGPYUXZRS5GpeFFF13Wvx1fAFgwUxxDR');
+export const vaultProgramId = new PublicKey('GizNF1qvjrTwZy1sFpq5L9cnov2ZB19DAoLKEYCYapwH');
