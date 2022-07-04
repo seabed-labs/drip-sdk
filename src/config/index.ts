@@ -8,6 +8,7 @@ export interface Config {
   tokens: Record<string, Token>;
   vaultProtoConfigs: Record<string, VaultProtoConfig>;
   vaults: Record<string, Vault>;
+  vaultProgramIDLId: PublicKey;
 }
 
 export const Configs: Record<Network, Config> = {
@@ -16,6 +17,7 @@ export const Configs: Record<Network, Config> = {
     tokens: {},
     vaultProtoConfigs: {},
     vaults: {},
+    vaultProgramIDLId: PublicKey.default,
   },
   [Network.Devnet]: devnet,
 };

@@ -1,4 +1,4 @@
-import { Address, BN, Program, Provider } from '@project-serum/anchor';
+import { Address, BN, Program, AnchorProvider } from '@project-serum/anchor';
 import { PublicKey, SystemProgram, Transaction } from '@solana/web3.js';
 import {
   createApproveInstruction,
@@ -8,7 +8,7 @@ import {
   TokenInvalidAccountOwnerError,
 } from '@solana/spl-token';
 import { Configs } from '../config';
-import { DcaVault } from '../idl/type';
+import { Drip } from '../idl/type';
 import { DripPosition } from '../interfaces';
 import { Network } from '../models';
 import DcaVaultIDL from '../idl/idl.json';
@@ -27,29 +27,29 @@ import {
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 import { BroadcastTransactionWithMetadata, TransactionWithMetadata } from '../types';
-import { makeSolscanUrl } from '../utils/transaction';
+import { makeExplorerUrl } from '../utils/transaction';
 
 export class DripPositionImpl implements DripPosition {
-  private readonly vaultProgram: Program<DcaVault>;
+  private readonly vaultProgram: Program<Drip>;
   private readonly positionPubkey: PublicKey;
 
   private constructor(
-    private readonly provider: Provider,
+    private readonly provider: AnchorProvider,
     private readonly network: Network,
     positionPubkey: Address
   ) {
     const config = Configs[network];
-    this.vaultProgram = new Program(DcaVaultIDL as DcaVault, config.vaultProgramId, provider);
+    this.vaultProgram = new Program(DcaVaultIDL as Drip, config.vaultProgramId, provider);
     this.positionPubkey = toPubkey(positionPubkey);
   }
 
   public static async fromPosition(
     positionPubkey: Address,
-    provider: Provider,
+    provider: AnchorProvider,
     network: Network
   ): Promise<DripPositionImpl> {
     const config = Configs[network];
-    const vaultProgram = new Program(DcaVaultIDL as DcaVault, config.vaultProgramId, provider);
+    const vaultProgram = new Program(DcaVaultIDL as Drip, config.vaultProgramId, provider);
 
     const position = await vaultProgram.account.position.fetchNullable(positionPubkey);
     if (!position) {
@@ -61,7 +61,7 @@ export class DripPositionImpl implements DripPosition {
 
   public static async fromPositionNftMint(
     positionNftMintPubkey: Address,
-    provider: Provider,
+    provider: AnchorProvider,
     network: Network
   ): Promise<DripPositionImpl> {
     const config = Configs[network];
@@ -236,11 +236,11 @@ export class DripPositionImpl implements DripPosition {
     BroadcastTransactionWithMetadata<{ withdrawnToTokenAccount: PublicKey }>
   > {
     const { tx, metadata } = await this.getWithdrawBTx();
-    const txHash = await this.provider.send(tx);
+    const txHash = await this.provider.sendAndConfirm(tx);
 
     return {
       id: txHash,
-      solscan: makeSolscanUrl(txHash, this.network),
+      explorer: makeExplorerUrl(txHash, this.network),
       metadata,
     };
   }
@@ -408,11 +408,11 @@ export class DripPositionImpl implements DripPosition {
 
   async closePosition(): Promise<BroadcastTransactionWithMetadata<undefined>> {
     const tx = await this.getClosePositionTx();
-    const txHash = await this.provider.send(tx);
+    const txHash = await this.provider.sendAndConfirm(tx);
 
     return {
       id: txHash,
-      solscan: makeSolscanUrl(txHash, this.network),
+      explorer: makeExplorerUrl(txHash, this.network),
       metadata: undefined,
     };
   }
