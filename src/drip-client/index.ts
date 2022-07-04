@@ -1,4 +1,4 @@
-import { Address, Provider } from '@project-serum/anchor';
+import { Address, AnchorProvider } from '@project-serum/anchor';
 import { PublicKey } from '@solana/web3.js';
 import { Configs } from '../config';
 import {
@@ -14,7 +14,7 @@ export class Drip {
   public readonly querier: DripQuerier;
   public readonly admin: DripAdmin;
 
-  public constructor(public readonly network: Network, public readonly provider: Provider) {
+  public constructor(public readonly network: Network, public readonly provider: AnchorProvider) {
     this.querier = new DripQuerierImpl(provider, network);
     this.admin = new DripAdminImpl(provider, network);
   }

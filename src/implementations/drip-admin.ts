@@ -1,4 +1,4 @@
-import { Program, Provider } from '@project-serum/anchor';
+import { Program, AnchorProvider } from '@project-serum/anchor';
 import {
   Keypair,
   PublicKey,
@@ -7,7 +7,7 @@ import {
   Transaction,
 } from '@solana/web3.js';
 import { Configs } from '../config';
-import { DcaVault } from '../idl/type';
+import { Drip } from '../idl/type';
 import DcaVaultIDL from '../idl/idl.json';
 import { DripAdmin } from '../interfaces';
 import { InitVaultProtoConfigParams, InitVaultParams } from '../interfaces/drip-admin/params';
@@ -27,17 +27,17 @@ import {
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 import { findVaultPeriodPubkey, findVaultPubkey } from '../helpers';
-import { makeSolscanUrl } from '../utils/transaction';
+import { makeExplorerUrl } from '../utils/transaction';
 
 export class DripAdminImpl implements DripAdmin {
-  private readonly vaultProgram: Program<DcaVault>;
+  private readonly vaultProgram: Program<Drip>;
 
   // For now we can do this, but we should transition to taking in a read-only connection here instead and
   // letting users only pass in signer at the end if they choose to else sign and broadcast the tx themselves
   // We should also decouple anchor from this to make it an actual SDK
-  constructor(private readonly provider: Provider, private readonly network: Network) {
+  constructor(private readonly provider: AnchorProvider, private readonly network: Network) {
     const config = Configs[network];
-    this.vaultProgram = new Program(DcaVaultIDL as DcaVault, config.vaultProgramId, provider);
+    this.vaultProgram = new Program(DcaVaultIDL as Drip, config.vaultProgramId, provider);
   }
 
   public getInitVaultProtoConfigPreview(
@@ -85,11 +85,11 @@ export class DripAdminImpl implements DripAdmin {
     params: InitVaultProtoConfigParams | InitVaultProtoConfigPreview
   ): Promise<BroadcastTransactionWithMetadata<{ vaultProtoConfigPubkey: PublicKey }>> {
     const { tx, metadata } = await this.getInitVaultProtoConfigTx(params);
-    const txHash = await this.provider.send(tx);
+    const txHash = await this.provider.sendAndConfirm(tx);
 
     return {
       id: txHash,
-      solscan: makeSolscanUrl(txHash, this.network),
+      explorer: makeExplorerUrl(txHash, this.network),
       metadata,
     };
   }
@@ -143,7 +143,9 @@ export class DripAdminImpl implements DripAdmin {
     ]);
 
     const initVaultIx = await this.vaultProgram.methods
-      .initVault()
+      .initVault({
+        whitelistedSwaps: [],
+      })
       .accounts({
         vault: vaultPubkey,
         vaultProtoConfig: params.protoConfig,
@@ -181,11 +183,11 @@ export class DripAdminImpl implements DripAdmin {
     params: InitVaultParams
   ): Promise<BroadcastTransactionWithMetadata<{ vaultPubkey: PublicKey }>> {
     const { tx, metadata } = await this.getInitVaultTx(params);
-    const txHash = await this.provider.send(tx);
+    const txHash = await this.provider.sendAndConfirm(tx);
 
     return {
       id: txHash,
-      solscan: makeSolscanUrl(txHash, this.network),
+      explorer: makeExplorerUrl(txHash, this.network),
       metadata,
     };
   }

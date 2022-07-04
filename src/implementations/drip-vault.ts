@@ -1,6 +1,6 @@
-import { Address, BN, Program, Provider } from '@project-serum/anchor';
+import { Address, BN, Program, AnchorProvider } from '@project-serum/anchor';
 import { Configs } from '../config';
-import { DcaVault } from '../idl/type';
+import { Drip } from '../idl/type';
 import { DripVault } from '../interfaces';
 import { Network } from '../models';
 import DcaVaultIDL from '../idl/idl.json';
@@ -29,33 +29,33 @@ import {
   getMint,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
-import { makeSolscanUrl } from '../utils/transaction';
+import { makeExplorerUrl } from '../utils/transaction';
 
 export class DripVaultImpl implements DripVault {
-  private readonly vaultProgram: Program<DcaVault>;
+  private readonly vaultProgram: Program<Drip>;
   private readonly vaultPubkey: PublicKey;
 
   // For now we can do this, but we should transition to taking in a read-only connection here instead and
   // letting users only pass in signer at the end if they choose to else sign and broadcast the tx themselves
   // We should also decouple anchor from this to make it an actual SDK
   private constructor(
-    private readonly provider: Provider,
+    private readonly provider: AnchorProvider,
     private readonly network: Network,
     vaultPubkey: Address
   ) {
     const config = Configs[network];
-    this.vaultProgram = new Program(DcaVaultIDL as DcaVault, config.vaultProgramId, provider);
+    this.vaultProgram = new Program(DcaVaultIDL as Drip, config.vaultProgramId, provider);
     this.vaultPubkey = toPubkey(vaultPubkey);
   }
 
   public static async fromVaultSeeds(
     vaultSeeds: { protoConfig: Address; tokenAMint: Address; tokenBMint: Address },
-    provider: Provider,
+    provider: AnchorProvider,
     network: Network
   ): Promise<DripVaultImpl> {
     const vaultPubkey = findVaultPubkey(Configs[network].vaultProgramId, vaultSeeds);
     const config = Configs[network];
-    const vaultProgram = new Program(DcaVaultIDL as DcaVault, config.vaultProgramId, provider);
+    const vaultProgram = new Program(DcaVaultIDL as Drip, config.vaultProgramId, provider);
 
     const vault = await vaultProgram.account.vault.fetchNullable(vaultPubkey);
     if (!vault) {
@@ -67,11 +67,11 @@ export class DripVaultImpl implements DripVault {
 
   public static async fromVaultPubkey(
     vaultPubkey: Address,
-    provider: Provider,
+    provider: AnchorProvider,
     network: Network
   ): Promise<DripVaultImpl> {
     const config = Configs[network];
-    const vaultProgram = new Program(DcaVaultIDL as DcaVault, config.vaultProgramId, provider);
+    const vaultProgram = new Program(DcaVaultIDL as Drip, config.vaultProgramId, provider);
 
     const vault = await vaultProgram.account.vault.fetchNullable(vaultPubkey);
     if (!vault) {
@@ -177,7 +177,7 @@ export class DripVaultImpl implements DripVault {
         userTokenAAccount,
         vault.tokenAMint,
         this.vaultPubkey,
-        this.vaultProgram.provider.wallet.publicKey,
+        this.provider.wallet.publicKey,
         BigInt(params.amount.toString()),
         tokenAMintInfo.decimals
       )
@@ -221,11 +221,11 @@ export class DripVaultImpl implements DripVault {
     params: DepositParams | DepositPreview
   ): Promise<BroadcastTransactionWithMetadata<{ positionNftMint: Keypair; position: PublicKey }>> {
     const { tx, metadata } = await this.getDepositTx(params);
-    const txHash = await this.provider.send(tx, [metadata.positionNftMint]);
+    const txHash = await this.provider.sendAndConfirm(tx, [metadata.positionNftMint]);
 
     return {
       id: txHash,
-      solscan: makeSolscanUrl(txHash, this.network),
+      explorer: makeExplorerUrl(txHash, this.network),
       metadata,
     };
   }
@@ -279,11 +279,11 @@ export class DripVaultImpl implements DripVault {
     }>
   > {
     const { tx, metadata } = await this.getInitVaultPeriodTx(params);
-    const txHash = await this.provider.send(tx);
+    const txHash = await this.provider.sendAndConfirm(tx);
 
     return {
       id: txHash,
-      solscan: makeSolscanUrl(txHash, this.network),
+      explorer: makeExplorerUrl(txHash, this.network),
       metadata,
     };
   }

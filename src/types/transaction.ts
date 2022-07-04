@@ -7,6 +7,6 @@ export type TransactionWithMetadata<T> = {
 
 export type BroadcastTransactionWithMetadata<T> = {
   id: string;
-  solscan: string;
+  explorer: string;
   metadata: T;
 };

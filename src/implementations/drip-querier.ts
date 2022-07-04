@@ -1,8 +1,8 @@
-import { Address, Program, Provider } from '@project-serum/anchor';
+import { Address, Program, AnchorProvider } from '@project-serum/anchor';
 import { PublicKey } from '@solana/web3.js';
 import { Configs } from '../config';
 import { Vault, Token, VaultProtoConfig } from '../config/types';
-import { DcaVault } from '../idl/type';
+import { Drip } from '../idl/type';
 import DcaVaultIDL from '../idl/idl.json';
 import { DripQuerier } from '../interfaces';
 import {
@@ -19,11 +19,11 @@ import { findVaultPositionPubkey } from '../helpers';
 import { Granularity } from '../interfaces/drip-admin/params';
 
 export class DripQuerierImpl implements DripQuerier {
-  private readonly vaultProgram: Program<DcaVault>;
+  private readonly vaultProgram: Program<Drip>;
 
-  constructor(provider: Provider, private readonly network: Network) {
+  constructor(provider: AnchorProvider, private readonly network: Network) {
     const config = Configs[network];
-    this.vaultProgram = new Program(DcaVaultIDL as DcaVault, config.vaultProgramId, provider);
+    this.vaultProgram = new Program(DcaVaultIDL as Drip, config.vaultProgramId, provider);
   }
 
   public async getAllVaults(): Promise<Record<string, Vault>> {

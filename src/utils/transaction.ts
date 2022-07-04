@@ -1,10 +1,10 @@
 import { Network } from '../models';
 
-export function makeSolscanUrl(txHash: string, network: Network): string {
+export function makeExplorerUrl(txHash: string, network: Network): string {
   switch (network) {
     case Network.Mainnet:
-      return `https://solscan.io/tx/${txHash}`;
+      return `https://explorer.solana.com/tx/${txHash}`;
     case Network.Devnet:
-      return `https://solscan.io/tx/${txHash}?cluster=devnet`;
+      return `https://explorer.solana.com/tx/${txHash}?cluster=devnet`;
   }
 }
