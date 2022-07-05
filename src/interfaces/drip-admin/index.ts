@@ -1,4 +1,4 @@
-import { PublicKey } from '@solana/web3.js';
+import { Keypair, PublicKey } from '@solana/web3.js';
 import { BroadcastTransactionWithMetadata, TransactionWithMetadata } from '../../types';
 import { InitVaultParams, InitVaultProtoConfigParams } from './params';
 import { InitVaultProtoConfigPreview } from './previews';
@@ -7,10 +7,10 @@ export interface DripAdmin {
   getInitVaultProtoConfigPreview(params: InitVaultProtoConfigParams): InitVaultProtoConfigPreview;
   getInitVaultProtoConfigTx(
     params: InitVaultProtoConfigParams | InitVaultProtoConfigPreview
-  ): Promise<TransactionWithMetadata<{ vaultProtoConfigPubkey: PublicKey }>>;
+  ): Promise<TransactionWithMetadata<{ vaultProtoConfigKeypair: Keypair }>>;
   initVaultProtoConfig(
     params: InitVaultProtoConfigParams | InitVaultProtoConfigPreview
-  ): Promise<BroadcastTransactionWithMetadata<{ vaultProtoConfigPubkey: PublicKey }>>;
+  ): Promise<BroadcastTransactionWithMetadata<{ vaultProtoConfigKeypair: Keypair }>>;
 
   getInitVaultTx(
     params: InitVaultParams

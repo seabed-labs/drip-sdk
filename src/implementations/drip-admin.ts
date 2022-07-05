@@ -53,7 +53,7 @@ export class DripAdminImpl implements DripAdmin {
 
   public async getInitVaultProtoConfigTx(
     params: InitVaultProtoConfigParams | InitVaultProtoConfigPreview
-  ): Promise<TransactionWithMetadata<{ vaultProtoConfigPubkey: PublicKey }>> {
+  ): Promise<TransactionWithMetadata<{ vaultProtoConfigKeypair: Keypair }>> {
     const { granularity, triggerDcaSpread, baseWithdrawalSpread } = params;
     const vaultProtoConfigKeypair = isInitVaultProtoConfigPreview(params)
       ? params.vaultProtoConfigKeypair
@@ -76,16 +76,16 @@ export class DripAdminImpl implements DripAdmin {
     return {
       tx,
       metadata: {
-        vaultProtoConfigPubkey: vaultProtoConfigKeypair.publicKey,
+        vaultProtoConfigKeypair,
       },
     };
   }
 
   public async initVaultProtoConfig(
     params: InitVaultProtoConfigParams | InitVaultProtoConfigPreview
-  ): Promise<BroadcastTransactionWithMetadata<{ vaultProtoConfigPubkey: PublicKey }>> {
+  ): Promise<BroadcastTransactionWithMetadata<{ vaultProtoConfigKeypair: Keypair }>> {
     const { tx, metadata } = await this.getInitVaultProtoConfigTx(params);
-    const txHash = await this.provider.sendAndConfirm(tx);
+    const txHash = await this.provider.sendAndConfirm(tx, [metadata.vaultProtoConfigKeypair]);
 
     return {
       id: txHash,
