@@ -17,7 +17,6 @@ export function findVaultPubkey(
     ],
     toPubkey(vaultProgramId)
   );
-
   return publicKey;
 }
 
@@ -33,7 +32,6 @@ export function findVaultPeriodPubkey(
     ],
     toPubkey(vaultProgramId)
   );
-
   return publicKey;
 }
 
@@ -45,6 +43,13 @@ export function findVaultPositionPubkey(
     [Buffer.from(CONSTANT_SEEDS.userPosition), toPubkeyBuffer(seeds.positionNftMint)],
     toPubkey(vaultProgramId)
   );
+  return publicKey;
+}
 
+export function findTokenSwapPubkey(tokenProgramId: Address, seeds: { swap: Address }): PublicKey {
+  const [publicKey] = findProgramAddressSync(
+    [Buffer.from(CONSTANT_SEEDS.userPosition), toPubkeyBuffer(seeds.swap)],
+    toPubkey(tokenProgramId)
+  );
   return publicKey;
 }

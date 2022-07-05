@@ -10,7 +10,12 @@ import { Configs } from '../config';
 import { Drip } from '../idl/type';
 import DcaVaultIDL from '../idl/idl.json';
 import { DripAdmin } from '../interfaces';
-import { InitVaultProtoConfigParams, InitVaultParams } from '../interfaces/drip-admin/params';
+import {
+  InitVaultProtoConfigParams,
+  InitVaultParams,
+  InitVaultPeriodParams,
+  InitTokenSwapParams,
+} from '../interfaces/drip-admin/params';
 import { Network } from '../models';
 import {
   InitVaultProtoConfigPreview,
@@ -23,11 +28,16 @@ import { toPubkey } from '../utils';
 import { VaultAlreadyExistsError } from '../errors';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
+  createInitializeMintInstruction,
+  createMint,
   getAssociatedTokenAddress,
+  getMinimumBalanceForRentExemptMint,
+  MINT_SIZE,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
-import { findVaultPeriodPubkey, findVaultPubkey } from '../helpers';
+import { findTokenSwapPubkey, findVaultPeriodPubkey, findVaultPubkey } from '../helpers';
 import { makeExplorerUrl } from '../utils/transaction';
+import { TOKEN_SWAP_PROGRAM_ID } from '@solana/spl-token-swap';
 
 export class DripAdminImpl implements DripAdmin {
   private readonly vaultProgram: Program<Drip>;
@@ -39,6 +49,86 @@ export class DripAdminImpl implements DripAdmin {
     const config = Configs[network];
     this.vaultProgram = new Program(DcaVaultIDL as Drip, config.vaultProgramId, provider);
   }
+
+  // async getInitTokenSwapTx(
+  //   params: InitTokenSwapParams
+  // ): Promise<TransactionWithMetadata<{ swapPubkey: PublicKey }>> {
+  //   const lamports = await getMinimumBalanceForRentExemptMint(this.provider.connection);
+
+  //   const swapLpTokenMint = Keypair.generate();
+  //   const createSwapLpTokenMintIx = SystemProgram.createAccount({
+  //     fromPubkey: this.provider.wallet.publicKey,
+  //     newAccountPubkey: swapLpTokenMint.publicKey,
+  //     space: MINT_SIZE,
+  //     lamports,
+  //     programId: TOKEN_PROGRAM_ID,
+  //   });
+  //   const initSwapLpTokenMintIx = createInitializeMintInstruction(
+  //     swapLpTokenMint.publicKey,
+  //     params.lpTokenDecimals ?? 6,
+  //     this.provider.wallet.publicKey,
+  //     this.provider.wallet.publicKey,
+  //     this.provider.wallet.publicKey
+  //   );
+
+  //   const swapLpTokenAccount = Keypair.generate();
+  //   const swapLpTokenAccountIx = SystemProgram.createAccount({
+  //     fromPubkey: this.provider.wallet.publicKey,
+  //     newAccountPubkey: swapLpTokenAccount.publicKey,
+  //     space: MINT_SIZE,
+  //     lamports,
+  //     programId: TOKEN_PROGRAM_ID,
+  //   });
+  
+  //   params.tokenA.
+  //   const swapLpTokenFeeAccount = Keypair.generate();
+  //   const swapLpTokenFeeAccountIx = SystemProgram.createAccount({
+  //     fromPubkey: this.provider.wallet.publicKey,
+  //     newAccountPubkey: swapLpTokenAccount.publicKey,
+  //     space: MINT_SIZE,
+  //     lamports,
+  //     programId: TOKEN_PROGRAM_ID,
+  //   });
+
+  //   const tokenSwapKeypair = Keypair.generate();
+
+  //   const swapAuthorityPDA = findTokenSwapPubkey(TOKEN_SWAP_PROGRAM_ID, {
+  //     swap: tokenSwapKeypair.publicKey,
+  //   });
+  //   const blah = new Transaction().add(createSwapLpTokenMintIx, initSwapLpTokenMintIx);
+
+  //   // new Transaction().add(
+  //   //   SystemProgram.createAccount({
+  //   //     fromPubkey: payer.publicKey,
+  //   //     newAccountPubkey: keypair.publicKey,
+  //   //     space: MINT_SIZE,
+  //   //     lamports,
+  //   //     programId,
+  //   //   }),
+  //   //   createInitializeMintInstruction(
+  //   //     keypair.publicKey,
+  //   //     decimals,
+  //   //     mintAuthority,
+  //   //     freezeAuthority,
+  //   //     programId
+  //   //   )
+  //   // );
+
+  //   throw new Error('Method not implemented.');
+  // }
+
+  // initTokenSwap(
+  //   params: InitTokenSwapParams
+  // ): Promise<BroadcastTransactionWithMetadata<{ swapPubkey: PublicKey }>> {
+  //   const swapLpToken = await createMint(
+  //     this.provider.connection,
+  //     this.provider.connection,
+  //     this.provider.wallet.publicKey,
+  //     this.provider.wallet.publicKey,
+  //     params.lpTokenDecimals ?? 6
+  //   );
+  //   throw new Error('Method not implemented.');
+  // }
 
   public getInitVaultProtoConfigPreview(
     params: InitVaultProtoConfigParams
@@ -94,6 +184,53 @@ export class DripAdminImpl implements DripAdmin {
     };
   }
 
+  public async getInitVaultPeriodTx(
+    params: InitVaultPeriodParams
+  ): Promise<TransactionWithMetadata<{ vaultPeriodPubkey: PublicKey }>> {
+    const vaultPeriodPDA = findVaultPeriodPubkey(this.vaultProgram.programId, {
+      vault: params.vault.toString(),
+      periodId: params.periodId,
+    });
+    const initVaultPeriodIx = await await this.vaultProgram.methods
+      .initVaultPeriod({
+        periodId: params.periodId,
+      })
+      .accounts({
+        vault: params.vault.toString(),
+        vaultPeriod: vaultPeriodPDA.toString(),
+        vaultProtoConfig: params.vaultProtoConfig.toString(),
+        tokenAMint: params.tokenAMint.toString(),
+        tokenBMint: params.tokenBMint.toString(),
+        creator: this.provider.wallet.publicKey.toString(),
+        systemProgram: this.vaultProgram.programId.toString(),
+      })
+      .instruction();
+
+    const tx = new Transaction({
+      recentBlockhash: (await this.provider.connection.getLatestBlockhash()).blockhash,
+      feePayer: this.provider.wallet.publicKey,
+    }).add(initVaultPeriodIx);
+    return {
+      tx,
+      metadata: {
+        vaultPeriodPubkey: vaultPeriodPDA,
+      },
+    };
+  }
+
+  public async initVaultPeriod(
+    params: InitVaultPeriodParams
+  ): Promise<BroadcastTransactionWithMetadata<{ vaultPeriodPubkey: PublicKey }>> {
+    const { tx, metadata } = await this.getInitVaultPeriodTx(params);
+    const txHash = await this.provider.sendAndConfirm(tx);
+
+    return {
+      id: txHash,
+      explorer: makeExplorerUrl(txHash, this.network),
+      metadata,
+    };
+  }
+
   public async getInitVaultTx(
     params: InitVaultParams
   ): Promise<TransactionWithMetadata<{ vaultPubkey: PublicKey }>> {
@@ -104,26 +241,40 @@ export class DripAdminImpl implements DripAdmin {
       throw new VaultAlreadyExistsError(vaultPubkey);
     }
 
-    const vaultGenesisPeriodId = ZERO;
-    const vaultGenesisPeriodPubkey = findVaultPeriodPubkey(this.vaultProgram.programId, {
-      vault: vaultPubkey,
-      periodId: vaultGenesisPeriodId,
-    });
+    // const vaultGenesisPeriodId = ZERO;
+    // const vaultGenesisPeriodPubkey = findVaultPeriodPubkey(this.vaultProgram.programId, {
+    //   vault: vaultPubkey,
+    //   periodId: vaultGenesisPeriodId,
+    // });
 
-    const initVaultPeriodIxPromise = this.vaultProgram.methods
-      .initVaultPeriod({
-        periodId: vaultGenesisPeriodId,
-      })
-      .accounts({
-        vaultPeriod: vaultGenesisPeriodPubkey,
+    // const initVaultPeriodIxPromise = this.vaultProgram.methods
+    //   .initVaultPeriod({
+    //     periodId: vaultGenesisPeriodId,
+    //   })
+    //   .accounts({
+    //     vaultPeriod: vaultGenesisPeriodPubkey,
+    //     vault: vaultPubkey,
+    //     tokenAMint: params.tokenAMint,
+    //     tokenBMint: params.tokenBMint,
+    //     vaultProtoConfig: params.protoConfig,
+    //     creator: this.provider.wallet.publicKey,
+    //     systemProgram: SystemProgram.programId,
+    //   })
+    //   .instruction();
+    // vault: Address;
+    // vaultProtoConfig: Address;
+    // tokenAMint: Address;
+    // tokenBMint: Address;
+    // periodId: BN;
+    const initVaultPeriodIxPromise = (
+      await this.getInitVaultPeriodTx({
         vault: vaultPubkey,
+        vaultProtoConfig: params.protoConfig,
         tokenAMint: params.tokenAMint,
         tokenBMint: params.tokenBMint,
-        vaultProtoConfig: params.protoConfig,
-        creator: this.provider.wallet.publicKey,
-        systemProgram: SystemProgram.programId,
+        periodId: ZERO,
       })
-      .instruction();
+    ).tx.instructions[0];
 
     const [tokenAAccount, tokenBAccount] = await Promise.all([
       getAssociatedTokenAddress(

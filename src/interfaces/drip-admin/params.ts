@@ -1,5 +1,6 @@
 import { Address } from '@project-serum/anchor';
 import BN from 'bn.js';
+import { Mint } from '@solana/spl-token';
 
 export enum Granularity {
   Minutely = 60,
@@ -25,9 +26,22 @@ export interface InitVaultProtoConfigParams {
   baseWithdrawalSpread: number;
 }
 
+export interface InitVaultPeriodParams {
+  vault: Address;
+  vaultProtoConfig: Address;
+  tokenAMint: Address;
+  tokenBMint: Address;
+  periodId: BN;
+}
+
 export interface InitVaultParams {
   protoConfig: Address;
   tokenAMint: Address;
   tokenBMint: Address;
   tokenBFeeTreasury: Address;
+}
+
+export interface InitTokenSwapParams {
+  tokenA: Mint;
+  lpTokenDecimals?: number;
 }
