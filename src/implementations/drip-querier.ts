@@ -13,7 +13,7 @@ import {
 } from '../interfaces/drip-querier/results';
 import { Network } from '../models';
 import { toPubkey } from '../utils';
-import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { getMint, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { ONE } from '../constants';
 import { findVaultPeriodPubkey, findVaultPositionPubkey } from '../helpers';
 import { Granularity } from '../interfaces/drip-admin/params';
@@ -64,6 +64,11 @@ export class DripQuerierImpl implements DripQuerier {
       currentPeriodPubkey
     );
 
+    const [tokenA, tokenB] = await Promise.all([
+      getMint(this.vaultProgram.provider.connection, vault.tokenAMint),
+      getMint(this.vaultProgram.provider.connection, vault.tokenBMint),
+    ]);
+
     if (!startPeriod) {
       throw new VaultPeriodDoesNotExistError(startPeriodPubkey);
     }
@@ -80,7 +85,10 @@ export class DripQuerierImpl implements DripQuerier {
       .div(positionCurrentPeriodId.sub(positionStartPeriodId));
 
     const averageBOverAPriceDecimalX64 = new Decimal(averageBOverAPriceX64.toString());
-    const averageBOverAPriceDecimal = averageBOverAPriceDecimalX64.div(new Decimal(2).pow(64));
+    const averageBOverAPriceDecimalRaw = averageBOverAPriceDecimalX64.div(new Decimal(2).pow(64));
+    const averageBOverAPriceDecimal = averageBOverAPriceDecimalRaw
+      .mul(tokenA.decimals)
+      .div(tokenB.decimals);
 
     switch (quoteToken) {
       case QuoteToken.TokenB:
