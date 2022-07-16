@@ -1,11 +1,8 @@
 import { Address } from '@project-serum/anchor';
-import { PublicKey, TokenAmount } from '@solana/web3.js';
+import { PublicKey } from '@solana/web3.js';
 import Decimal from 'decimal.js';
-import { VaultProtoConfig } from '../../config';
-import { Granularity } from '../drip-admin/params';
+import { Token, Vault, VaultProtoConfig } from '../../config';
 import {
-  Token,
-  Vault,
   VaultAccount,
   VaultPeriodAccount,
   VaultPositionAccount,
@@ -16,6 +13,8 @@ export enum QuoteToken {
   TokenA,
   TokenB,
 }
+
+export * from './results';
 
 export interface DripQuerier {
   getAllVaults(): Promise<Record<string, Vault>>;

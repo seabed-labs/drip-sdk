@@ -3,6 +3,9 @@ import { BroadcastTransactionWithMetadata, TransactionWithMetadata } from '../..
 import { InitVaultParams, InitVaultProtoConfigParams } from './params';
 import { InitVaultProtoConfigPreview } from './previews';
 
+export * from './params';
+export * from './previews';
+
 export interface DripAdmin {
   getInitVaultProtoConfigPreview(params: InitVaultProtoConfigParams): InitVaultProtoConfigPreview;
   getInitVaultProtoConfigTx(

@@ -1,10 +1,5 @@
 import { PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
-import * as Config from '../../config/types';
-
-export type Vault = Config.Vault;
-export type VaultProtoConfig = Config.VaultProtoConfig;
-export type Token = Config.Token;
 
 export interface VaultProtoConfigAccount {
   granularity: BN;

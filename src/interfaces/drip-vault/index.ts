@@ -3,6 +3,9 @@ import { DepositPreview } from './previews';
 import { DepositParams, InitVaultPeriodParams } from './params';
 import { BroadcastTransactionWithMetadata, TransactionWithMetadata } from '../../types';
 
+export * from './params';
+export * from './previews';
+
 // TODO: Currently we don't support trigger DCA through this interface. Add support for it later.
 export interface DripVault {
   getDepositPreview(params: DepositParams): Promise<DepositPreview>;

@@ -2,6 +2,8 @@ import { PublicKey, Transaction } from '@solana/web3.js';
 import { BroadcastTransactionWithMetadata, TransactionWithMetadata } from '../../types';
 import { ClosePositionPreview, WithdrawBPreview } from './previews';
 
+export * from './previews';
+
 export interface DripPosition {
   getWithdrawBPreview(): Promise<WithdrawBPreview>;
   getWithdrawBTx(): Promise<
