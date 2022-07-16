@@ -23,7 +23,7 @@ export function expiryToDcaCycles(expiry: Date, granularity: Granularity): numbe
   const expirySeconds = expiry.getTime() / 1e3;
   const delta = expirySeconds - nowInSeconds;
 
-  return delta / granularity;
+  return Math.ceil(delta / granularity);
 }
 
 export interface DepositParams {
