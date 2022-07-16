@@ -108,7 +108,7 @@ export class DripPositionImpl implements DripPosition {
       periodI.twap,
       periodJ.twap,
       position.periodicDripAmount,
-      new BN(vault.triggerDcaSpread)
+      new BN(vaultProtoConfig.triggerDcaSpread)
     );
 
     const withdrawableTokenBAmountBeforeFees = maxWithdrawableTokenBAmount.sub(
