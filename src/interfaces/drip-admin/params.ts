@@ -30,4 +30,5 @@ export interface InitVaultParams {
   tokenAMint: Address;
   tokenBMint: Address;
   tokenBFeeTreasury: Address;
+  whitelistedSwaps: Address[];
 }

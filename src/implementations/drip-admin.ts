@@ -144,7 +144,7 @@ export class DripAdminImpl implements DripAdmin {
 
     const initVaultIx = await this.vaultProgram.methods
       .initVault({
-        whitelistedSwaps: [],
+        whitelistedSwaps: params.whitelistedSwaps.map(toPubkey),
       })
       .accounts({
         vault: vaultPubkey,
