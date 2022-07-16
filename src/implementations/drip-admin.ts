@@ -64,6 +64,7 @@ export class DripAdminImpl implements DripAdmin {
         granularity: new BN(granularity.toString()),
         triggerDcaSpread,
         baseWithdrawalSpread,
+        admin: toPubkey(params.admin),
       })
       .accounts({
         vaultProtoConfig: vaultProtoConfigKeypair.publicKey,

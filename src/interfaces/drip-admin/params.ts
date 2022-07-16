@@ -23,6 +23,10 @@ export interface InitVaultProtoConfigParams {
    * Withdrawal spread in basis points
    */
   baseWithdrawalSpread: number;
+  /**
+   * Vault Admin
+   */
+  admin: Address;
 }
 
 export interface InitVaultParams {
