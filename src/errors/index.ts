@@ -6,6 +6,7 @@ export enum ErrorCode {
   VaultDoesNotExist,
   VaultPeriodAlreadyExists,
   VaultPeriodDoesNotExist,
+  VaultProtoConfigDoesNotExist,
   PositionDoesNotExist,
 }
 
@@ -33,6 +34,13 @@ export class VaultDoesNotExistError extends DripError {
   }
 }
 
+export class VaultProtoConfigDoesNotExistError extends DripError {
+  public readonly code = ErrorCode.VaultProtoConfigDoesNotExist;
+
+  public constructor(vaultProtoConfig: Address) {
+    super(`Vault Proto Config ${vaultProtoConfig.toString()} does not exist`);
+  }
+}
 export class VaultPeriodAlreadyExistsError extends DripError {
   public readonly code = ErrorCode.VaultPeriodAlreadyExists;
 

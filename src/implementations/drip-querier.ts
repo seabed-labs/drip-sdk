@@ -21,6 +21,7 @@ import {
   PositionDoesNotExistError,
   VaultDoesNotExistError,
   VaultPeriodDoesNotExistError,
+  VaultProtoConfigDoesNotExistError,
 } from '../errors';
 import Decimal from 'decimal.js';
 
@@ -41,6 +42,11 @@ export class DripQuerierImpl implements DripQuerier {
     const [vault] = await this.fetchVaultAccounts(position.vault);
     if (!vault) {
       throw new VaultDoesNotExistError(position.vault);
+    }
+
+    const [vaultProtoConfig] = await this.fetchVaultProtoConfigAccounts(vault.protoConfig);
+    if (!vaultProtoConfig) {
+      throw new VaultProtoConfigDoesNotExistError(vault.protoConfig);
     }
 
     const [positionStartPeriodId, positionCurrentPeriodId] = [
@@ -90,11 +96,23 @@ export class DripQuerierImpl implements DripQuerier {
       .mul(new Decimal(10).pow(tokenA.decimals))
       .div(new Decimal(10).pow(tokenB.decimals));
 
+    const dcaSpreadA = vaultProtoConfig.triggerDcaSpread;
+    const withdrawSpreadB = vaultProtoConfig.baseWithdrawalSpread;
+    const oneE4 = new Decimal(1e4);
+
+    const priceMultiplierNumerator = oneE4.sub(dcaSpreadA).mul(oneE4.sub(withdrawSpreadB));
+    const priceMultiplierDenominator = oneE4.mul(oneE4);
+
     switch (quoteToken) {
       case QuoteToken.TokenB:
-        return averageBOverAPriceDecimal;
+        return averageBOverAPriceDecimal
+          .mul(priceMultiplierNumerator)
+          .div(priceMultiplierDenominator);
       case QuoteToken.TokenA:
-        return new Decimal(1).div(averageBOverAPriceDecimal);
+        const averageAOverBPriceDecimals = new Decimal(1).div(averageBOverAPriceDecimal);
+        return averageAOverBPriceDecimals
+          .mul(priceMultiplierDenominator)
+          .div(priceMultiplierNumerator);
     }
   }
 
