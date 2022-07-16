@@ -1,10 +1,10 @@
-import { Address, Program, AnchorProvider } from '@project-serum/anchor';
-import { PublicKey } from '@solana/web3.js';
+import { Address, Program, AnchorProvider, BN } from '@project-serum/anchor';
+import { PublicKey, TokenAmount } from '@solana/web3.js';
 import { Configs } from '../config';
 import { Vault, Token, VaultProtoConfig } from '../config/types';
 import { Drip } from '../idl/type';
 import DcaVaultIDL from '../idl/idl.json';
-import { DripQuerier } from '../interfaces';
+import { DripQuerier, QuoteToken } from '../interfaces';
 import {
   VaultAccount,
   VaultPeriodAccount,
@@ -15,8 +15,14 @@ import { Network } from '../models';
 import { toPubkey } from '../utils';
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { ONE } from '../constants';
-import { findVaultPositionPubkey } from '../helpers';
+import { findVaultPeriodPubkey, findVaultPositionPubkey } from '../helpers';
 import { Granularity } from '../interfaces/drip-admin/params';
+import {
+  PositionDoesNotExistError,
+  VaultDoesNotExistError,
+  VaultPeriodDoesNotExistError,
+} from '../errors';
+import Decimal from 'decimal.js';
 
 export class DripQuerierImpl implements DripQuerier {
   private readonly vaultProgram: Program<Drip>;
@@ -24,6 +30,64 @@ export class DripQuerierImpl implements DripQuerier {
   constructor(provider: AnchorProvider, private readonly network: Network) {
     const config = Configs[network];
     this.vaultProgram = new Program(DcaVaultIDL as Drip, config.vaultProgramId, provider);
+  }
+
+  async getAveragePrice(positionPubkey: Address, quoteToken: QuoteToken): Promise<Decimal> {
+    const [position] = await this.fetchVaultPositionAccounts(positionPubkey);
+    if (!position) {
+      throw new PositionDoesNotExistError(positionPubkey);
+    }
+
+    const [vault] = await this.fetchVaultAccounts(position.vault);
+    if (!vault) {
+      throw new VaultDoesNotExistError(position.vault);
+    }
+
+    const [positionStartPeriodId, positionCurrentPeriodId] = [
+      position.dcaPeriodIdBeforeDeposit,
+      BN.min(position.dcaPeriodIdBeforeDeposit.add(position.numberOfSwaps), vault.lastDcaPeriod),
+    ];
+
+    const [startPeriodPubkey, currentPeriodPubkey] = [
+      findVaultPeriodPubkey(this.vaultProgram.programId, {
+        vault: position.vault,
+        periodId: positionStartPeriodId,
+      }),
+      findVaultPeriodPubkey(this.vaultProgram.programId, {
+        vault: position.vault,
+        periodId: positionCurrentPeriodId,
+      }),
+    ];
+
+    const [startPeriod, currentPeriod] = await this.fetchVaultPeriodAccounts(
+      startPeriodPubkey,
+      currentPeriodPubkey
+    );
+
+    if (!startPeriod) {
+      throw new VaultPeriodDoesNotExistError(startPeriodPubkey);
+    }
+
+    if (!currentPeriod) {
+      throw new VaultPeriodDoesNotExistError(currentPeriodPubkey);
+    }
+
+    const [twapStartX64, twapCurrentX64] = [startPeriod.twap, currentPeriod.twap];
+
+    const averageBOverAPriceX64 = twapCurrentX64
+      .mul(positionCurrentPeriodId)
+      .sub(twapStartX64.mul(positionStartPeriodId))
+      .div(positionCurrentPeriodId.sub(positionStartPeriodId));
+
+    const averageBOverAPriceDecimalX64 = new Decimal(averageBOverAPriceX64.toString());
+    const averageBOverAPriceDecimal = averageBOverAPriceDecimalX64.div(new Decimal(2).pow(64));
+
+    switch (quoteToken) {
+      case QuoteToken.TokenB:
+        return averageBOverAPriceDecimal;
+      case QuoteToken.TokenA:
+        return new Decimal(1).div(averageBOverAPriceDecimal);
+    }
   }
 
   public async getAllVaults(): Promise<Record<string, Vault>> {

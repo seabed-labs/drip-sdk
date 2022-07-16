@@ -1,9 +1,11 @@
+import { Address } from '@project-serum/anchor';
 import { PublicKey } from '@solana/web3.js';
 
 export enum ErrorCode {
   VaultAlreadyExists = 1,
   VaultDoesNotExist,
   VaultPeriodAlreadyExists,
+  VaultPeriodDoesNotExist,
   PositionDoesNotExist,
 }
 
@@ -18,31 +20,39 @@ export abstract class DripError extends Error {
 export class VaultAlreadyExistsError extends DripError {
   public readonly code = ErrorCode.VaultAlreadyExists;
 
-  public constructor(vaultPubkey: PublicKey) {
-    super(`Vault ${vaultPubkey.toBase58()} already exists`);
+  public constructor(vaultPubkey: Address) {
+    super(`Vault ${vaultPubkey.toString()} already exists`);
   }
 }
 
 export class VaultDoesNotExistError extends DripError {
   public readonly code = ErrorCode.VaultDoesNotExist;
 
-  public constructor(vaultPubkey: PublicKey) {
-    super(`Vault ${vaultPubkey.toBase58()} does not exist`);
+  public constructor(vaultPubkey: Address) {
+    super(`Vault ${vaultPubkey.toString()} does not exist`);
   }
 }
 
 export class VaultPeriodAlreadyExistsError extends DripError {
   public readonly code = ErrorCode.VaultPeriodAlreadyExists;
 
-  public constructor(vaultPeriodPubkey: PublicKey) {
-    super(`Vault period ${vaultPeriodPubkey.toBase58()} already exists`);
+  public constructor(vaultPeriodPubkey: Address) {
+    super(`Vault period ${vaultPeriodPubkey.toString()} already exists`);
+  }
+}
+
+export class VaultPeriodDoesNotExistError extends DripError {
+  public readonly code = ErrorCode.VaultPeriodDoesNotExist;
+
+  public constructor(vaultPeriodPubkey: Address) {
+    super(`Vault period ${vaultPeriodPubkey.toString()} does not exist`);
   }
 }
 
 export class PositionDoesNotExistError extends DripError {
   public readonly code = ErrorCode.PositionDoesNotExist;
 
-  public constructor(positionPubkey: PublicKey) {
-    super(`Vault position ${positionPubkey.toBase58()} does not exist`);
+  public constructor(positionPubkey: Address) {
+    super(`Vault position ${positionPubkey.toString()} does not exist`);
   }
 }
