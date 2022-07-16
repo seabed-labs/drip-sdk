@@ -1,5 +1,6 @@
 import { Address } from '@project-serum/anchor';
-import { PublicKey } from '@solana/web3.js';
+import { PublicKey, TokenAmount } from '@solana/web3.js';
+import Decimal from 'decimal.js';
 import { VaultProtoConfig } from '../../config';
 import { Granularity } from '../drip-admin/params';
 import {
@@ -11,6 +12,11 @@ import {
   VaultProtoConfigAccount,
 } from './results';
 
+export enum QuoteToken {
+  TokenA,
+  TokenB,
+}
+
 export interface DripQuerier {
   getAllVaults(): Promise<Record<string, Vault>>;
   getAllPositions(user: Address): Promise<Record<string, VaultPositionAccount>>;
@@ -20,6 +26,7 @@ export interface DripQuerier {
     tokenA: Address,
     tokenB: Address
   ): Promise<VaultProtoConfig[]>;
+  getAveragePrice(position: Address, quoteToken: QuoteToken): Promise<Decimal>;
 
   fetchVaultProtoConfigAccounts(...pubkeys: Address[]): Promise<(VaultProtoConfigAccount | null)[]>;
   fetchVaultAccounts(...pubkeys: Address[]): Promise<(VaultAccount | null)[]>;
