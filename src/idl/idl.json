@@ -563,6 +563,62 @@
       }
     },
     {
+      "name": "VaultPeriod",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "vault",
+            "type": "publicKey"
+          },
+          {
+            "name": "periodId",
+            "type": "u64"
+          },
+          {
+            "name": "dar",
+            "type": "u64"
+          },
+          {
+            "name": "twap",
+            "type": "u128"
+          },
+          {
+            "name": "dcaTimestamp",
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "VaultProtoConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "granularity",
+            "type": "u64"
+          },
+          {
+            "name": "triggerDcaSpread",
+            "type": "u16"
+          },
+          {
+            "name": "baseWithdrawalSpread",
+            "type": "u16"
+          },
+          {
+            "name": "admin",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
       "name": "Vault",
       "type": {
         "kind": "struct",
@@ -594,7 +650,10 @@
           {
             "name": "whitelistedSwaps",
             "type": {
-              "array": ["publicKey", 5]
+              "array": [
+                "publicKey",
+                5
+              ]
             }
           },
           {
@@ -619,54 +678,6 @@
           }
         ]
       }
-    },
-    {
-      "name": "VaultPeriod",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "vault",
-            "type": "publicKey"
-          },
-          {
-            "name": "periodId",
-            "type": "u64"
-          },
-          {
-            "name": "dar",
-            "type": "u64"
-          },
-          {
-            "name": "twap",
-            "type": "u128"
-          },
-          {
-            "name": "bump",
-            "type": "u8"
-          }
-        ]
-      }
-    },
-    {
-      "name": "VaultProtoConfig",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "granularity",
-            "type": "u64"
-          },
-          {
-            "name": "triggerDcaSpread",
-            "type": "u16"
-          },
-          {
-            "name": "baseWithdrawalSpread",
-            "type": "u16"
-          }
-        ]
-      }
     }
   ],
   "types": [
@@ -682,20 +693,6 @@
           {
             "name": "dcaCycles",
             "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "InitializeVaultParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "whitelistedSwaps",
-            "type": {
-              "vec": "publicKey"
-            }
           }
         ]
       }
@@ -728,6 +725,24 @@
           {
             "name": "baseWithdrawalSpread",
             "type": "u16"
+          },
+          {
+            "name": "admin",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "InitializeVaultParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "whitelistedSwaps",
+            "type": {
+              "vec": "publicKey"
+            }
           }
         ]
       }

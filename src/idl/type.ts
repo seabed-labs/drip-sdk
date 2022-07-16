@@ -563,6 +563,62 @@ export type Drip = {
       };
     },
     {
+      name: 'vaultPeriod';
+      type: {
+        kind: 'struct';
+        fields: [
+          {
+            name: 'vault';
+            type: 'publicKey';
+          },
+          {
+            name: 'periodId';
+            type: 'u64';
+          },
+          {
+            name: 'dar';
+            type: 'u64';
+          },
+          {
+            name: 'twap';
+            type: 'u128';
+          },
+          {
+            name: 'dcaTimestamp';
+            type: 'i64';
+          },
+          {
+            name: 'bump';
+            type: 'u8';
+          }
+        ];
+      };
+    },
+    {
+      name: 'vaultProtoConfig';
+      type: {
+        kind: 'struct';
+        fields: [
+          {
+            name: 'granularity';
+            type: 'u64';
+          },
+          {
+            name: 'triggerDcaSpread';
+            type: 'u16';
+          },
+          {
+            name: 'baseWithdrawalSpread';
+            type: 'u16';
+          },
+          {
+            name: 'admin';
+            type: 'publicKey';
+          }
+        ];
+      };
+    },
+    {
       name: 'vault';
       type: {
         kind: 'struct';
@@ -619,54 +675,6 @@ export type Drip = {
           }
         ];
       };
-    },
-    {
-      name: 'vaultPeriod';
-      type: {
-        kind: 'struct';
-        fields: [
-          {
-            name: 'vault';
-            type: 'publicKey';
-          },
-          {
-            name: 'periodId';
-            type: 'u64';
-          },
-          {
-            name: 'dar';
-            type: 'u64';
-          },
-          {
-            name: 'twap';
-            type: 'u128';
-          },
-          {
-            name: 'bump';
-            type: 'u8';
-          }
-        ];
-      };
-    },
-    {
-      name: 'vaultProtoConfig';
-      type: {
-        kind: 'struct';
-        fields: [
-          {
-            name: 'granularity';
-            type: 'u64';
-          },
-          {
-            name: 'triggerDcaSpread';
-            type: 'u16';
-          },
-          {
-            name: 'baseWithdrawalSpread';
-            type: 'u16';
-          }
-        ];
-      };
     }
   ];
   types: [
@@ -682,20 +690,6 @@ export type Drip = {
           {
             name: 'dcaCycles';
             type: 'u64';
-          }
-        ];
-      };
-    },
-    {
-      name: 'InitializeVaultParams';
-      type: {
-        kind: 'struct';
-        fields: [
-          {
-            name: 'whitelistedSwaps';
-            type: {
-              vec: 'publicKey';
-            };
           }
         ];
       };
@@ -728,6 +722,24 @@ export type Drip = {
           {
             name: 'baseWithdrawalSpread';
             type: 'u16';
+          },
+          {
+            name: 'admin';
+            type: 'publicKey';
+          }
+        ];
+      };
+    },
+    {
+      name: 'InitializeVaultParams';
+      type: {
+        kind: 'struct';
+        fields: [
+          {
+            name: 'whitelistedSwaps';
+            type: {
+              vec: 'publicKey';
+            };
           }
         ];
       };
@@ -1411,6 +1423,62 @@ export const IDL: Drip = {
       },
     },
     {
+      name: 'vaultPeriod',
+      type: {
+        kind: 'struct',
+        fields: [
+          {
+            name: 'vault',
+            type: 'publicKey',
+          },
+          {
+            name: 'periodId',
+            type: 'u64',
+          },
+          {
+            name: 'dar',
+            type: 'u64',
+          },
+          {
+            name: 'twap',
+            type: 'u128',
+          },
+          {
+            name: 'dcaTimestamp',
+            type: 'i64',
+          },
+          {
+            name: 'bump',
+            type: 'u8',
+          },
+        ],
+      },
+    },
+    {
+      name: 'vaultProtoConfig',
+      type: {
+        kind: 'struct',
+        fields: [
+          {
+            name: 'granularity',
+            type: 'u64',
+          },
+          {
+            name: 'triggerDcaSpread',
+            type: 'u16',
+          },
+          {
+            name: 'baseWithdrawalSpread',
+            type: 'u16',
+          },
+          {
+            name: 'admin',
+            type: 'publicKey',
+          },
+        ],
+      },
+    },
+    {
       name: 'vault',
       type: {
         kind: 'struct',
@@ -1468,54 +1536,6 @@ export const IDL: Drip = {
         ],
       },
     },
-    {
-      name: 'vaultPeriod',
-      type: {
-        kind: 'struct',
-        fields: [
-          {
-            name: 'vault',
-            type: 'publicKey',
-          },
-          {
-            name: 'periodId',
-            type: 'u64',
-          },
-          {
-            name: 'dar',
-            type: 'u64',
-          },
-          {
-            name: 'twap',
-            type: 'u128',
-          },
-          {
-            name: 'bump',
-            type: 'u8',
-          },
-        ],
-      },
-    },
-    {
-      name: 'vaultProtoConfig',
-      type: {
-        kind: 'struct',
-        fields: [
-          {
-            name: 'granularity',
-            type: 'u64',
-          },
-          {
-            name: 'triggerDcaSpread',
-            type: 'u16',
-          },
-          {
-            name: 'baseWithdrawalSpread',
-            type: 'u16',
-          },
-        ],
-      },
-    },
   ],
   types: [
     {
@@ -1530,20 +1550,6 @@ export const IDL: Drip = {
           {
             name: 'dcaCycles',
             type: 'u64',
-          },
-        ],
-      },
-    },
-    {
-      name: 'InitializeVaultParams',
-      type: {
-        kind: 'struct',
-        fields: [
-          {
-            name: 'whitelistedSwaps',
-            type: {
-              vec: 'publicKey',
-            },
           },
         ],
       },
@@ -1576,6 +1582,24 @@ export const IDL: Drip = {
           {
             name: 'baseWithdrawalSpread',
             type: 'u16',
+          },
+          {
+            name: 'admin',
+            type: 'publicKey',
+          },
+        ],
+      },
+    },
+    {
+      name: 'InitializeVaultParams',
+      type: {
+        kind: 'struct',
+        fields: [
+          {
+            name: 'whitelistedSwaps',
+            type: {
+              vec: 'publicKey',
+            },
           },
         ],
       },
