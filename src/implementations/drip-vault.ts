@@ -3,7 +3,7 @@ import { Configs } from '../config';
 import { Drip } from '../idl/type';
 import { DripVault } from '../interfaces';
 import { Network } from '../models';
-import DcaVaultIDL from '../idl/idl.json';
+import DripIDL from '../idl/idl.json';
 import {
   Keypair,
   PublicKey,
@@ -14,8 +14,8 @@ import {
 import {
   DepositParams,
   InitVaultPeriodParams,
-  isDcaCyclesParam,
-  expiryToDcaCycles,
+  isDripCyclesParam,
+  expiryToNumberOfSwaps,
 } from '../interfaces/drip-vault/params';
 import { DepositPreview, isDepositPreview } from '../interfaces/drip-vault/previews';
 import { toPubkey } from '../utils';
@@ -44,7 +44,7 @@ export class DripVaultImpl implements DripVault {
     vaultPubkey: Address
   ) {
     const config = Configs[network];
-    this.vaultProgram = new Program(DcaVaultIDL as Drip, config.vaultProgramId, provider);
+    this.vaultProgram = new Program(DripIDL as unknown as Drip, config.vaultProgramId, provider);
     this.vaultPubkey = toPubkey(vaultPubkey);
   }
 
@@ -55,7 +55,7 @@ export class DripVaultImpl implements DripVault {
   ): Promise<DripVaultImpl> {
     const vaultPubkey = findVaultPubkey(Configs[network].vaultProgramId, vaultSeeds);
     const config = Configs[network];
-    const vaultProgram = new Program(DcaVaultIDL as Drip, config.vaultProgramId, provider);
+    const vaultProgram = new Program(DripIDL as unknown as Drip, config.vaultProgramId, provider);
 
     const vault = await vaultProgram.account.vault.fetchNullable(vaultPubkey);
     if (!vault) {
@@ -71,7 +71,7 @@ export class DripVaultImpl implements DripVault {
     network: Network
   ): Promise<DripVaultImpl> {
     const config = Configs[network];
-    const vaultProgram = new Program(DcaVaultIDL as Drip, config.vaultProgramId, provider);
+    const vaultProgram = new Program(DripIDL as unknown as Drip, config.vaultProgramId, provider);
 
     const vault = await vaultProgram.account.vault.fetchNullable(vaultPubkey);
     if (!vault) {
@@ -87,17 +87,17 @@ export class DripVaultImpl implements DripVault {
       vault.protoConfig
     );
 
-    const dcaCycles = isDcaCyclesParam(params.dcaParams)
-      ? params.dcaParams.dcaCycles
-      : expiryToDcaCycles(params.dcaParams.expiry, vaultProtoConfig.granularity.toNumber());
+    const numberOfSwaps = isDripCyclesParam(params.dripParams)
+      ? params.dripParams.numberOfSwaps
+      : expiryToNumberOfSwaps(params.dripParams.expiry, vaultProtoConfig.granularity.toNumber());
 
-    const dripAmount = params.amount.divn(dcaCycles);
+    const dripAmount = params.amount.divn(numberOfSwaps);
 
     return {
       vault: this.vaultPubkey,
       amount: params.amount,
       dripAmount,
-      dcaCycles,
+      numberOfSwaps,
     };
   }
 
@@ -111,8 +111,8 @@ export class DripVaultImpl implements DripVault {
       throw new VaultDoesNotExistError(toPubkey(preview.vault));
     }
 
-    const currentPeriodId = vault.lastDcaPeriod;
-    const depositExpiryPeriodId = vault.lastDcaPeriod.addn(preview.dcaCycles);
+    const currentPeriodId = vault.lastDripPeriod;
+    const depositExpiryPeriodId = vault.lastDripPeriod.addn(preview.numberOfSwaps);
 
     const currentPeriodPubkey = findVaultPeriodPubkey(this.vaultProgram.programId, {
       vault: preview.vault,
@@ -186,7 +186,7 @@ export class DripVaultImpl implements DripVault {
     const depositIx = await this.vaultProgram.methods
       .deposit({
         tokenADepositAmount: preview.amount,
-        dcaCycles: new BN(preview.dcaCycles),
+        numberOfSwaps: new BN(preview.numberOfSwaps),
       })
       .accounts({
         vault: this.vaultPubkey,

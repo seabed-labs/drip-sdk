@@ -2,23 +2,23 @@ import { Address } from '@project-serum/anchor';
 import BN from 'bn.js';
 import { Granularity } from '../drip-admin/params';
 
-export interface DCAParamsCycles {
-  dcaCycles: number;
+export interface DripParamsNumberOfSwaps {
+  numberOfSwaps: number;
 }
 
-export interface DCAParamsTime {
+export interface DripParamsTime {
   expiry: Date;
 }
 
-export function isDcaCyclesParam(obj: any): obj is DCAParamsCycles {
-  return obj.dcaCycles != null;
+export function isDripCyclesParam(obj: any): obj is DripParamsNumberOfSwaps {
+  return obj.numberOfSwaps != null;
 }
 
-export function isDcaTimeParam(obj: any): obj is DCAParamsTime {
+export function isDripTimeParam(obj: any): obj is DripParamsTime {
   return obj.expiry != null;
 }
 
-export function expiryToDcaCycles(expiry: Date, granularity: Granularity): number {
+export function expiryToNumberOfSwaps(expiry: Date, granularity: Granularity): number {
   const nowInSeconds = new Date().getTime() / 1e3;
   const expirySeconds = expiry.getTime() / 1e3;
   const delta = expirySeconds - nowInSeconds;
@@ -28,7 +28,7 @@ export function expiryToDcaCycles(expiry: Date, granularity: Granularity): numbe
 
 export interface DepositParams {
   amount: BN;
-  dcaParams: DCAParamsCycles | DCAParamsTime;
+  dripParams: DripParamsNumberOfSwaps | DripParamsTime;
 }
 
 export interface InitVaultPeriodParams {

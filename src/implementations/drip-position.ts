@@ -11,7 +11,7 @@ import { Configs } from '../config';
 import { Drip } from '../idl/type';
 import { DripPosition } from '../interfaces';
 import { Network } from '../models';
-import DcaVaultIDL from '../idl/idl.json';
+import DripIDL from '../idl/idl.json';
 import { toPubkey } from '../utils';
 import {
   calculateWithdrawTokenAAmount,
@@ -39,7 +39,7 @@ export class DripPositionImpl implements DripPosition {
     positionPubkey: Address
   ) {
     const config = Configs[network];
-    this.vaultProgram = new Program(DcaVaultIDL as Drip, config.vaultProgramId, provider);
+    this.vaultProgram = new Program(DripIDL as unknown as Drip, config.vaultProgramId, provider);
     this.positionPubkey = toPubkey(positionPubkey);
   }
 
@@ -49,7 +49,7 @@ export class DripPositionImpl implements DripPosition {
     network: Network
   ): Promise<DripPositionImpl> {
     const config = Configs[network];
-    const vaultProgram = new Program(DcaVaultIDL as Drip, config.vaultProgramId, provider);
+    const vaultProgram = new Program(DripIDL as unknown as Drip, config.vaultProgramId, provider);
 
     const position = await vaultProgram.account.position.fetchNullable(positionPubkey);
     if (!position) {
@@ -75,17 +75,17 @@ export class DripPositionImpl implements DripPosition {
 
   public async getWithdrawBPreview(): Promise<WithdrawBPreview> {
     const position = await this.vaultProgram.account.position.fetch(this.positionPubkey);
-    const dcaStartPeriodId = position.dcaPeriodIdBeforeDeposit;
-    const dcaEndPeriodId = position.dcaPeriodIdBeforeDeposit.add(position.numberOfSwaps);
+    const dripStartPeriodId = position.dripPeriodIdBeforeDeposit;
+    const dripEndPeriodId = position.dripPeriodIdBeforeDeposit.add(position.numberOfSwaps);
 
     const vault = await this.vaultProgram.account.vault.fetch(position.vault);
     const vaultProtoConfig = await this.vaultProgram.account.vaultProtoConfig.fetch(
       vault.protoConfig
     );
-    const currentVaultPeriodId = vault.lastDcaPeriod;
+    const currentVaultPeriodId = vault.lastDripPeriod;
 
-    const periodIdI = dcaStartPeriodId;
-    const periodIdJ = BN.min(dcaEndPeriodId, currentVaultPeriodId);
+    const periodIdI = dripStartPeriodId;
+    const periodIdJ = BN.min(dripEndPeriodId, currentVaultPeriodId);
 
     const periodIdIPubkey = findVaultPeriodPubkey(this.vaultProgram.programId, {
       vault: position.vault,
@@ -108,7 +108,7 @@ export class DripPositionImpl implements DripPosition {
       periodI.twap,
       periodJ.twap,
       position.periodicDripAmount,
-      new BN(vaultProtoConfig.triggerDcaSpread)
+      new BN(vaultProtoConfig.tokenADripTriggerSpread)
     );
 
     const withdrawableTokenBAmountBeforeFees = maxWithdrawableTokenBAmount.sub(
@@ -116,7 +116,7 @@ export class DripPositionImpl implements DripPosition {
     );
 
     const withdrawalFees = withdrawableTokenBAmountBeforeFees
-      .muln(vaultProtoConfig.baseWithdrawalSpread)
+      .muln(vaultProtoConfig.tokenBWithdrawalSpread)
       .divn(1e4);
 
     const withdrawableTokenBAmount = withdrawableTokenBAmountBeforeFees.sub(withdrawalFees);
@@ -139,14 +139,14 @@ export class DripPositionImpl implements DripPosition {
     TransactionWithMetadata<{ withdrawnToTokenAccount: PublicKey }>
   > {
     const position = await this.vaultProgram.account.position.fetch(this.positionPubkey);
-    const dcaStartPeriodId = position.dcaPeriodIdBeforeDeposit;
-    const dcaEndPeriodId = position.dcaPeriodIdBeforeDeposit.add(position.numberOfSwaps);
+    const dripStartPeriodId = position.dripPeriodIdBeforeDeposit;
+    const dripEndPeriodId = position.dripPeriodIdBeforeDeposit.add(position.numberOfSwaps);
 
     const vault = await this.vaultProgram.account.vault.fetch(position.vault);
-    const currentVaultPeriodId = vault.lastDcaPeriod;
+    const currentVaultPeriodId = vault.lastDripPeriod;
 
-    const periodIdI = dcaStartPeriodId;
-    const periodIdJ = BN.min(dcaEndPeriodId, currentVaultPeriodId);
+    const periodIdI = dripStartPeriodId;
+    const periodIdJ = BN.min(dripEndPeriodId, currentVaultPeriodId);
 
     const periodIdIPubkey = findVaultPeriodPubkey(this.vaultProgram.programId, {
       vault: position.vault,
@@ -248,14 +248,14 @@ export class DripPositionImpl implements DripPosition {
   async getClosePositionPreview(): Promise<ClosePositionPreview> {
     const withdrawBPreview = await this.getWithdrawBPreview();
     const position = await this.vaultProgram.account.position.fetch(this.positionPubkey);
-    const dcaStartPeriodId = position.dcaPeriodIdBeforeDeposit;
-    const dcaEndPeriodId = position.dcaPeriodIdBeforeDeposit.add(position.numberOfSwaps);
+    const dripStartPeriodId = position.dripPeriodIdBeforeDeposit;
+    const dripEndPeriodId = position.dripPeriodIdBeforeDeposit.add(position.numberOfSwaps);
 
     const vault = await this.vaultProgram.account.vault.fetch(position.vault);
-    const currentVaultPeriodId = vault.lastDcaPeriod;
+    const currentVaultPeriodId = vault.lastDripPeriod;
 
-    const periodIdI = dcaStartPeriodId;
-    const periodIdJ = BN.min(dcaEndPeriodId, currentVaultPeriodId);
+    const periodIdI = dripStartPeriodId;
+    const periodIdJ = BN.min(dripEndPeriodId, currentVaultPeriodId);
 
     const withdrawableTokenAAmount = calculateWithdrawTokenAAmount(
       periodIdI,
@@ -282,15 +282,15 @@ export class DripPositionImpl implements DripPosition {
 
   async getClosePositionTx(): Promise<Transaction> {
     const position = await this.vaultProgram.account.position.fetch(this.positionPubkey);
-    const dcaStartPeriodId = position.dcaPeriodIdBeforeDeposit;
-    const dcaEndPeriodId = position.dcaPeriodIdBeforeDeposit.add(position.numberOfSwaps);
+    const dripStartPeriodId = position.dripPeriodIdBeforeDeposit;
+    const dripEndPeriodId = position.dripPeriodIdBeforeDeposit.add(position.numberOfSwaps);
 
     const vault = await this.vaultProgram.account.vault.fetch(position.vault);
-    const currentVaultPeriodId = vault.lastDcaPeriod;
+    const currentVaultPeriodId = vault.lastDripPeriod;
 
-    const periodIdI = dcaStartPeriodId;
-    const periodIdJ = BN.min(dcaEndPeriodId, currentVaultPeriodId);
-    const periodIdK = dcaEndPeriodId;
+    const periodIdI = dripStartPeriodId;
+    const periodIdJ = BN.min(dripEndPeriodId, currentVaultPeriodId);
+    const periodIdK = dripEndPeriodId;
 
     const periodIdIPubkey = findVaultPeriodPubkey(this.vaultProgram.programId, {
       vault: position.vault,

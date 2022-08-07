@@ -402,10 +402,10 @@ export type Drip = {
       args: [];
     },
     {
-      name: 'triggerDca';
+      name: 'dripSplTokenSwap';
       accounts: [
         {
-          name: 'dcaTriggerSource';
+          name: 'dripTriggerSource';
           isMut: false;
           isSigner: true;
         },
@@ -470,7 +470,7 @@ export type Drip = {
           isSigner: false;
         },
         {
-          name: 'dcaTriggerFeeTokenAAccount';
+          name: 'dripFeeTokenAAccount';
           isMut: true;
           isSigner: false;
         },
@@ -511,6 +511,122 @@ export type Drip = {
         }
       ];
       args: [];
+    },
+    {
+      name: 'dripOrcaWhirlpool';
+      accounts: [
+        {
+          name: 'dripTriggerSource';
+          isMut: false;
+          isSigner: true;
+        },
+        {
+          name: 'vault';
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: 'vaultProtoConfig';
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: 'lastVaultPeriod';
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: 'currentVaultPeriod';
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: 'tokenAMint';
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: 'tokenBMint';
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: 'vaultTokenAAccount';
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: 'vaultTokenBAccount';
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: 'swapTokenAAccount';
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: 'swapTokenBAccount';
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: 'dripFeeTokenAAccount';
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: 'tokenProgram';
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: 'associatedTokenProgram';
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: 'whirlpoolProgram';
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: 'systemProgram';
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: 'rent';
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: 'whirlpool';
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: 'tickArray0';
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: 'tickArray1';
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: 'tickArray2';
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: 'oracle';
+          isMut: false;
+          isSigner: false;
+        }
+      ];
+      args: [];
     }
   ];
   accounts: [
@@ -540,7 +656,7 @@ export type Drip = {
             type: 'i64';
           },
           {
-            name: 'dcaPeriodIdBeforeDeposit';
+            name: 'dripPeriodIdBeforeDeposit';
             type: 'u64';
           },
           {
@@ -584,7 +700,7 @@ export type Drip = {
             type: 'u128';
           },
           {
-            name: 'dcaTimestamp';
+            name: 'dripTimestamp';
             type: 'i64';
           },
           {
@@ -604,11 +720,11 @@ export type Drip = {
             type: 'u64';
           },
           {
-            name: 'triggerDcaSpread';
+            name: 'tokenADripTriggerSpread';
             type: 'u16';
           },
           {
-            name: 'baseWithdrawalSpread';
+            name: 'tokenBWithdrawalSpread';
             type: 'u16';
           },
           {
@@ -654,7 +770,7 @@ export type Drip = {
             };
           },
           {
-            name: 'lastDcaPeriod';
+            name: 'lastDripPeriod';
             type: 'u64';
           },
           {
@@ -662,7 +778,7 @@ export type Drip = {
             type: 'u64';
           },
           {
-            name: 'dcaActivationTimestamp';
+            name: 'dripActivationTimestamp';
             type: 'i64';
           },
           {
@@ -688,7 +804,7 @@ export type Drip = {
             type: 'u64';
           },
           {
-            name: 'dcaCycles';
+            name: 'numberOfSwaps';
             type: 'u64';
           }
         ];
@@ -716,11 +832,11 @@ export type Drip = {
             type: 'u64';
           },
           {
-            name: 'triggerDcaSpread';
+            name: 'tokenADripTriggerSpread';
             type: 'u16';
           },
           {
-            name: 'baseWithdrawalSpread';
+            name: 'tokenBWithdrawalSpread';
             type: 'u16';
           },
           {
@@ -782,8 +898,8 @@ export type Drip = {
     },
     {
       code: 6003;
-      name: 'DuplicateDCAError';
-      msg: 'DCA already triggered for the current period';
+      name: 'DuplicateDripError';
+      msg: 'Drip already triggered for the current period';
     },
     {
       code: 6004;
@@ -1262,10 +1378,10 @@ export const IDL: Drip = {
       args: [],
     },
     {
-      name: 'triggerDca',
+      name: 'dripSplTokenSwap',
       accounts: [
         {
-          name: 'dcaTriggerSource',
+          name: 'dripTriggerSource',
           isMut: false,
           isSigner: true,
         },
@@ -1330,7 +1446,7 @@ export const IDL: Drip = {
           isSigner: false,
         },
         {
-          name: 'dcaTriggerFeeTokenAAccount',
+          name: 'dripFeeTokenAAccount',
           isMut: true,
           isSigner: false,
         },
@@ -1372,6 +1488,122 @@ export const IDL: Drip = {
       ],
       args: [],
     },
+    {
+      name: 'dripOrcaWhirlpool',
+      accounts: [
+        {
+          name: 'dripTriggerSource',
+          isMut: false,
+          isSigner: true,
+        },
+        {
+          name: 'vault',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'vaultProtoConfig',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'lastVaultPeriod',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'currentVaultPeriod',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'tokenAMint',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'tokenBMint',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'vaultTokenAAccount',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'vaultTokenBAccount',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'swapTokenAAccount',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'swapTokenBAccount',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'dripFeeTokenAAccount',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'tokenProgram',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'associatedTokenProgram',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'whirlpoolProgram',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'systemProgram',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'rent',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'whirlpool',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'tickArray0',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'tickArray1',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'tickArray2',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'oracle',
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [],
+    },
   ],
   accounts: [
     {
@@ -1400,7 +1632,7 @@ export const IDL: Drip = {
             type: 'i64',
           },
           {
-            name: 'dcaPeriodIdBeforeDeposit',
+            name: 'dripPeriodIdBeforeDeposit',
             type: 'u64',
           },
           {
@@ -1444,7 +1676,7 @@ export const IDL: Drip = {
             type: 'u128',
           },
           {
-            name: 'dcaTimestamp',
+            name: 'dripTimestamp',
             type: 'i64',
           },
           {
@@ -1464,11 +1696,11 @@ export const IDL: Drip = {
             type: 'u64',
           },
           {
-            name: 'triggerDcaSpread',
+            name: 'tokenADripTriggerSpread',
             type: 'u16',
           },
           {
-            name: 'baseWithdrawalSpread',
+            name: 'tokenBWithdrawalSpread',
             type: 'u16',
           },
           {
@@ -1514,7 +1746,7 @@ export const IDL: Drip = {
             },
           },
           {
-            name: 'lastDcaPeriod',
+            name: 'lastDripPeriod',
             type: 'u64',
           },
           {
@@ -1522,7 +1754,7 @@ export const IDL: Drip = {
             type: 'u64',
           },
           {
-            name: 'dcaActivationTimestamp',
+            name: 'dripActivationTimestamp',
             type: 'i64',
           },
           {
@@ -1548,7 +1780,7 @@ export const IDL: Drip = {
             type: 'u64',
           },
           {
-            name: 'dcaCycles',
+            name: 'numberOfSwaps',
             type: 'u64',
           },
         ],
@@ -1576,11 +1808,11 @@ export const IDL: Drip = {
             type: 'u64',
           },
           {
-            name: 'triggerDcaSpread',
+            name: 'tokenADripTriggerSpread',
             type: 'u16',
           },
           {
-            name: 'baseWithdrawalSpread',
+            name: 'tokenBWithdrawalSpread',
             type: 'u16',
           },
           {
@@ -1642,8 +1874,8 @@ export const IDL: Drip = {
     },
     {
       code: 6003,
-      name: 'DuplicateDCAError',
-      msg: 'DCA already triggered for the current period',
+      name: 'DuplicateDripError',
+      msg: 'Drip already triggered for the current period',
     },
     {
       code: 6004,

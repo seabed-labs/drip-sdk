@@ -4,9 +4,9 @@ export interface DepositPreview {
   vault: Address;
   amount: BN;
   dripAmount: BN;
-  dcaCycles: number;
+  numberOfSwaps: number;
 }
 
 export function isDepositPreview(obj: any): obj is DepositPreview {
-  return Boolean(obj.dcaCycles);
+  return Boolean(obj.numberOfSwaps);
 }
