@@ -22,7 +22,7 @@ export function calculateWithdrawTokenBAmount(
   twapIX64: BN,
   twapJX64: BN,
   periodicDripAmount: BN,
-  triggerDcaSpread: BN
+  tokenADripTriggerSpread: BN
 ): BN {
   if (i.eq(j)) {
     return ZERO;
@@ -35,7 +35,7 @@ export function calculateWithdrawTokenBAmount(
   const drippedSoFar = periodicDripAmount.mul(j.sub(i));
 
   // calculate fees (already charged by now during each drip)
-  const feesAmount = drippedSoFar.mul(triggerDcaSpread).divn(1e4);
+  const feesAmount = drippedSoFar.mul(tokenADripTriggerSpread).divn(1e4);
 
   // subtract fees
   const drippedSoFarAfterFees = drippedSoFar.sub(feesAmount);

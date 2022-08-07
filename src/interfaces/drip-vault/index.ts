@@ -6,7 +6,7 @@ import { BroadcastTransactionWithMetadata, TransactionWithMetadata } from '../..
 export * from './params';
 export * from './previews';
 
-// TODO: Currently we don't support trigger DCA through this interface. Add support for it later.
+// TODO: Currently we don't support dripXXX through this interface. Add support for it later.
 export interface DripVault {
   getDepositPreview(params: DepositParams): Promise<DepositPreview>;
   // Might need to return an abstraction that holds multiple TXs if TX is too big

@@ -1,9 +1,9 @@
 import { Address, Program, AnchorProvider, BN } from '@project-serum/anchor';
-import { PublicKey, TokenAmount } from '@solana/web3.js';
+import { PublicKey } from '@solana/web3.js';
 import { Configs } from '../config';
 import { Vault, Token, VaultProtoConfig } from '../config/types';
 import { Drip } from '../idl/type';
-import DcaVaultIDL from '../idl/idl.json';
+import DripIDL from '../idl/idl.json';
 import { DripQuerier, QuoteToken } from '../interfaces';
 import {
   VaultAccount,
@@ -14,9 +14,7 @@ import {
 import { Network } from '../models';
 import { toPubkey } from '../utils';
 import { getMint, TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { ONE } from '../constants';
 import { findVaultPeriodPubkey, findVaultPositionPubkey } from '../helpers';
-import { Granularity } from '../interfaces/drip-admin/params';
 import {
   PositionDoesNotExistError,
   VaultDoesNotExistError,
@@ -30,7 +28,7 @@ export class DripQuerierImpl implements DripQuerier {
 
   constructor(provider: AnchorProvider, private readonly network: Network) {
     const config = Configs[network];
-    this.vaultProgram = new Program(DcaVaultIDL as Drip, config.vaultProgramId, provider);
+    this.vaultProgram = new Program(DripIDL as unknown as Drip, config.vaultProgramId, provider);
   }
 
   async getAveragePrice(positionPubkey: Address, quoteToken: QuoteToken): Promise<Decimal> {
@@ -50,8 +48,8 @@ export class DripQuerierImpl implements DripQuerier {
     }
 
     const [positionStartPeriodId, positionCurrentPeriodId] = [
-      position.dcaPeriodIdBeforeDeposit,
-      BN.min(position.dcaPeriodIdBeforeDeposit.add(position.numberOfSwaps), vault.lastDcaPeriod),
+      position.dripPeriodIdBeforeDeposit,
+      BN.min(position.dripPeriodIdBeforeDeposit.add(position.numberOfSwaps), vault.lastDripPeriod),
     ];
 
     const [startPeriodPubkey, currentPeriodPubkey] = [
@@ -96,11 +94,11 @@ export class DripQuerierImpl implements DripQuerier {
       .mul(new Decimal(10).pow(tokenA.decimals))
       .div(new Decimal(10).pow(tokenB.decimals));
 
-    const dcaSpreadA = vaultProtoConfig.triggerDcaSpread;
-    const withdrawSpreadB = vaultProtoConfig.baseWithdrawalSpread;
+    const dripSpreadA = vaultProtoConfig.tokenADripTriggerSpread;
+    const withdrawSpreadB = vaultProtoConfig.tokenBWithdrawalSpread;
     const oneE4 = new Decimal(1e4);
 
-    const priceMultiplierNumerator = oneE4.sub(dcaSpreadA).mul(oneE4.sub(withdrawSpreadB));
+    const priceMultiplierNumerator = oneE4.sub(dripSpreadA).mul(oneE4.sub(withdrawSpreadB));
     const priceMultiplierDenominator = oneE4.mul(oneE4);
 
     switch (quoteToken) {

@@ -8,7 +8,7 @@ import {
 } from '@solana/web3.js';
 import { Configs } from '../config';
 import { Drip } from '../idl/type';
-import DcaVaultIDL from '../idl/idl.json';
+import DripIDL from '../idl/idl.json';
 import { DripAdmin } from '../interfaces';
 import { InitVaultProtoConfigParams, InitVaultParams } from '../interfaces/drip-admin/params';
 import { Network } from '../models';
@@ -37,7 +37,7 @@ export class DripAdminImpl implements DripAdmin {
   // We should also decouple anchor from this to make it an actual SDK
   constructor(private readonly provider: AnchorProvider, private readonly network: Network) {
     const config = Configs[network];
-    this.vaultProgram = new Program(DcaVaultIDL as Drip, config.vaultProgramId, provider);
+    this.vaultProgram = new Program(DripIDL as unknown as Drip, config.vaultProgramId, provider);
   }
 
   public getInitVaultProtoConfigPreview(
@@ -54,7 +54,7 @@ export class DripAdminImpl implements DripAdmin {
   public async getInitVaultProtoConfigTx(
     params: InitVaultProtoConfigParams | InitVaultProtoConfigPreview
   ): Promise<TransactionWithMetadata<{ vaultProtoConfigKeypair: Keypair }>> {
-    const { granularity, triggerDcaSpread, baseWithdrawalSpread } = params;
+    const { granularity, tokenADripTriggerSpread, tokenBWithdrawalSpread } = params;
     const vaultProtoConfigKeypair = isInitVaultProtoConfigPreview(params)
       ? params.vaultProtoConfigKeypair
       : Keypair.generate();
@@ -62,8 +62,8 @@ export class DripAdminImpl implements DripAdmin {
     const tx = await this.vaultProgram.methods
       .initVaultProtoConfig({
         granularity: new BN(granularity.toString()),
-        triggerDcaSpread,
-        baseWithdrawalSpread,
+        tokenADripTriggerSpread,
+        tokenBWithdrawalSpread,
         admin: toPubkey(params.admin),
       })
       .accounts({

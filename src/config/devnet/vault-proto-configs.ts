@@ -2,12 +2,16 @@ import { PublicKey } from '@solana/web3.js';
 import { VaultProtoConfig } from '../types';
 
 export const vaultProtoConfigs: Record<string, VaultProtoConfig> = {
-  '22FnWdXzQ1tTrvjFaZ2S7Qs3RmGHbZtEr7jVjWFebrrv': {
-    pubkey: new PublicKey('22FnWdXzQ1tTrvjFaZ2S7Qs3RmGHbZtEr7jVjWFebrrv'),
+  HWtY2TzvkuMX8vXPzEivs27Ao1SvZz2qWsyY8dhGk4dY: {
+    pubkey: new PublicKey('HWtY2TzvkuMX8vXPzEivs27Ao1SvZz2qWsyY8dhGk4dY'),
     granularity: 60,
   },
-  J6wYVgtJek7ady5wzvtZF6ivF26YqMHtxbTXfzSPZGFp: {
-    pubkey: new PublicKey('J6wYVgtJek7ady5wzvtZF6ivF26YqMHtxbTXfzSPZGFp'),
+  '3pHuZFxyDYoG7WzKouWvuuSqE5KidNy2tdf2f9Z2VZby': {
+    pubkey: new PublicKey('3pHuZFxyDYoG7WzKouWvuuSqE5KidNy2tdf2f9Z2VZby'),
     granularity: 3600,
+  },
+  '2f3eTcDyph3S2DbQpdCVEHSba3iugZkWZUHPukTiJ6Aa': {
+    pubkey: new PublicKey('2f3eTcDyph3S2DbQpdCVEHSba3iugZkWZUHPukTiJ6Aa'),
+    granularity: 86400,
   },
 };

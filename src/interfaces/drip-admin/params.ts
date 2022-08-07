@@ -12,17 +12,17 @@ export enum Granularity {
 
 export interface InitVaultProtoConfigParams {
   /**
-   * DCA granularity in seconds
+   * Drip granularity in seconds
    */
   granularity: Granularity | BN;
   /**
-   * Trigger DCA spread in basis points
+   * Drip Trigger spread in basis points
    */
-  triggerDcaSpread: number;
+  tokenADripTriggerSpread: number;
   /**
    * Withdrawal spread in basis points
    */
-  baseWithdrawalSpread: number;
+  tokenBWithdrawalSpread: number;
   /**
    * Vault Admin
    */

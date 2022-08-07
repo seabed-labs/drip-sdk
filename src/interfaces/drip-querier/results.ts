@@ -3,8 +3,9 @@ import BN from 'bn.js';
 
 export interface VaultProtoConfigAccount {
   granularity: BN;
-  triggerDcaSpread: number;
-  baseWithdrawalSpread: number;
+  tokenADripTriggerSpread: number;
+  tokenBWithdrawalSpread: number;
+  admin: PublicKey;
 }
 
 export interface VaultAccount {
@@ -14,10 +15,11 @@ export interface VaultAccount {
   tokenAAccount: PublicKey;
   tokenBAccount: PublicKey;
   treasuryTokenBAccount: PublicKey;
-  lastDcaPeriod: BN;
+  lastDripPeriod: BN;
   dripAmount: BN;
-  dcaActivationTimestamp: BN;
+  dripActivationTimestamp: BN;
   bump: number;
+  whitelistedSwaps: PublicKey[];
 }
 
 export interface VaultPeriodAccount {
@@ -26,15 +28,16 @@ export interface VaultPeriodAccount {
   twap: BN;
   dar: BN;
   bump: number;
+  dripTimestamp: number;
 }
 
 export interface VaultPositionAccount {
+  vault: PublicKey;
   positionAuthority: PublicKey;
   depositedTokenAAmount: BN;
   withdrawnTokenBAmount: BN;
-  vault: PublicKey;
   depositTimestamp: BN;
-  dcaPeriodIdBeforeDeposit: BN;
+  dripPeriodIdBeforeDeposit: BN;
   numberOfSwaps: BN;
   periodicDripAmount: BN;
   isClosed: boolean;
