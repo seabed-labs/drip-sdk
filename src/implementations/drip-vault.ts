@@ -25,7 +25,12 @@ import {
   isSol,
   toPubkey,
 } from '../utils';
-import { findVaultPeriodPubkey, findVaultPositionPubkey, findVaultPubkey } from '../helpers';
+import {
+  findMPLTokenMetadataAccount,
+  findVaultPeriodPubkey,
+  findVaultPositionPubkey,
+  findVaultPubkey,
+} from '../helpers';
 import { VaultDoesNotExistError, VaultPeriodAlreadyExistsError } from '../errors';
 import { BroadcastTransactionWithMetadata, TransactionWithMetadata } from '../types';
 import {
@@ -36,6 +41,7 @@ import {
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 import { makeExplorerUrl } from '../utils/transaction';
+import { MPL_TOKEN_METADATA_PROGRAM } from '../utils/constants';
 
 export class DripVaultImpl implements DripVault {
   private readonly vaultProgram: Program<Drip>;
@@ -107,9 +113,20 @@ export class DripVaultImpl implements DripVault {
     };
   }
 
-  public async getDepositTx(
-    params: DepositParams | DepositPreview
-  ): Promise<TransactionWithMetadata<{ positionNftMint: Keypair; position: PublicKey }>> {
+  private async getDepositCommon(params: DepositParams | DepositPreview): Promise<{
+    tokenADepositAmount: BN;
+    numberOfSwaps: BN;
+    vaultPeriodEnd: PublicKey;
+    userPosition: PublicKey;
+    tokenAMint: PublicKey;
+    userPositionNftMint: PublicKey;
+    vaultTokenAAccount: PublicKey;
+    userTokenAAccount: PublicKey;
+    userPositionNftAccount: PublicKey;
+    positionNftMint: Keypair;
+    position: PublicKey;
+    tx: Transaction;
+  }> {
     const preview = isDepositPreview(params) ? params : await this.getDepositPreview(params);
     const vault = await this.vaultProgram.account.vault.fetchNullable(preview.vault);
 
@@ -203,18 +220,51 @@ export class DripVaultImpl implements DripVault {
       )
     );
 
+    return {
+      tokenADepositAmount: preview.amount,
+      numberOfSwaps: new BN(preview.numberOfSwaps),
+      vaultPeriodEnd: depositExpiryPeriodPubkey,
+      userPosition: positionPubkey,
+      tokenAMint: vault.tokenAMint,
+      userPositionNftMint: positionMintKeypair.publicKey,
+      vaultTokenAAccount: vault.tokenAAccount,
+      userTokenAAccount,
+      userPositionNftAccount,
+      positionNftMint: positionMintKeypair,
+      position: positionPubkey,
+      tx,
+    };
+  }
+
+  public async getDepositTx(
+    params: DepositParams | DepositPreview
+  ): Promise<TransactionWithMetadata<{ positionNftMint: Keypair; position: PublicKey }>> {
+    let {
+      tokenADepositAmount,
+      numberOfSwaps,
+      vaultPeriodEnd,
+      userPosition,
+      tokenAMint,
+      userPositionNftMint,
+      vaultTokenAAccount,
+      userTokenAAccount,
+      positionNftMint,
+      userPositionNftAccount,
+      position,
+      tx,
+    } = await this.getDepositCommon(params);
     const depositIx = await this.vaultProgram.methods
       .deposit({
-        tokenADepositAmount: preview.amount,
-        numberOfSwaps: new BN(preview.numberOfSwaps),
+        tokenADepositAmount,
+        numberOfSwaps,
       })
       .accounts({
         vault: this.vaultPubkey,
-        vaultPeriodEnd: depositExpiryPeriodPubkey,
-        userPosition: positionPubkey,
-        tokenAMint: vault.tokenAMint,
-        userPositionNftMint: positionMintKeypair.publicKey,
-        vaultTokenAAccount: vault.tokenAAccount,
+        vaultPeriodEnd,
+        userPosition,
+        tokenAMint,
+        userPositionNftMint,
+        vaultTokenAAccount,
         userTokenAAccount,
         userPositionNftAccount,
         depositor: this.provider.wallet.publicKey,
@@ -230,8 +280,8 @@ export class DripVaultImpl implements DripVault {
     return {
       tx,
       metadata: {
-        positionNftMint: positionMintKeypair,
-        position: positionPubkey,
+        positionNftMint,
+        position,
       },
     };
   }
@@ -242,6 +292,84 @@ export class DripVaultImpl implements DripVault {
     const { tx, metadata } = await this.getDepositTx(params);
     const txHash = await this.provider.sendAndConfirm(tx, [metadata.positionNftMint]);
 
+    return {
+      id: txHash,
+      explorer: makeExplorerUrl(txHash, this.network),
+      metadata,
+    };
+  }
+
+  async getDepositWithMetadataTx(params: DepositParams | DepositPreview): Promise<
+    TransactionWithMetadata<{
+      positionNftMint: Keypair;
+      position: PublicKey;
+      positionMetadataAccount: PublicKey;
+    }>
+  > {
+    let {
+      tokenADepositAmount,
+      numberOfSwaps,
+      vaultPeriodEnd,
+      userPosition,
+      tokenAMint,
+      userPositionNftMint,
+      vaultTokenAAccount,
+      userTokenAAccount,
+      positionNftMint,
+      userPositionNftAccount,
+      position,
+      tx,
+    } = await this.getDepositCommon(params);
+    console.log('hi');
+    const positionMetadataAccount = findMPLTokenMetadataAccount(MPL_TOKEN_METADATA_PROGRAM, {
+      mint: userPositionNftMint,
+    });
+    console.log(positionMetadataAccount.toString());
+    const depositIx = await this.vaultProgram.methods
+      .depositWithMetadata({
+        tokenADepositAmount,
+        numberOfSwaps,
+      })
+      .accounts({
+        vault: this.vaultPubkey,
+        vaultPeriodEnd,
+        userPosition,
+        tokenAMint,
+        userPositionNftMint,
+        vaultTokenAAccount,
+        userTokenAAccount,
+        userPositionNftAccount,
+        positionMetadataAccount,
+        depositor: this.provider.wallet.publicKey,
+        metadataProgram: MPL_TOKEN_METADATA_PROGRAM,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+        rent: SYSVAR_RENT_PUBKEY,
+        systemProgram: SystemProgram.programId,
+      })
+      .instruction();
+
+    tx = tx.add(depositIx);
+
+    return {
+      tx,
+      metadata: {
+        positionNftMint,
+        positionMetadataAccount,
+        position,
+      },
+    };
+  }
+
+  async depositWithMetadata(params: DepositParams | DepositPreview): Promise<
+    BroadcastTransactionWithMetadata<{
+      positionNftMint: Keypair;
+      position: PublicKey;
+      positionMetadataAccount: PublicKey;
+    }>
+  > {
+    const { tx, metadata } = await this.getDepositWithMetadataTx(params);
+    const txHash = await this.provider.sendAndConfirm(tx, [metadata.positionNftMint]);
     return {
       id: txHash,
       explorer: makeExplorerUrl(txHash, this.network),

@@ -20,6 +20,21 @@ export interface DripVault {
     }>
   >;
 
+  getDepositWithMetadataTx(params: DepositParams | DepositPreview): Promise<
+    TransactionWithMetadata<{
+      positionNftMint: Keypair;
+      position: PublicKey;
+      positionMetadataAccount: PublicKey;
+    }>
+  >;
+  depositWithMetadata(params: DepositParams | DepositPreview): Promise<
+    BroadcastTransactionWithMetadata<{
+      positionNftMint: Keypair;
+      position: PublicKey;
+      positionMetadataAccount: PublicKey;
+    }>
+  >;
+
   getInitVaultPeriodTx(params: InitVaultPeriodParams): Promise<
     TransactionWithMetadata<{
       vaultPeriodPubkey: PublicKey;
