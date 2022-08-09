@@ -100,18 +100,12 @@ export async function getCreateWSolAtaInstructions(
 }
 
 export async function getUnwrapSolInstructions(
-  connection: Connection,
+  _connection: Connection,
   owner: Address
 ): Promise<TransactionInstruction[]> {
   const wSolAta = await getWSolAtaPubkey(owner);
-  const wSolAtaInfo = await connection.getAccountInfo(wSolAta);
-  const wSolAtaExists = !!wSolAtaInfo;
 
   const ixs: TransactionInstruction[] = [];
-
-  if (!wSolAtaExists) {
-    throw new Error("Cannot unwrap SOL if WSOL ATA doesn't exist");
-  }
 
   const closeWSolAtaIx = createCloseAccountInstruction(wSolAta, toPubkey(owner), toPubkey(owner));
   ixs.push(closeWSolAtaIx);
