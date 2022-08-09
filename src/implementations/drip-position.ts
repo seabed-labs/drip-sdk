@@ -171,20 +171,6 @@ export class DripPositionImpl implements DripPosition {
       feePayer: this.provider.wallet.publicKey,
     });
 
-    const tokenToWithdraw = vault.tokenBMint;
-    if (isSol(tokenToWithdraw)) {
-      const createWSolAtaIxs = await getCreateWSolAtaInstructions(
-        this.provider.connection,
-        this.provider.wallet.publicKey,
-        this.provider.wallet.publicKey
-      );
-
-      if (createWSolAtaIxs.length > 0) {
-        // Create WSOL ATA if it doesn't exist already BEFORE everything else
-        tx = tx.add(...createWSolAtaIxs);
-      }
-    }
-
     const userTokenBAccount = await getAccount(
       this.provider.connection,
       userTokenBAccountPubkey
@@ -238,6 +224,7 @@ export class DripPositionImpl implements DripPosition {
         .instruction()
     );
 
+    const tokenToWithdraw = vault.tokenBMint;
     if (isSol(tokenToWithdraw)) {
       const unwrapSolIxs = await getUnwrapSolInstructions(
         this.provider.connection,
@@ -339,22 +326,6 @@ export class DripPositionImpl implements DripPosition {
       feePayer: this.provider.wallet.publicKey,
     });
 
-    const tokenA = vault.tokenAMint;
-    const tokenB = vault.tokenBMint;
-    const withdrawingSol = isSol(tokenA) || isSol(tokenB);
-    if (withdrawingSol) {
-      const createWSolAtaIxs = await getCreateWSolAtaInstructions(
-        this.provider.connection,
-        this.provider.wallet.publicKey,
-        this.provider.wallet.publicKey
-      );
-
-      if (createWSolAtaIxs.length > 0) {
-        // Create WSOL ATA if it doesn't exist already BEFORE everything else
-        tx = tx.add(...createWSolAtaIxs);
-      }
-    }
-
     const userTokenAAccount = await getAccount(
       this.provider.connection,
       closePositionPreview.withdrawnToTokenAAccount
@@ -444,6 +415,7 @@ export class DripPositionImpl implements DripPosition {
         .instruction()
     );
 
+    const withdrawingSol = isSol(vault.tokenAMint) || isSol(vault.tokenBMint);
     if (withdrawingSol) {
       const unwrapSolIxs = await getUnwrapSolInstructions(
         this.provider.connection,
