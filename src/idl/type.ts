@@ -326,6 +326,97 @@ export type Drip = {
       ];
     },
     {
+      name: 'depositWithMetadata';
+      accounts: [
+        {
+          name: 'vault';
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: 'vaultPeriodEnd';
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: 'userPosition';
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: 'tokenAMint';
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: 'userPositionNftMint';
+          isMut: true;
+          isSigner: true;
+        },
+        {
+          name: 'vaultTokenAAccount';
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: 'userTokenAAccount';
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: 'userPositionNftAccount';
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: 'positionMetadataAccount';
+          isMut: true;
+          isSigner: false;
+          docs: [
+            'https://github.com/metaplex-foundation/metaplex-program-library/blob/master/token-metadata/program/src/utils.rs#L873'
+          ];
+        },
+        {
+          name: 'depositor';
+          isMut: true;
+          isSigner: true;
+        },
+        {
+          name: 'metadataProgram';
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: 'tokenProgram';
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: 'associatedTokenProgram';
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: 'rent';
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: 'systemProgram';
+          isMut: false;
+          isSigner: false;
+        }
+      ];
+      args: [
+        {
+          name: 'params';
+          type: {
+            defined: 'DepositParams';
+          };
+        }
+      ];
+    },
+    {
       name: 'withdrawB';
       accounts: [
         {
@@ -904,7 +995,7 @@ export type Drip = {
     {
       code: 6004;
       name: 'IncompleteSwapError';
-      msg: 'Swap did not complete';
+      msg: 'Swap did not complete, either received token_b is 0, or swappd token_a is too high';
     },
     {
       code: 6005;
@@ -1270,6 +1361,97 @@ export const IDL: Drip = {
           name: 'depositor',
           isMut: true,
           isSigner: true,
+        },
+        {
+          name: 'tokenProgram',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'associatedTokenProgram',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'rent',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'systemProgram',
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [
+        {
+          name: 'params',
+          type: {
+            defined: 'DepositParams',
+          },
+        },
+      ],
+    },
+    {
+      name: 'depositWithMetadata',
+      accounts: [
+        {
+          name: 'vault',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'vaultPeriodEnd',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'userPosition',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'tokenAMint',
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: 'userPositionNftMint',
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: 'vaultTokenAAccount',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'userTokenAAccount',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'userPositionNftAccount',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'positionMetadataAccount',
+          isMut: true,
+          isSigner: false,
+          docs: [
+            'https://github.com/metaplex-foundation/metaplex-program-library/blob/master/token-metadata/program/src/utils.rs#L873',
+          ],
+        },
+        {
+          name: 'depositor',
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: 'metadataProgram',
+          isMut: false,
+          isSigner: false,
         },
         {
           name: 'tokenProgram',
@@ -1880,7 +2062,7 @@ export const IDL: Drip = {
     {
       code: 6004,
       name: 'IncompleteSwapError',
-      msg: 'Swap did not complete',
+      msg: 'Swap did not complete, either received token_b is 0, or swappd token_a is too high',
     },
     {
       code: 6005,
