@@ -12,7 +12,7 @@ import { Drip } from '../idl/type';
 import { DripPosition } from '../interfaces';
 import { Network } from '../models';
 import DripIDL from '../idl/idl.json';
-import { toPubkey } from '../utils';
+import { getCreateWSolAtaInstructions, getUnwrapSolInstructions, isSol, toPubkey } from '../utils';
 import {
   calculateWithdrawTokenAAmount,
   calculateWithdrawTokenBAmount,
@@ -171,6 +171,20 @@ export class DripPositionImpl implements DripPosition {
       feePayer: this.provider.wallet.publicKey,
     });
 
+    const tokenToWithdraw = vault.tokenBMint;
+    if (isSol(tokenToWithdraw)) {
+      const createWSolAtaIxs = await getCreateWSolAtaInstructions(
+        this.provider.connection,
+        this.provider.wallet.publicKey,
+        this.provider.wallet.publicKey
+      );
+
+      if (createWSolAtaIxs.length > 0) {
+        // Create WSOL ATA if it doesn't exist already BEFORE everything else
+        tx = tx.add(...createWSolAtaIxs);
+      }
+    }
+
     const userTokenBAccount = await getAccount(
       this.provider.connection,
       userTokenBAccountPubkey
@@ -223,6 +237,17 @@ export class DripPositionImpl implements DripPosition {
         })
         .instruction()
     );
+
+    if (isSol(tokenToWithdraw)) {
+      const unwrapSolIxs = await getUnwrapSolInstructions(
+        this.provider.connection,
+        this.provider.wallet.publicKey
+      );
+
+      if (unwrapSolIxs.length > 0) {
+        tx = tx.add(...unwrapSolIxs);
+      }
+    }
 
     return {
       tx,
@@ -314,6 +339,22 @@ export class DripPositionImpl implements DripPosition {
       feePayer: this.provider.wallet.publicKey,
     });
 
+    const tokenA = vault.tokenAMint;
+    const tokenB = vault.tokenBMint;
+    const withdrawingSol = isSol(tokenA) || isSol(tokenB);
+    if (withdrawingSol) {
+      const createWSolAtaIxs = await getCreateWSolAtaInstructions(
+        this.provider.connection,
+        this.provider.wallet.publicKey,
+        this.provider.wallet.publicKey
+      );
+
+      if (createWSolAtaIxs.length > 0) {
+        // Create WSOL ATA if it doesn't exist already BEFORE everything else
+        tx = tx.add(...createWSolAtaIxs);
+      }
+    }
+
     const userTokenAAccount = await getAccount(
       this.provider.connection,
       closePositionPreview.withdrawnToTokenAAccount
@@ -402,6 +443,17 @@ export class DripPositionImpl implements DripPosition {
         })
         .instruction()
     );
+
+    if (withdrawingSol) {
+      const unwrapSolIxs = await getUnwrapSolInstructions(
+        this.provider.connection,
+        this.provider.wallet.publicKey
+      );
+
+      if (unwrapSolIxs.length > 0) {
+        tx = tx.add(...unwrapSolIxs);
+      }
+    }
 
     return tx;
   }
