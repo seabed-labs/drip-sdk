@@ -48,3 +48,19 @@ export function findVaultPositionPubkey(
 
   return publicKey;
 }
+
+export function findMPLTokenMetadataAccount(
+  metaplexProgramId: Address,
+  seeds: { mint: Address }
+): PublicKey {
+  const [publicKey] = findProgramAddressSync(
+    [
+      Buffer.from(CONSTANT_SEEDS.mplTokenMetadata),
+      toPubkeyBuffer(metaplexProgramId),
+      toPubkeyBuffer(seeds.mint),
+    ],
+    toPubkey(metaplexProgramId)
+  );
+
+  return publicKey;
+}
