@@ -18,7 +18,13 @@ import {
   expiryToNumberOfSwaps,
 } from '../interfaces/drip-vault/params';
 import { DepositPreview, isDepositPreview } from '../interfaces/drip-vault/previews';
-import { toPubkey } from '../utils';
+import {
+  getCreateWSolAtaInstructions,
+  getUnwrapSolInstructions,
+  getWrapSolInstructions,
+  isSol,
+  toPubkey,
+} from '../utils';
 import { findVaultPeriodPubkey, findVaultPositionPubkey, findVaultPubkey } from '../helpers';
 import { VaultDoesNotExistError, VaultPeriodAlreadyExistsError } from '../errors';
 import { BroadcastTransactionWithMetadata, TransactionWithMetadata } from '../types';
@@ -134,6 +140,20 @@ export class DripVaultImpl implements DripVault {
       feePayer: this.provider.wallet.publicKey,
     });
 
+    const tokenToDeposit = vault.tokenAMint;
+    if (isSol(tokenToDeposit)) {
+      const wrapSolIxs = await getWrapSolInstructions(
+        this.provider.connection,
+        this.provider.wallet.publicKey,
+        this.provider.wallet.publicKey,
+        params.amount
+      );
+
+      if (wrapSolIxs.length > 0) {
+        tx = tx.add(...wrapSolIxs);
+      }
+    }
+
     if (!currentPeriod) {
       const { tx: initCurrentPeriodTx } = await this.getInitVaultPeriodTx({
         periodId: currentPeriodId,
@@ -206,7 +226,6 @@ export class DripVaultImpl implements DripVault {
       .instruction();
 
     tx = tx.add(depositIx);
-    // tx.sign(positionMintKeypair);
 
     return {
       tx,
