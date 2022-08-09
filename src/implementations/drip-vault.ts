@@ -320,11 +320,9 @@ export class DripVaultImpl implements DripVault {
       position,
       tx,
     } = await this.getDepositCommon(params);
-    console.log('hi');
     const positionMetadataAccount = findMPLTokenMetadataAccount(MPL_TOKEN_METADATA_PROGRAM, {
       mint: userPositionNftMint,
     });
-    console.log(positionMetadataAccount.toString());
     const depositIx = await this.vaultProgram.methods
       .depositWithMetadata({
         tokenADepositAmount,
