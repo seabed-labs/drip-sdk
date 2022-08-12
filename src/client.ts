@@ -1,9 +1,8 @@
+import { Network } from '@dcaf-labs/drip-sdk/dist/models';
 import { clusterApiUrl, Connection, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
+import { Config } from './config';
 
-const cluster =
-  process.env.environment === 'devnet' || process.env.environment === undefined
-    ? 'devnet'
-    : 'mainnet-beta';
+const cluster = Config.environment === Network.Mainnet ? 'mainnet-beta' : 'devnet';
 
 function wait(ms = 1000) {
   return new Promise((resolve) => {
