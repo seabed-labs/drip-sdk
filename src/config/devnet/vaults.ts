@@ -2,44 +2,44 @@ import { PublicKey } from '@solana/web3.js';
 import { Vault } from '../types';
 
 export const vaults: Record<string, Vault> = {
-  '7ZrPseXCAEtXEbPvxWtmiQN1V3bkh9ASdBBejWQmEEM': {
+  '2WintQnjYhYJpgJtBxgHqBefuJoD71TDeGMCJa9shsr3': {
     // USDT -> BTC @ minutely
-    pubkey: new PublicKey('7ZrPseXCAEtXEbPvxWtmiQN1V3bkh9ASdBBejWQmEEM'),
-    protoConfig: new PublicKey('HWtY2TzvkuMX8vXPzEivs27Ao1SvZz2qWsyY8dhGk4dY'),
-    tokenAMint: new PublicKey('8ULDKGmKJJaZa32eiL36ARr6cFaZaoAXAosWeg5r17ra'),
-    tokenBMint: new PublicKey('5nY3xT4PJe7NU41zqBx5UACHDckrimmfwznv4uLenrQg'),
-    tokenAAccount: new PublicKey('2p2nwqznQGFoVHNyTJf3DyZXngoLig4ZkB1QvL8GDd77'),
-    tokenBAccount: new PublicKey('XkrLs6usgJVgRmm1KUA8DfAyLd4XGeWsWB5PU44AYjv'),
-    treasuryTokenBAccount: new PublicKey('r1utrDwXi2umimDucMiCTHVKTkbGbjL8uTYBZLgvx3M'),
+    pubkey: new PublicKey('2WintQnjYhYJpgJtBxgHqBefuJoD71TDeGMCJa9shsr3'),
+    protoConfig: new PublicKey('2CEDnU1Kh9LAJqMbeMuftWF7iL3Dp2hMcmkkHMjV4gNh'),
+    tokenAMint: new PublicKey('7ihthG4cFydyDnuA3zmJrX13ePGpLcANf3tHLmKLPN7M'),
+    tokenBMint: new PublicKey('H9gBUJs5Kc5zyiKRTzZcYom4Hpj9VPHLy4VzExTVPgxa'),
+    tokenAAccount: new PublicKey('8Tq1poiHWnJvN1QbUJXGHqvsMvH6MPmjMzjJRP1KSpYY'),
+    tokenBAccount: new PublicKey('FpKy57H9AD1G9Srjg9n158u6pvEAxcwyEmLKJ6sqg8h7'),
+    treasuryTokenBAccount: new PublicKey('FpKy57H9AD1G9Srjg9n158u6pvEAxcwyEmLKJ6sqg8h7'),
   },
-  uN35hnMJ2FhNUr5BsRSmcThNLwvUiehxLTSFf3U1K2T: {
+  '3EbcNELVsQLJvVGpeXpgyKJkLiCRZ2XtWZSsrSXYKQnz': {
     // BTC -> USDT @ minutely
-    pubkey: new PublicKey('uN35hnMJ2FhNUr5BsRSmcThNLwvUiehxLTSFf3U1K2T'),
-    protoConfig: new PublicKey('HWtY2TzvkuMX8vXPzEivs27Ao1SvZz2qWsyY8dhGk4dY'),
-    tokenAMint: new PublicKey('5nY3xT4PJe7NU41zqBx5UACHDckrimmfwznv4uLenrQg'),
-    tokenBMint: new PublicKey('8ULDKGmKJJaZa32eiL36ARr6cFaZaoAXAosWeg5r17ra'),
-    tokenAAccount: new PublicKey('2bH8ZwygGZr9LgbPGaidcs3wMechtARohWdeANTwnUV2'),
-    tokenBAccount: new PublicKey('EgagDa6GhwLW3X8EjkoeRJDH8CogXrZYVQM891KDpwy5'),
-    treasuryTokenBAccount: new PublicKey('4i1BDQh233h3NHCVGPT8p3H4cUG81MuxAir64D55VtdU'),
+    pubkey: new PublicKey('3EbcNELVsQLJvVGpeXpgyKJkLiCRZ2XtWZSsrSXYKQnz'),
+    protoConfig: new PublicKey('2CEDnU1Kh9LAJqMbeMuftWF7iL3Dp2hMcmkkHMjV4gNh'),
+    tokenAMint: new PublicKey('H9gBUJs5Kc5zyiKRTzZcYom4Hpj9VPHLy4VzExTVPgxa'),
+    tokenBMint: new PublicKey('7ihthG4cFydyDnuA3zmJrX13ePGpLcANf3tHLmKLPN7M'),
+    tokenAAccount: new PublicKey('2y6EhpdzZP5pYhv57UmnE9qZgJdpJfsHHukifJ3g91m2'),
+    tokenBAccount: new PublicKey('4CNm6Aq9x5HG3JWw15Um4TwUa3925aiPXKRCZANftz82'),
+    treasuryTokenBAccount: new PublicKey('HoVHHXz36nhBbXSZi7LMw8EZK76H6GrUujf1EvwxCpDA'),
   },
-  '2KVoQTUs1JxwSqAaccYuuDWVtPZkH2obdxZGk3uxnEnY': {
+  oGiepvtwpb2Z4ZpgpftrTdD9M7DDhJShCawdwEmXMAV: {
     // WSOL -> USDC @ minutely
-    pubkey: new PublicKey('2KVoQTUs1JxwSqAaccYuuDWVtPZkH2obdxZGk3uxnEnY'),
-    protoConfig: new PublicKey('HWtY2TzvkuMX8vXPzEivs27Ao1SvZz2qWsyY8dhGk4dY'),
+    pubkey: new PublicKey('oGiepvtwpb2Z4ZpgpftrTdD9M7DDhJShCawdwEmXMAV'),
+    protoConfig: new PublicKey('2CEDnU1Kh9LAJqMbeMuftWF7iL3Dp2hMcmkkHMjV4gNh'),
     tokenAMint: new PublicKey('So11111111111111111111111111111111111111112'),
     tokenBMint: new PublicKey('EmXq3Ni9gfudTiyNKzzYvpnQqnJEMRw2ttnVXoJXjLo1'),
-    tokenAAccount: new PublicKey('HccjVMaH1q9BV96UmNmqsZqLwByKn5sQb7fGHY3rzCon'),
-    tokenBAccount: new PublicKey('93VGpBizDzGCXyigZh3zZXeGhtRRdFa1wUen3dfLnEhQ'),
-    treasuryTokenBAccount: new PublicKey('4id8gqEqZ823zrcVYSM6e2NwhihXqWNJfrjjhMQ3ZC2G'),
+    tokenAAccount: new PublicKey('6YJ9qnNaP8besenvcK5UCz7drSB1v5Ej2T6aPCHdm6Sm'),
+    tokenBAccount: new PublicKey('5i7X3c7RfATw3jqwPi7mH5uJ3KYgHF7UYo2j4MsC3Ctr'),
+    treasuryTokenBAccount: new PublicKey('8k5zSJ6K39PEAnhtAJuv4CYm1hPYPKDUBVpZ4NxzdpuS'),
   },
-  '783BESo7zDZmVXSnwjFFxJ6L81LEVW47j1U92xv1tmKL': {
+  EiQtfh9ebmxE4BuSWGEs4A3mdcdz4Le6rmosU4e6gstf: {
     // USDC -> WSOL @ minutely
-    pubkey: new PublicKey('783BESo7zDZmVXSnwjFFxJ6L81LEVW47j1U92xv1tmKL'),
-    protoConfig: new PublicKey('HWtY2TzvkuMX8vXPzEivs27Ao1SvZz2qWsyY8dhGk4dY'),
+    pubkey: new PublicKey('EiQtfh9ebmxE4BuSWGEs4A3mdcdz4Le6rmosU4e6gstf'),
+    protoConfig: new PublicKey('2CEDnU1Kh9LAJqMbeMuftWF7iL3Dp2hMcmkkHMjV4gNh'),
     tokenAMint: new PublicKey('EmXq3Ni9gfudTiyNKzzYvpnQqnJEMRw2ttnVXoJXjLo1'),
     tokenBMint: new PublicKey('So11111111111111111111111111111111111111112'),
-    tokenAAccount: new PublicKey('6eWshRewQKiUrRR4oaj2mEk4Z2QPhDjPP7scsZGjYfaC'),
-    tokenBAccount: new PublicKey('DH6Mx8vPV4eRtZP6q1RQ1D3X4BsrXuGLrFoxBgzQbvLo'),
-    treasuryTokenBAccount: new PublicKey('7W1KxceuEoZNUwigFwHm3y1wVhQRpBtvWc6HX9wB1o61'),
+    tokenAAccount: new PublicKey('HCd5dhmSfzVGHAUzauS1ehmxAuDF2jL4Skdm8Wx8jRS2'),
+    tokenBAccount: new PublicKey('9vjNcRL8698cyS7JAvNxQ6AMrCxYdp7YMgjYV3zQAfQK'),
+    treasuryTokenBAccount: new PublicKey('62z9wZYAKaqxsDgPy37ZRxm5EhkbuhFxWPrh3BbzoC7D'),
   },
 };

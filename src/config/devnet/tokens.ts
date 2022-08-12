@@ -2,8 +2,8 @@ import { PublicKey } from '@solana/web3.js';
 import { Token } from '../types';
 
 export const tokens: Record<string, Token> = {
-  '8ULDKGmKJJaZa32eiL36ARr6cFaZaoAXAosWeg5r17ra': {
-    mint: new PublicKey('8ULDKGmKJJaZa32eiL36ARr6cFaZaoAXAosWeg5r17ra'),
+  '7ihthG4cFydyDnuA3zmJrX13ePGpLcANf3tHLmKLPN7M': {
+    mint: new PublicKey('7ihthG4cFydyDnuA3zmJrX13ePGpLcANf3tHLmKLPN7M'),
     symbol: 'USDT',
   },
   So11111111111111111111111111111111111111112: {
@@ -14,8 +14,8 @@ export const tokens: Record<string, Token> = {
     mint: new PublicKey('EmXq3Ni9gfudTiyNKzzYvpnQqnJEMRw2ttnVXoJXjLo1'),
     symbol: 'USDC',
   },
-  '5nY3xT4PJe7NU41zqBx5UACHDckrimmfwznv4uLenrQg': {
-    mint: new PublicKey('5nY3xT4PJe7NU41zqBx5UACHDckrimmfwznv4uLenrQg'),
+  H9gBUJs5Kc5zyiKRTzZcYom4Hpj9VPHLy4VzExTVPgxa: {
+    mint: new PublicKey('H9gBUJs5Kc5zyiKRTzZcYom4Hpj9VPHLy4VzExTVPgxa'),
     symbol: 'BTC',
   },
 };
