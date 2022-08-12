@@ -2,7 +2,7 @@ import { PublicKey } from '@solana/web3.js';
 import { Token } from '../types';
 
 export const tokens: Record<string, Token> = {
-  '7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxa': {
+  '7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs': {
     mint: new PublicKey('7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs'),
     symbol: 'ETH',
   },
