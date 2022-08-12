@@ -1,9 +1,6 @@
-/* eslint-disable no-nested-ternary */
 import cron from 'node-cron';
 import { notifyDiscord } from './discord';
-import {
-  getBalanceHandler, getCluster, getExplorerURL, lamportsToSol,
-} from './client';
+import { getBalanceHandler, getCluster, getExplorerURL, lamportsToSol } from './client';
 
 export const EVERY_30_SECONDS = '*/30 * * * * *';
 export const EVERY_MINUTE = '* * * * * ';
@@ -18,26 +15,26 @@ export const sendBalanceUpdate = async () => {
   await notifyDiscord('Keeper Bot Balance Update', [
     {
       description: `[${WALLET_ADDRESS}](${getExplorerURL(WALLET_ADDRESS)})`,
-      // eslint-disable-next-line max-len
-      color: balanceLamports > 5000000000 ? 3066993 : balanceLamports > 1000000000 ? 15258703 : 15158332,
+      color:
+        balanceLamports > 5000000000 ? 3066993 : balanceLamports > 1000000000 ? 15258703 : 15158332,
       fields: [
         {
           name: 'Lamports',
           value: `${balanceLamports.toString()}`,
-          inline: true,
+          inline: true
         },
         {
           name: 'Sol',
           value: `${balanceSOL}`,
-          inline: true,
+          inline: true
         },
         {
           name: 'Cluster',
           value: `${getCluster()}`,
-          inline: true,
-        },
-      ],
-    },
+          inline: true
+        }
+      ]
+    }
   ]);
 };
 
