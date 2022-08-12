@@ -3,7 +3,7 @@ import { Vault } from '../types';
 
 export const vaults: Record<string, Vault> = {
   '2WintQnjYhYJpgJtBxgHqBefuJoD71TDeGMCJa9shsr3': {
-    // USDT -> BTC @ minutely
+    // BTC -> USDT @ minutely
     pubkey: new PublicKey('2WintQnjYhYJpgJtBxgHqBefuJoD71TDeGMCJa9shsr3'),
     protoConfig: new PublicKey('2CEDnU1Kh9LAJqMbeMuftWF7iL3Dp2hMcmkkHMjV4gNh'),
     tokenAMint: new PublicKey('7ihthG4cFydyDnuA3zmJrX13ePGpLcANf3tHLmKLPN7M'),
@@ -13,7 +13,7 @@ export const vaults: Record<string, Vault> = {
     treasuryTokenBAccount: new PublicKey('FpKy57H9AD1G9Srjg9n158u6pvEAxcwyEmLKJ6sqg8h7'),
   },
   '3EbcNELVsQLJvVGpeXpgyKJkLiCRZ2XtWZSsrSXYKQnz': {
-    // BTC -> USDT @ minutely
+    // USDT -> BTC @ minutely
     pubkey: new PublicKey('3EbcNELVsQLJvVGpeXpgyKJkLiCRZ2XtWZSsrSXYKQnz'),
     protoConfig: new PublicKey('2CEDnU1Kh9LAJqMbeMuftWF7iL3Dp2hMcmkkHMjV4gNh'),
     tokenAMint: new PublicKey('H9gBUJs5Kc5zyiKRTzZcYom4Hpj9VPHLy4VzExTVPgxa'),
