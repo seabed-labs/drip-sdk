@@ -2,11 +2,6 @@ import cron from 'node-cron';
 import { notifyDiscord } from './discord';
 import { getBalanceHandler, getCluster, getExplorerURL, lamportsToSol } from './client';
 
-export const EVERY_30_SECONDS = '*/30 * * * * *';
-export const EVERY_MINUTE = '* * * * * ';
-export const EVERY_30_MINUTES = '*/30 * * * *';
-export const EVERY_HOUR = '0 0 * * * *';
-
 const WALLET_ADDRESS = process.env.WALLET_ADDRESS ?? 'BJmuWLetrZRm2ADpDVxArg6CovgUwxgYESV5GHVDwnHi';
 
 export const sendBalanceUpdate = async () => {
@@ -36,10 +31,4 @@ export const sendBalanceUpdate = async () => {
       ]
     }
   ]);
-};
-
-export default () => {
-  cron.schedule(EVERY_HOUR, async () => {
-    await sendBalanceUpdate();
-  });
 };
