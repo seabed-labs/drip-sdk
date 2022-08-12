@@ -35,4 +35,5 @@ export interface InitVaultParams {
   tokenBMint: Address;
   tokenBFeeTreasury: Address;
   whitelistedSwaps: Address[];
+  maxSlippageBps: number;
 }

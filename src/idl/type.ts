@@ -1,2133 +1,2169 @@
 export type Drip = {
-  version: '0.1.0';
-  name: 'drip';
-  instructions: [
+  "version": "0.1.0",
+  "name": "drip",
+  "instructions": [
     {
-      name: 'initVaultProtoConfig';
-      accounts: [
+      "name": "initVaultProtoConfig",
+      "accounts": [
         {
-          name: 'vaultProtoConfig';
-          isMut: true;
-          isSigner: true;
+          "name": "vaultProtoConfig",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: 'creator';
-          isMut: true;
-          isSigner: true;
+          "name": "creator",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: 'systemProgram';
-          isMut: false;
-          isSigner: false;
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         }
-      ];
-      args: [
+      ],
+      "args": [
         {
-          name: 'params';
-          type: {
-            defined: 'InitVaultProtoConfigParams';
-          };
+          "name": "params",
+          "type": {
+            "defined": "InitVaultProtoConfigParams"
+          }
         }
-      ];
+      ]
     },
     {
-      name: 'initVault';
-      accounts: [
+      "name": "initVault",
+      "accounts": [
         {
-          name: 'vault';
-          isMut: true;
-          isSigner: false;
+          "name": "vault",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultProtoConfig';
-          isMut: false;
-          isSigner: false;
+          "name": "vaultProtoConfig",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'tokenAAccount';
-          isMut: true;
-          isSigner: false;
+          "name": "tokenAAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'tokenBAccount';
-          isMut: true;
-          isSigner: false;
+          "name": "tokenBAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'treasuryTokenBAccount';
-          isMut: false;
-          isSigner: false;
+          "name": "treasuryTokenBAccount",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'tokenAMint';
-          isMut: false;
-          isSigner: false;
+          "name": "tokenAMint",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'tokenBMint';
-          isMut: false;
-          isSigner: false;
+          "name": "tokenBMint",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'creator';
-          isMut: true;
-          isSigner: true;
+          "name": "creator",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: 'tokenProgram';
-          isMut: false;
-          isSigner: false;
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'associatedTokenProgram';
-          isMut: false;
-          isSigner: false;
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'systemProgram';
-          isMut: false;
-          isSigner: false;
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'rent';
-          isMut: false;
-          isSigner: false;
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
         }
-      ];
-      args: [
+      ],
+      "args": [
         {
-          name: 'params';
-          type: {
-            defined: 'InitializeVaultParams';
-          };
+          "name": "params",
+          "type": {
+            "defined": "InitializeVaultParams"
+          }
         }
-      ];
+      ]
     },
     {
-      name: 'initVaultPeriod';
-      accounts: [
+      "name": "initVaultPeriod",
+      "accounts": [
         {
-          name: 'vaultPeriod';
-          isMut: true;
-          isSigner: false;
+          "name": "vaultPeriod",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vault';
-          isMut: false;
-          isSigner: false;
+          "name": "vault",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'tokenAMint';
-          isMut: false;
-          isSigner: false;
+          "name": "tokenAMint",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'tokenBMint';
-          isMut: false;
-          isSigner: false;
+          "name": "tokenBMint",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'vaultProtoConfig';
-          isMut: false;
-          isSigner: false;
+          "name": "vaultProtoConfig",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'creator';
-          isMut: true;
-          isSigner: true;
+          "name": "creator",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: 'systemProgram';
-          isMut: false;
-          isSigner: false;
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         }
-      ];
-      args: [
+      ],
+      "args": [
         {
-          name: 'params';
-          type: {
-            defined: 'InitializeVaultPeriodParams';
-          };
+          "name": "params",
+          "type": {
+            "defined": "InitializeVaultPeriodParams"
+          }
         }
-      ];
+      ]
     },
     {
-      name: 'closePosition';
-      accounts: [
+      "name": "deposit",
+      "accounts": [
         {
-          name: 'vault';
-          isMut: true;
-          isSigner: false;
+          "name": "vault",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultProtoConfig';
-          isMut: false;
-          isSigner: false;
+          "name": "vaultPeriodEnd",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultPeriodI';
-          isMut: false;
-          isSigner: false;
+          "name": "userPosition",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultPeriodJ';
-          isMut: false;
-          isSigner: false;
+          "name": "tokenAMint",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'vaultPeriodUserExpiry';
-          isMut: true;
-          isSigner: false;
+          "name": "userPositionNftMint",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: 'userPosition';
-          isMut: true;
-          isSigner: false;
+          "name": "vaultTokenAAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultTokenAAccount';
-          isMut: true;
-          isSigner: false;
+          "name": "userTokenAAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultTokenBAccount';
-          isMut: true;
-          isSigner: false;
+          "name": "userPositionNftAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultTreasuryTokenBAccount';
-          isMut: true;
-          isSigner: false;
+          "name": "depositor",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: 'userTokenBAccount';
-          isMut: true;
-          isSigner: false;
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'userTokenAAccount';
-          isMut: true;
-          isSigner: false;
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'userPositionNftAccount';
-          isMut: true;
-          isSigner: false;
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'userPositionNftMint';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'tokenAMint';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'tokenBMint';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'withdrawer';
-          isMut: false;
-          isSigner: true;
-        },
-        {
-          name: 'tokenProgram';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'systemProgram';
-          isMut: false;
-          isSigner: false;
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         }
-      ];
-      args: [];
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "DepositParams"
+          }
+        }
+      ]
     },
     {
-      name: 'deposit';
-      accounts: [
+      "name": "depositWithMetadata",
+      "accounts": [
         {
-          name: 'vault';
-          isMut: true;
-          isSigner: false;
+          "name": "vault",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultPeriodEnd';
-          isMut: true;
-          isSigner: false;
+          "name": "vaultPeriodEnd",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'userPosition';
-          isMut: true;
-          isSigner: false;
+          "name": "userPosition",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'tokenAMint';
-          isMut: false;
-          isSigner: false;
+          "name": "tokenAMint",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'userPositionNftMint';
-          isMut: true;
-          isSigner: true;
+          "name": "userPositionNftMint",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: 'vaultTokenAAccount';
-          isMut: true;
-          isSigner: false;
+          "name": "vaultTokenAAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'userTokenAAccount';
-          isMut: true;
-          isSigner: false;
+          "name": "userTokenAAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'userPositionNftAccount';
-          isMut: true;
-          isSigner: false;
+          "name": "userPositionNftAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'depositor';
-          isMut: true;
-          isSigner: true;
+          "name": "depositor",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: 'tokenProgram';
-          isMut: false;
-          isSigner: false;
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'associatedTokenProgram';
-          isMut: false;
-          isSigner: false;
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'rent';
-          isMut: false;
-          isSigner: false;
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'systemProgram';
-          isMut: false;
-          isSigner: false;
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "positionMetadataAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "metadataProgram",
+          "isMut": false,
+          "isSigner": false
         }
-      ];
-      args: [
+      ],
+      "args": [
         {
-          name: 'params';
-          type: {
-            defined: 'DepositParams';
-          };
+          "name": "params",
+          "type": {
+            "defined": "DepositParams"
+          }
         }
-      ];
+      ]
     },
     {
-      name: 'depositWithMetadata';
-      accounts: [
+      "name": "withdrawB",
+      "accounts": [
         {
-          name: 'vault';
-          isMut: true;
-          isSigner: false;
+          "name": "vault",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'vaultPeriodEnd';
-          isMut: true;
-          isSigner: false;
+          "name": "vaultProtoConfig",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'userPosition';
-          isMut: true;
-          isSigner: false;
+          "name": "vaultPeriodI",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'tokenAMint';
-          isMut: false;
-          isSigner: false;
+          "name": "vaultPeriodJ",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'userPositionNftMint';
-          isMut: true;
-          isSigner: true;
+          "name": "userPosition",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultTokenAAccount';
-          isMut: true;
-          isSigner: false;
+          "name": "userPositionNftAccount",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'userTokenAAccount';
-          isMut: true;
-          isSigner: false;
+          "name": "vaultTokenBAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'userPositionNftAccount';
-          isMut: true;
-          isSigner: false;
+          "name": "userTokenBAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'positionMetadataAccount';
-          isMut: true;
-          isSigner: false;
-          docs: [
-            'https://github.com/metaplex-foundation/metaplex-program-library/blob/master/token-metadata/program/src/utils.rs#L873'
-          ];
+          "name": "vaultTreasuryTokenBAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'depositor';
-          isMut: true;
-          isSigner: true;
+          "name": "userPositionNftMint",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'metadataProgram';
-          isMut: false;
-          isSigner: false;
+          "name": "tokenBMint",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'tokenProgram';
-          isMut: false;
-          isSigner: false;
+          "name": "withdrawer",
+          "isMut": false,
+          "isSigner": true
         },
         {
-          name: 'associatedTokenProgram';
-          isMut: false;
-          isSigner: false;
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'rent';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'systemProgram';
-          isMut: false;
-          isSigner: false;
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
         }
-      ];
-      args: [
-        {
-          name: 'params';
-          type: {
-            defined: 'DepositParams';
-          };
-        }
-      ];
+      ],
+      "args": []
     },
     {
-      name: 'withdrawB';
-      accounts: [
+      "name": "closePosition",
+      "accounts": [
         {
-          name: 'vault';
-          isMut: false;
-          isSigner: false;
+          "name": "vault",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultProtoConfig';
-          isMut: false;
-          isSigner: false;
+          "name": "vaultProtoConfig",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'vaultPeriodI';
-          isMut: false;
-          isSigner: false;
+          "name": "vaultPeriodI",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'vaultPeriodJ';
-          isMut: false;
-          isSigner: false;
+          "name": "vaultPeriodJ",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'userPosition';
-          isMut: true;
-          isSigner: false;
+          "name": "vaultPeriodUserExpiry",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'userPositionNftAccount';
-          isMut: false;
-          isSigner: false;
+          "name": "userPosition",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultTokenBAccount';
-          isMut: true;
-          isSigner: false;
+          "name": "vaultTokenAAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'userTokenBAccount';
-          isMut: true;
-          isSigner: false;
+          "name": "vaultTokenBAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultTreasuryTokenBAccount';
-          isMut: true;
-          isSigner: false;
+          "name": "vaultTreasuryTokenBAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'userPositionNftMint';
-          isMut: false;
-          isSigner: false;
+          "name": "userTokenBAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'tokenBMint';
-          isMut: false;
-          isSigner: false;
+          "name": "userTokenAAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'withdrawer';
-          isMut: false;
-          isSigner: true;
+          "name": "userPositionNftAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'tokenProgram';
-          isMut: false;
-          isSigner: false;
+          "name": "userPositionNftMint",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'associatedTokenProgram';
-          isMut: false;
-          isSigner: false;
+          "name": "tokenAMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenBMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "withdrawer",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         }
-      ];
-      args: [];
+      ],
+      "args": []
     },
     {
-      name: 'dripSplTokenSwap';
-      accounts: [
+      "name": "dripSplTokenSwap",
+      "accounts": [
         {
-          name: 'dripTriggerSource';
-          isMut: false;
-          isSigner: true;
+          "name": "dripTriggerSource",
+          "isMut": false,
+          "isSigner": true
         },
         {
-          name: 'vault';
-          isMut: true;
-          isSigner: false;
+          "name": "vault",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultProtoConfig';
-          isMut: false;
-          isSigner: false;
+          "name": "vaultProtoConfig",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'lastVaultPeriod';
-          isMut: false;
-          isSigner: false;
+          "name": "lastVaultPeriod",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'currentVaultPeriod';
-          isMut: true;
-          isSigner: false;
+          "name": "currentVaultPeriod",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'swapTokenMint';
-          isMut: true;
-          isSigner: false;
+          "name": "swapTokenMint",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'tokenAMint';
-          isMut: false;
-          isSigner: false;
+          "name": "tokenAMint",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'tokenBMint';
-          isMut: false;
-          isSigner: false;
+          "name": "tokenBMint",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'vaultTokenAAccount';
-          isMut: true;
-          isSigner: false;
+          "name": "vaultTokenAAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultTokenBAccount';
-          isMut: true;
-          isSigner: false;
+          "name": "vaultTokenBAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'swapTokenAAccount';
-          isMut: true;
-          isSigner: false;
+          "name": "swapTokenAAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'swapTokenBAccount';
-          isMut: true;
-          isSigner: false;
+          "name": "swapTokenBAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'swapFeeAccount';
-          isMut: true;
-          isSigner: false;
+          "name": "swapFeeAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'dripFeeTokenAAccount';
-          isMut: true;
-          isSigner: false;
+          "name": "dripFeeTokenAAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'swap';
-          isMut: false;
-          isSigner: false;
+          "name": "swap",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'swapAuthority';
-          isMut: false;
-          isSigner: false;
+          "name": "swapAuthority",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'tokenSwapProgram';
-          isMut: false;
-          isSigner: false;
+          "name": "tokenSwapProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'tokenProgram';
-          isMut: false;
-          isSigner: false;
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'associatedTokenProgram';
-          isMut: false;
-          isSigner: false;
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'systemProgram';
-          isMut: false;
-          isSigner: false;
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'rent';
-          isMut: false;
-          isSigner: false;
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
         }
-      ];
-      args: [];
+      ],
+      "args": []
     },
     {
-      name: 'dripOrcaWhirlpool';
-      accounts: [
+      "name": "dripOrcaWhirlpool",
+      "accounts": [
         {
-          name: 'dripTriggerSource';
-          isMut: false;
-          isSigner: true;
+          "name": "dripTriggerSource",
+          "isMut": false,
+          "isSigner": true
         },
         {
-          name: 'vault';
-          isMut: true;
-          isSigner: false;
+          "name": "vault",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultProtoConfig';
-          isMut: false;
-          isSigner: false;
+          "name": "vaultProtoConfig",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'lastVaultPeriod';
-          isMut: false;
-          isSigner: false;
+          "name": "lastVaultPeriod",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'currentVaultPeriod';
-          isMut: true;
-          isSigner: false;
+          "name": "currentVaultPeriod",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'tokenAMint';
-          isMut: false;
-          isSigner: false;
+          "name": "vaultTokenAAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'tokenBMint';
-          isMut: false;
-          isSigner: false;
+          "name": "vaultTokenBAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultTokenAAccount';
-          isMut: true;
-          isSigner: false;
+          "name": "swapTokenAAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultTokenBAccount';
-          isMut: true;
-          isSigner: false;
+          "name": "swapTokenBAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'swapTokenAAccount';
-          isMut: true;
-          isSigner: false;
+          "name": "dripFeeTokenAAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'swapTokenBAccount';
-          isMut: true;
-          isSigner: false;
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'dripFeeTokenAAccount';
-          isMut: true;
-          isSigner: false;
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'tokenProgram';
-          isMut: false;
-          isSigner: false;
+          "name": "whirlpoolProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'associatedTokenProgram';
-          isMut: false;
-          isSigner: false;
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'whirlpoolProgram';
-          isMut: false;
-          isSigner: false;
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'systemProgram';
-          isMut: false;
-          isSigner: false;
+          "name": "whirlpool",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'rent';
-          isMut: false;
-          isSigner: false;
+          "name": "tickArray0",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'whirlpool';
-          isMut: true;
-          isSigner: false;
+          "name": "tickArray1",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'tickArray0';
-          isMut: true;
-          isSigner: false;
+          "name": "tickArray2",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'tickArray1';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'tickArray2';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'oracle';
-          isMut: false;
-          isSigner: false;
+          "name": "oracle",
+          "isMut": false,
+          "isSigner": false
         }
-      ];
-      args: [];
+      ],
+      "args": []
     }
-  ];
-  accounts: [
+  ],
+  "accounts": [
     {
-      name: 'position';
-      type: {
-        kind: 'struct';
-        fields: [
+      "name": "position",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: 'vault';
-            type: 'publicKey';
+            "name": "vault",
+            "type": "publicKey"
           },
           {
-            name: 'positionAuthority';
-            type: 'publicKey';
+            "name": "positionAuthority",
+            "type": "publicKey"
           },
           {
-            name: 'depositedTokenAAmount';
-            type: 'u64';
+            "name": "depositedTokenAAmount",
+            "type": "u64"
           },
           {
-            name: 'withdrawnTokenBAmount';
-            type: 'u64';
+            "name": "withdrawnTokenBAmount",
+            "type": "u64"
           },
           {
-            name: 'depositTimestamp';
-            type: 'i64';
+            "name": "depositTimestamp",
+            "type": "i64"
           },
           {
-            name: 'dripPeriodIdBeforeDeposit';
-            type: 'u64';
+            "name": "dripPeriodIdBeforeDeposit",
+            "type": "u64"
           },
           {
-            name: 'numberOfSwaps';
-            type: 'u64';
+            "name": "numberOfSwaps",
+            "type": "u64"
           },
           {
-            name: 'periodicDripAmount';
-            type: 'u64';
+            "name": "periodicDripAmount",
+            "type": "u64"
           },
           {
-            name: 'isClosed';
-            type: 'bool';
+            "name": "isClosed",
+            "type": "bool"
           },
           {
-            name: 'bump';
-            type: 'u8';
+            "name": "bump",
+            "type": "u8"
           }
-        ];
-      };
+        ]
+      }
     },
     {
-      name: 'vaultPeriod';
-      type: {
-        kind: 'struct';
-        fields: [
+      "name": "vaultPeriod",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: 'vault';
-            type: 'publicKey';
+            "name": "vault",
+            "type": "publicKey"
           },
           {
-            name: 'periodId';
-            type: 'u64';
+            "name": "periodId",
+            "type": "u64"
           },
           {
-            name: 'dar';
-            type: 'u64';
+            "name": "dar",
+            "type": "u64"
           },
           {
-            name: 'twap';
-            type: 'u128';
+            "name": "twap",
+            "type": "u128"
           },
           {
-            name: 'dripTimestamp';
-            type: 'i64';
+            "name": "dripTimestamp",
+            "type": "i64"
           },
           {
-            name: 'bump';
-            type: 'u8';
+            "name": "bump",
+            "type": "u8"
           }
-        ];
-      };
+        ]
+      }
     },
     {
-      name: 'vaultProtoConfig';
-      type: {
-        kind: 'struct';
-        fields: [
+      "name": "vaultProtoConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: 'granularity';
-            type: 'u64';
+            "name": "granularity",
+            "type": "u64"
           },
           {
-            name: 'tokenADripTriggerSpread';
-            type: 'u16';
+            "name": "tokenADripTriggerSpread",
+            "type": "u16"
           },
           {
-            name: 'tokenBWithdrawalSpread';
-            type: 'u16';
+            "name": "tokenBWithdrawalSpread",
+            "type": "u16"
           },
           {
-            name: 'admin';
-            type: 'publicKey';
+            "name": "admin",
+            "type": "publicKey"
           }
-        ];
-      };
+        ]
+      }
     },
     {
-      name: 'vault';
-      type: {
-        kind: 'struct';
-        fields: [
+      "name": "vault",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: 'protoConfig';
-            type: 'publicKey';
+            "name": "protoConfig",
+            "type": "publicKey"
           },
           {
-            name: 'tokenAMint';
-            type: 'publicKey';
+            "name": "tokenAMint",
+            "type": "publicKey"
           },
           {
-            name: 'tokenBMint';
-            type: 'publicKey';
+            "name": "tokenBMint",
+            "type": "publicKey"
           },
           {
-            name: 'tokenAAccount';
-            type: 'publicKey';
+            "name": "tokenAAccount",
+            "type": "publicKey"
           },
           {
-            name: 'tokenBAccount';
-            type: 'publicKey';
+            "name": "tokenBAccount",
+            "type": "publicKey"
           },
           {
-            name: 'treasuryTokenBAccount';
-            type: 'publicKey';
+            "name": "treasuryTokenBAccount",
+            "type": "publicKey"
           },
           {
-            name: 'whitelistedSwaps';
-            type: {
-              array: ['publicKey', 5];
-            };
+            "name": "whitelistedSwaps",
+            "type": {
+              "array": [
+                "publicKey",
+                5
+              ]
+            }
           },
           {
-            name: 'lastDripPeriod';
-            type: 'u64';
+            "name": "lastDripPeriod",
+            "type": "u64"
           },
           {
-            name: 'dripAmount';
-            type: 'u64';
+            "name": "dripAmount",
+            "type": "u64"
           },
           {
-            name: 'dripActivationTimestamp';
-            type: 'i64';
+            "name": "dripActivationTimestamp",
+            "type": "i64"
           },
           {
-            name: 'bump';
-            type: 'u8';
+            "name": "bump",
+            "type": "u8"
           },
           {
-            name: 'limitSwaps';
-            type: 'bool';
+            "name": "limitSwaps",
+            "type": "bool"
+          },
+          {
+            "name": "maxSlippageBps",
+            "type": "u16"
           }
-        ];
-      };
+        ]
+      }
     }
-  ];
-  types: [
+  ],
+  "types": [
     {
-      name: 'DepositParams';
-      type: {
-        kind: 'struct';
-        fields: [
+      "name": "InitializeVaultPeriodParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: 'tokenADepositAmount';
-            type: 'u64';
-          },
-          {
-            name: 'numberOfSwaps';
-            type: 'u64';
+            "name": "periodId",
+            "type": "u64"
           }
-        ];
-      };
+        ]
+      }
     },
     {
-      name: 'InitializeVaultPeriodParams';
-      type: {
-        kind: 'struct';
-        fields: [
+      "name": "InitVaultProtoConfigParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: 'periodId';
-            type: 'u64';
+            "name": "granularity",
+            "type": "u64"
+          },
+          {
+            "name": "tokenADripTriggerSpread",
+            "type": "u16"
+          },
+          {
+            "name": "tokenBWithdrawalSpread",
+            "type": "u16"
+          },
+          {
+            "name": "admin",
+            "type": "publicKey"
           }
-        ];
-      };
+        ]
+      }
     },
     {
-      name: 'InitVaultProtoConfigParams';
-      type: {
-        kind: 'struct';
-        fields: [
+      "name": "InitializeVaultParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: 'granularity';
-            type: 'u64';
+            "name": "maxSlippageBps",
+            "type": "u16"
           },
           {
-            name: 'tokenADripTriggerSpread';
-            type: 'u16';
-          },
-          {
-            name: 'tokenBWithdrawalSpread';
-            type: 'u16';
-          },
-          {
-            name: 'admin';
-            type: 'publicKey';
+            "name": "whitelistedSwaps",
+            "type": {
+              "vec": "publicKey"
+            }
           }
-        ];
-      };
+        ]
+      }
     },
     {
-      name: 'InitializeVaultParams';
-      type: {
-        kind: 'struct';
-        fields: [
+      "name": "DepositParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: 'whitelistedSwaps';
-            type: {
-              vec: 'publicKey';
-            };
+            "name": "tokenADepositAmount",
+            "type": "u64"
+          },
+          {
+            "name": "numberOfSwaps",
+            "type": "u64"
           }
-        ];
-      };
+        ]
+      }
     }
-  ];
-  events: [
+  ],
+  "events": [
     {
-      name: 'Log';
-      fields: [
+      "name": "Log",
+      "fields": [
         {
-          name: 'data';
-          type: {
-            option: 'u64';
-          };
-          index: false;
+          "name": "data",
+          "type": {
+            "option": "u64"
+          },
+          "index": false
         },
         {
-          name: 'message';
-          type: 'string';
-          index: true;
+          "name": "message",
+          "type": "string",
+          "index": true
         }
-      ];
+      ]
     }
-  ];
-  errors: [
+  ],
+  "errors": [
     {
-      code: 6000;
-      name: 'CannotGetPositionBump';
-      msg: 'Cannot get position bump';
+      "code": 6000,
+      "name": "CannotGetPositionBump",
+      "msg": "Cannot get position bump"
     },
     {
-      code: 6001;
-      name: 'CannotGetVaultBump';
-      msg: 'Cannot get vault bump';
+      "code": 6001,
+      "name": "CannotGetVaultBump",
+      "msg": "Cannot get vault bump"
     },
     {
-      code: 6002;
-      name: 'CannotGetVaultPeriodBump';
-      msg: 'Cannot get vault_period bump';
+      "code": 6002,
+      "name": "CannotGetVaultPeriodBump",
+      "msg": "Cannot get vault_period bump"
     },
     {
-      code: 6003;
-      name: 'DuplicateDripError';
-      msg: 'Drip already triggered for the current period';
+      "code": 6003,
+      "name": "DuplicateDripError",
+      "msg": "Drip already triggered for the current period"
     },
     {
-      code: 6004;
-      name: 'IncompleteSwapError';
-      msg: 'Swap did not complete, either received token_b is 0, or swappd token_a is too high';
+      "code": 6004,
+      "name": "IncompleteSwapError",
+      "msg": "Swap did not complete, either received token_b is 0"
     },
     {
-      code: 6005;
-      name: 'InvalidGranularity';
-      msg: 'Granularity must be an integer larger than 0';
+      "code": 6005,
+      "name": "InvalidGranularity",
+      "msg": "Granularity must be an integer larger than 0"
     },
     {
-      code: 6006;
-      name: 'InvalidMint';
-      msg: 'Token mint does not match expected value';
+      "code": 6006,
+      "name": "InvalidMint",
+      "msg": "Token mint does not match expected value"
     },
     {
-      code: 6007;
-      name: 'InvalidSpread';
-      msg: 'Spread must be >=0 and <=10000';
+      "code": 6007,
+      "name": "InvalidSpread",
+      "msg": "Spread must be >=0 and <5000"
     },
     {
-      code: 6008;
-      name: 'InvalidSwapAccount';
-      msg: 'Token Swap is Not Whitelisted';
+      "code": 6008,
+      "name": "InvalidSwapAccount",
+      "msg": "Token Swap is Not Whitelisted"
     },
     {
-      code: 6009;
-      name: 'InvalidNumSwaps';
-      msg: 'A Vault May Limit to a Maximum of 5 Token Swaps';
+      "code": 6009,
+      "name": "InvalidNumSwaps",
+      "msg": "A Vault May Limit to a Maximum of 5 Token Swaps"
     },
     {
-      code: 6010;
-      name: 'InvalidVaultProtoConfigReference';
-      msg: 'Provided account references the wrong vault-proto-config';
+      "code": 6010,
+      "name": "InvalidVaultProtoConfigReference",
+      "msg": "Provided account references the wrong vault-proto-config"
     },
     {
-      code: 6011;
-      name: 'InvalidSwapAuthorityAccount';
-      msg: 'Invalid swap authority account';
+      "code": 6011,
+      "name": "InvalidSwapAuthorityAccount",
+      "msg": "Invalid swap authority account"
     },
     {
-      code: 6012;
-      name: 'InvalidSwapFeeAccount';
-      msg: 'Invalid swap fee account';
+      "code": 6012,
+      "name": "InvalidSwapFeeAccount",
+      "msg": "Invalid swap fee account"
     },
     {
-      code: 6013;
-      name: 'InvalidVaultPeriod';
-      msg: 'Invalid vault-period';
+      "code": 6013,
+      "name": "InvalidVaultPeriod",
+      "msg": "Invalid vault-period"
     },
     {
-      code: 6014;
-      name: 'InvalidVaultReference';
-      msg: 'Provided account references the wrong vault';
+      "code": 6014,
+      "name": "InvalidVaultReference",
+      "msg": "Provided account references the wrong vault"
     },
     {
-      code: 6015;
-      name: 'PeriodicDripAmountIsZero';
-      msg: 'Periodic drip amount == 0';
+      "code": 6015,
+      "name": "OnlyAdminCanInitVault",
+      "msg": "Only admin can init vault"
     },
     {
-      code: 6016;
-      name: 'PositionAlreadyClosed';
-      msg: 'Position is already closed';
+      "code": 6016,
+      "name": "PeriodicDripAmountIsZero",
+      "msg": "Periodic drip amount == 0"
     },
     {
-      code: 6017;
-      name: 'WithdrawableAmountIsZero';
-      msg: 'Withdrawable amount is zero';
+      "code": 6017,
+      "name": "PositionAlreadyClosed",
+      "msg": "Position is already closed"
+    },
+    {
+      "code": 6018,
+      "name": "WithdrawableAmountIsZero",
+      "msg": "Withdrawable amount is zero"
+    },
+    {
+      "code": 6019,
+      "name": "CannotInitializeVaultPeriodLessThanVaultCurrentPeriod",
+      "msg": "Cannot initialize a vault period lesser than vault's current period"
+    },
+    {
+      "code": 6020,
+      "name": "InvalidVaultMaxSlippage",
+      "msg": "Invalid value for vault.max_slippage_bps"
+    },
+    {
+      "code": 6021,
+      "name": "SwappedMoreThanVaultDripAmount",
+      "msg": "Swapped more than vault's drip amount"
     }
-  ];
+  ]
 };
 
 export const IDL: Drip = {
-  version: '0.1.0',
-  name: 'drip',
-  instructions: [
+  "version": "0.1.0",
+  "name": "drip",
+  "instructions": [
     {
-      name: 'initVaultProtoConfig',
-      accounts: [
+      "name": "initVaultProtoConfig",
+      "accounts": [
         {
-          name: 'vaultProtoConfig',
-          isMut: true,
-          isSigner: true,
+          "name": "vaultProtoConfig",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: 'creator',
-          isMut: true,
-          isSigner: true,
+          "name": "creator",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: 'systemProgram',
-          isMut: false,
-          isSigner: false,
-        },
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
       ],
-      args: [
+      "args": [
         {
-          name: 'params',
-          type: {
-            defined: 'InitVaultProtoConfigParams',
-          },
-        },
-      ],
+          "name": "params",
+          "type": {
+            "defined": "InitVaultProtoConfigParams"
+          }
+        }
+      ]
     },
     {
-      name: 'initVault',
-      accounts: [
+      "name": "initVault",
+      "accounts": [
         {
-          name: 'vault',
-          isMut: true,
-          isSigner: false,
+          "name": "vault",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultProtoConfig',
-          isMut: false,
-          isSigner: false,
+          "name": "vaultProtoConfig",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'tokenAAccount',
-          isMut: true,
-          isSigner: false,
+          "name": "tokenAAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'tokenBAccount',
-          isMut: true,
-          isSigner: false,
+          "name": "tokenBAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'treasuryTokenBAccount',
-          isMut: false,
-          isSigner: false,
+          "name": "treasuryTokenBAccount",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'tokenAMint',
-          isMut: false,
-          isSigner: false,
+          "name": "tokenAMint",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'tokenBMint',
-          isMut: false,
-          isSigner: false,
+          "name": "tokenBMint",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'creator',
-          isMut: true,
-          isSigner: true,
+          "name": "creator",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: 'tokenProgram',
-          isMut: false,
-          isSigner: false,
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'associatedTokenProgram',
-          isMut: false,
-          isSigner: false,
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'systemProgram',
-          isMut: false,
-          isSigner: false,
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'rent',
-          isMut: false,
-          isSigner: false,
-        },
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
       ],
-      args: [
+      "args": [
         {
-          name: 'params',
-          type: {
-            defined: 'InitializeVaultParams',
-          },
-        },
-      ],
+          "name": "params",
+          "type": {
+            "defined": "InitializeVaultParams"
+          }
+        }
+      ]
     },
     {
-      name: 'initVaultPeriod',
-      accounts: [
+      "name": "initVaultPeriod",
+      "accounts": [
         {
-          name: 'vaultPeriod',
-          isMut: true,
-          isSigner: false,
+          "name": "vaultPeriod",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vault',
-          isMut: false,
-          isSigner: false,
+          "name": "vault",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'tokenAMint',
-          isMut: false,
-          isSigner: false,
+          "name": "tokenAMint",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'tokenBMint',
-          isMut: false,
-          isSigner: false,
+          "name": "tokenBMint",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'vaultProtoConfig',
-          isMut: false,
-          isSigner: false,
+          "name": "vaultProtoConfig",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'creator',
-          isMut: true,
-          isSigner: true,
+          "name": "creator",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: 'systemProgram',
-          isMut: false,
-          isSigner: false,
-        },
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
       ],
-      args: [
+      "args": [
         {
-          name: 'params',
-          type: {
-            defined: 'InitializeVaultPeriodParams',
-          },
-        },
-      ],
+          "name": "params",
+          "type": {
+            "defined": "InitializeVaultPeriodParams"
+          }
+        }
+      ]
     },
     {
-      name: 'closePosition',
-      accounts: [
+      "name": "deposit",
+      "accounts": [
         {
-          name: 'vault',
-          isMut: true,
-          isSigner: false,
+          "name": "vault",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultProtoConfig',
-          isMut: false,
-          isSigner: false,
+          "name": "vaultPeriodEnd",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultPeriodI',
-          isMut: false,
-          isSigner: false,
+          "name": "userPosition",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultPeriodJ',
-          isMut: false,
-          isSigner: false,
+          "name": "tokenAMint",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'vaultPeriodUserExpiry',
-          isMut: true,
-          isSigner: false,
+          "name": "userPositionNftMint",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: 'userPosition',
-          isMut: true,
-          isSigner: false,
+          "name": "vaultTokenAAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultTokenAAccount',
-          isMut: true,
-          isSigner: false,
+          "name": "userTokenAAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultTokenBAccount',
-          isMut: true,
-          isSigner: false,
+          "name": "userPositionNftAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultTreasuryTokenBAccount',
-          isMut: true,
-          isSigner: false,
+          "name": "depositor",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: 'userTokenBAccount',
-          isMut: true,
-          isSigner: false,
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'userTokenAAccount',
-          isMut: true,
-          isSigner: false,
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'userPositionNftAccount',
-          isMut: true,
-          isSigner: false,
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'userPositionNftMint',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'tokenAMint',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'tokenBMint',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'withdrawer',
-          isMut: false,
-          isSigner: true,
-        },
-        {
-          name: 'tokenProgram',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'systemProgram',
-          isMut: false,
-          isSigner: false,
-        },
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
       ],
-      args: [],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "DepositParams"
+          }
+        }
+      ]
     },
     {
-      name: 'deposit',
-      accounts: [
+      "name": "depositWithMetadata",
+      "accounts": [
         {
-          name: 'vault',
-          isMut: true,
-          isSigner: false,
+          "name": "vault",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultPeriodEnd',
-          isMut: true,
-          isSigner: false,
+          "name": "vaultPeriodEnd",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'userPosition',
-          isMut: true,
-          isSigner: false,
+          "name": "userPosition",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'tokenAMint',
-          isMut: false,
-          isSigner: false,
+          "name": "tokenAMint",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'userPositionNftMint',
-          isMut: true,
-          isSigner: true,
+          "name": "userPositionNftMint",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: 'vaultTokenAAccount',
-          isMut: true,
-          isSigner: false,
+          "name": "vaultTokenAAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'userTokenAAccount',
-          isMut: true,
-          isSigner: false,
+          "name": "userTokenAAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'userPositionNftAccount',
-          isMut: true,
-          isSigner: false,
+          "name": "userPositionNftAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'depositor',
-          isMut: true,
-          isSigner: true,
+          "name": "depositor",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: 'tokenProgram',
-          isMut: false,
-          isSigner: false,
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'associatedTokenProgram',
-          isMut: false,
-          isSigner: false,
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'rent',
-          isMut: false,
-          isSigner: false,
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'systemProgram',
-          isMut: false,
-          isSigner: false,
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         },
+        {
+          "name": "positionMetadataAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "metadataProgram",
+          "isMut": false,
+          "isSigner": false
+        }
       ],
-      args: [
+      "args": [
         {
-          name: 'params',
-          type: {
-            defined: 'DepositParams',
-          },
-        },
-      ],
+          "name": "params",
+          "type": {
+            "defined": "DepositParams"
+          }
+        }
+      ]
     },
     {
-      name: 'depositWithMetadata',
-      accounts: [
+      "name": "withdrawB",
+      "accounts": [
         {
-          name: 'vault',
-          isMut: true,
-          isSigner: false,
+          "name": "vault",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'vaultPeriodEnd',
-          isMut: true,
-          isSigner: false,
+          "name": "vaultProtoConfig",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'userPosition',
-          isMut: true,
-          isSigner: false,
+          "name": "vaultPeriodI",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'tokenAMint',
-          isMut: false,
-          isSigner: false,
+          "name": "vaultPeriodJ",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'userPositionNftMint',
-          isMut: true,
-          isSigner: true,
+          "name": "userPosition",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultTokenAAccount',
-          isMut: true,
-          isSigner: false,
+          "name": "userPositionNftAccount",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'userTokenAAccount',
-          isMut: true,
-          isSigner: false,
+          "name": "vaultTokenBAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'userPositionNftAccount',
-          isMut: true,
-          isSigner: false,
+          "name": "userTokenBAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'positionMetadataAccount',
-          isMut: true,
-          isSigner: false,
-          docs: [
-            'https://github.com/metaplex-foundation/metaplex-program-library/blob/master/token-metadata/program/src/utils.rs#L873',
-          ],
+          "name": "vaultTreasuryTokenBAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'depositor',
-          isMut: true,
-          isSigner: true,
+          "name": "userPositionNftMint",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'metadataProgram',
-          isMut: false,
-          isSigner: false,
+          "name": "tokenBMint",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'tokenProgram',
-          isMut: false,
-          isSigner: false,
+          "name": "withdrawer",
+          "isMut": false,
+          "isSigner": true
         },
         {
-          name: 'associatedTokenProgram',
-          isMut: false,
-          isSigner: false,
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'rent',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'systemProgram',
-          isMut: false,
-          isSigner: false,
-        },
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
       ],
-      args: [
-        {
-          name: 'params',
-          type: {
-            defined: 'DepositParams',
-          },
-        },
-      ],
+      "args": []
     },
     {
-      name: 'withdrawB',
-      accounts: [
+      "name": "closePosition",
+      "accounts": [
         {
-          name: 'vault',
-          isMut: false,
-          isSigner: false,
+          "name": "vault",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultProtoConfig',
-          isMut: false,
-          isSigner: false,
+          "name": "vaultProtoConfig",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'vaultPeriodI',
-          isMut: false,
-          isSigner: false,
+          "name": "vaultPeriodI",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'vaultPeriodJ',
-          isMut: false,
-          isSigner: false,
+          "name": "vaultPeriodJ",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'userPosition',
-          isMut: true,
-          isSigner: false,
+          "name": "vaultPeriodUserExpiry",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'userPositionNftAccount',
-          isMut: false,
-          isSigner: false,
+          "name": "userPosition",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultTokenBAccount',
-          isMut: true,
-          isSigner: false,
+          "name": "vaultTokenAAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'userTokenBAccount',
-          isMut: true,
-          isSigner: false,
+          "name": "vaultTokenBAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultTreasuryTokenBAccount',
-          isMut: true,
-          isSigner: false,
+          "name": "vaultTreasuryTokenBAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'userPositionNftMint',
-          isMut: false,
-          isSigner: false,
+          "name": "userTokenBAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'tokenBMint',
-          isMut: false,
-          isSigner: false,
+          "name": "userTokenAAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'withdrawer',
-          isMut: false,
-          isSigner: true,
+          "name": "userPositionNftAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'tokenProgram',
-          isMut: false,
-          isSigner: false,
+          "name": "userPositionNftMint",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'associatedTokenProgram',
-          isMut: false,
-          isSigner: false,
+          "name": "tokenAMint",
+          "isMut": false,
+          "isSigner": false
         },
+        {
+          "name": "tokenBMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "withdrawer",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
       ],
-      args: [],
+      "args": []
     },
     {
-      name: 'dripSplTokenSwap',
-      accounts: [
+      "name": "dripSplTokenSwap",
+      "accounts": [
         {
-          name: 'dripTriggerSource',
-          isMut: false,
-          isSigner: true,
+          "name": "dripTriggerSource",
+          "isMut": false,
+          "isSigner": true
         },
         {
-          name: 'vault',
-          isMut: true,
-          isSigner: false,
+          "name": "vault",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultProtoConfig',
-          isMut: false,
-          isSigner: false,
+          "name": "vaultProtoConfig",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'lastVaultPeriod',
-          isMut: false,
-          isSigner: false,
+          "name": "lastVaultPeriod",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'currentVaultPeriod',
-          isMut: true,
-          isSigner: false,
+          "name": "currentVaultPeriod",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'swapTokenMint',
-          isMut: true,
-          isSigner: false,
+          "name": "swapTokenMint",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'tokenAMint',
-          isMut: false,
-          isSigner: false,
+          "name": "tokenAMint",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'tokenBMint',
-          isMut: false,
-          isSigner: false,
+          "name": "tokenBMint",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'vaultTokenAAccount',
-          isMut: true,
-          isSigner: false,
+          "name": "vaultTokenAAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultTokenBAccount',
-          isMut: true,
-          isSigner: false,
+          "name": "vaultTokenBAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'swapTokenAAccount',
-          isMut: true,
-          isSigner: false,
+          "name": "swapTokenAAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'swapTokenBAccount',
-          isMut: true,
-          isSigner: false,
+          "name": "swapTokenBAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'swapFeeAccount',
-          isMut: true,
-          isSigner: false,
+          "name": "swapFeeAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'dripFeeTokenAAccount',
-          isMut: true,
-          isSigner: false,
+          "name": "dripFeeTokenAAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'swap',
-          isMut: false,
-          isSigner: false,
+          "name": "swap",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'swapAuthority',
-          isMut: false,
-          isSigner: false,
+          "name": "swapAuthority",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'tokenSwapProgram',
-          isMut: false,
-          isSigner: false,
+          "name": "tokenSwapProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'tokenProgram',
-          isMut: false,
-          isSigner: false,
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'associatedTokenProgram',
-          isMut: false,
-          isSigner: false,
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'systemProgram',
-          isMut: false,
-          isSigner: false,
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'rent',
-          isMut: false,
-          isSigner: false,
-        },
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
       ],
-      args: [],
+      "args": []
     },
     {
-      name: 'dripOrcaWhirlpool',
-      accounts: [
+      "name": "dripOrcaWhirlpool",
+      "accounts": [
         {
-          name: 'dripTriggerSource',
-          isMut: false,
-          isSigner: true,
+          "name": "dripTriggerSource",
+          "isMut": false,
+          "isSigner": true
         },
         {
-          name: 'vault',
-          isMut: true,
-          isSigner: false,
+          "name": "vault",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultProtoConfig',
-          isMut: false,
-          isSigner: false,
+          "name": "vaultProtoConfig",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'lastVaultPeriod',
-          isMut: false,
-          isSigner: false,
+          "name": "lastVaultPeriod",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'currentVaultPeriod',
-          isMut: true,
-          isSigner: false,
+          "name": "currentVaultPeriod",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'tokenAMint',
-          isMut: false,
-          isSigner: false,
+          "name": "vaultTokenAAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'tokenBMint',
-          isMut: false,
-          isSigner: false,
+          "name": "vaultTokenBAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultTokenAAccount',
-          isMut: true,
-          isSigner: false,
+          "name": "swapTokenAAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'vaultTokenBAccount',
-          isMut: true,
-          isSigner: false,
+          "name": "swapTokenBAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'swapTokenAAccount',
-          isMut: true,
-          isSigner: false,
+          "name": "dripFeeTokenAAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'swapTokenBAccount',
-          isMut: true,
-          isSigner: false,
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'dripFeeTokenAAccount',
-          isMut: true,
-          isSigner: false,
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'tokenProgram',
-          isMut: false,
-          isSigner: false,
+          "name": "whirlpoolProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'associatedTokenProgram',
-          isMut: false,
-          isSigner: false,
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'whirlpoolProgram',
-          isMut: false,
-          isSigner: false,
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'systemProgram',
-          isMut: false,
-          isSigner: false,
+          "name": "whirlpool",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'rent',
-          isMut: false,
-          isSigner: false,
+          "name": "tickArray0",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'whirlpool',
-          isMut: true,
-          isSigner: false,
+          "name": "tickArray1",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'tickArray0',
-          isMut: true,
-          isSigner: false,
+          "name": "tickArray2",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: 'tickArray1',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'tickArray2',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'oracle',
-          isMut: false,
-          isSigner: false,
-        },
+          "name": "oracle",
+          "isMut": false,
+          "isSigner": false
+        }
       ],
-      args: [],
-    },
+      "args": []
+    }
   ],
-  accounts: [
+  "accounts": [
     {
-      name: 'position',
-      type: {
-        kind: 'struct',
-        fields: [
+      "name": "position",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: 'vault',
-            type: 'publicKey',
+            "name": "vault",
+            "type": "publicKey"
           },
           {
-            name: 'positionAuthority',
-            type: 'publicKey',
+            "name": "positionAuthority",
+            "type": "publicKey"
           },
           {
-            name: 'depositedTokenAAmount',
-            type: 'u64',
+            "name": "depositedTokenAAmount",
+            "type": "u64"
           },
           {
-            name: 'withdrawnTokenBAmount',
-            type: 'u64',
+            "name": "withdrawnTokenBAmount",
+            "type": "u64"
           },
           {
-            name: 'depositTimestamp',
-            type: 'i64',
+            "name": "depositTimestamp",
+            "type": "i64"
           },
           {
-            name: 'dripPeriodIdBeforeDeposit',
-            type: 'u64',
+            "name": "dripPeriodIdBeforeDeposit",
+            "type": "u64"
           },
           {
-            name: 'numberOfSwaps',
-            type: 'u64',
+            "name": "numberOfSwaps",
+            "type": "u64"
           },
           {
-            name: 'periodicDripAmount',
-            type: 'u64',
+            "name": "periodicDripAmount",
+            "type": "u64"
           },
           {
-            name: 'isClosed',
-            type: 'bool',
+            "name": "isClosed",
+            "type": "bool"
           },
           {
-            name: 'bump',
-            type: 'u8',
-          },
-        ],
-      },
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
     },
     {
-      name: 'vaultPeriod',
-      type: {
-        kind: 'struct',
-        fields: [
+      "name": "vaultPeriod",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: 'vault',
-            type: 'publicKey',
+            "name": "vault",
+            "type": "publicKey"
           },
           {
-            name: 'periodId',
-            type: 'u64',
+            "name": "periodId",
+            "type": "u64"
           },
           {
-            name: 'dar',
-            type: 'u64',
+            "name": "dar",
+            "type": "u64"
           },
           {
-            name: 'twap',
-            type: 'u128',
+            "name": "twap",
+            "type": "u128"
           },
           {
-            name: 'dripTimestamp',
-            type: 'i64',
+            "name": "dripTimestamp",
+            "type": "i64"
           },
           {
-            name: 'bump',
-            type: 'u8',
-          },
-        ],
-      },
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
     },
     {
-      name: 'vaultProtoConfig',
-      type: {
-        kind: 'struct',
-        fields: [
+      "name": "vaultProtoConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: 'granularity',
-            type: 'u64',
+            "name": "granularity",
+            "type": "u64"
           },
           {
-            name: 'tokenADripTriggerSpread',
-            type: 'u16',
+            "name": "tokenADripTriggerSpread",
+            "type": "u16"
           },
           {
-            name: 'tokenBWithdrawalSpread',
-            type: 'u16',
+            "name": "tokenBWithdrawalSpread",
+            "type": "u16"
           },
           {
-            name: 'admin',
-            type: 'publicKey',
-          },
-        ],
-      },
+            "name": "admin",
+            "type": "publicKey"
+          }
+        ]
+      }
     },
     {
-      name: 'vault',
-      type: {
-        kind: 'struct',
-        fields: [
+      "name": "vault",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: 'protoConfig',
-            type: 'publicKey',
+            "name": "protoConfig",
+            "type": "publicKey"
           },
           {
-            name: 'tokenAMint',
-            type: 'publicKey',
+            "name": "tokenAMint",
+            "type": "publicKey"
           },
           {
-            name: 'tokenBMint',
-            type: 'publicKey',
+            "name": "tokenBMint",
+            "type": "publicKey"
           },
           {
-            name: 'tokenAAccount',
-            type: 'publicKey',
+            "name": "tokenAAccount",
+            "type": "publicKey"
           },
           {
-            name: 'tokenBAccount',
-            type: 'publicKey',
+            "name": "tokenBAccount",
+            "type": "publicKey"
           },
           {
-            name: 'treasuryTokenBAccount',
-            type: 'publicKey',
+            "name": "treasuryTokenBAccount",
+            "type": "publicKey"
           },
           {
-            name: 'whitelistedSwaps',
-            type: {
-              array: ['publicKey', 5],
-            },
+            "name": "whitelistedSwaps",
+            "type": {
+              "array": [
+                "publicKey",
+                5
+              ]
+            }
           },
           {
-            name: 'lastDripPeriod',
-            type: 'u64',
+            "name": "lastDripPeriod",
+            "type": "u64"
           },
           {
-            name: 'dripAmount',
-            type: 'u64',
+            "name": "dripAmount",
+            "type": "u64"
           },
           {
-            name: 'dripActivationTimestamp',
-            type: 'i64',
+            "name": "dripActivationTimestamp",
+            "type": "i64"
           },
           {
-            name: 'bump',
-            type: 'u8',
+            "name": "bump",
+            "type": "u8"
           },
           {
-            name: 'limitSwaps',
-            type: 'bool',
+            "name": "limitSwaps",
+            "type": "bool"
           },
-        ],
-      },
-    },
+          {
+            "name": "maxSlippageBps",
+            "type": "u16"
+          }
+        ]
+      }
+    }
   ],
-  types: [
+  "types": [
     {
-      name: 'DepositParams',
-      type: {
-        kind: 'struct',
-        fields: [
+      "name": "InitializeVaultPeriodParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: 'tokenADepositAmount',
-            type: 'u64',
-          },
-          {
-            name: 'numberOfSwaps',
-            type: 'u64',
-          },
-        ],
-      },
+            "name": "periodId",
+            "type": "u64"
+          }
+        ]
+      }
     },
     {
-      name: 'InitializeVaultPeriodParams',
-      type: {
-        kind: 'struct',
-        fields: [
+      "name": "InitVaultProtoConfigParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: 'periodId',
-            type: 'u64',
+            "name": "granularity",
+            "type": "u64"
           },
-        ],
-      },
+          {
+            "name": "tokenADripTriggerSpread",
+            "type": "u16"
+          },
+          {
+            "name": "tokenBWithdrawalSpread",
+            "type": "u16"
+          },
+          {
+            "name": "admin",
+            "type": "publicKey"
+          }
+        ]
+      }
     },
     {
-      name: 'InitVaultProtoConfigParams',
-      type: {
-        kind: 'struct',
-        fields: [
+      "name": "InitializeVaultParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: 'granularity',
-            type: 'u64',
+            "name": "maxSlippageBps",
+            "type": "u16"
           },
           {
-            name: 'tokenADripTriggerSpread',
-            type: 'u16',
-          },
-          {
-            name: 'tokenBWithdrawalSpread',
-            type: 'u16',
-          },
-          {
-            name: 'admin',
-            type: 'publicKey',
-          },
-        ],
-      },
+            "name": "whitelistedSwaps",
+            "type": {
+              "vec": "publicKey"
+            }
+          }
+        ]
+      }
     },
     {
-      name: 'InitializeVaultParams',
-      type: {
-        kind: 'struct',
-        fields: [
+      "name": "DepositParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: 'whitelistedSwaps',
-            type: {
-              vec: 'publicKey',
-            },
+            "name": "tokenADepositAmount",
+            "type": "u64"
           },
-        ],
-      },
-    },
+          {
+            "name": "numberOfSwaps",
+            "type": "u64"
+          }
+        ]
+      }
+    }
   ],
-  events: [
+  "events": [
     {
-      name: 'Log',
-      fields: [
+      "name": "Log",
+      "fields": [
         {
-          name: 'data',
-          type: {
-            option: 'u64',
+          "name": "data",
+          "type": {
+            "option": "u64"
           },
-          index: false,
+          "index": false
         },
         {
-          name: 'message',
-          type: 'string',
-          index: true,
-        },
-      ],
-    },
+          "name": "message",
+          "type": "string",
+          "index": true
+        }
+      ]
+    }
   ],
-  errors: [
+  "errors": [
     {
-      code: 6000,
-      name: 'CannotGetPositionBump',
-      msg: 'Cannot get position bump',
+      "code": 6000,
+      "name": "CannotGetPositionBump",
+      "msg": "Cannot get position bump"
     },
     {
-      code: 6001,
-      name: 'CannotGetVaultBump',
-      msg: 'Cannot get vault bump',
+      "code": 6001,
+      "name": "CannotGetVaultBump",
+      "msg": "Cannot get vault bump"
     },
     {
-      code: 6002,
-      name: 'CannotGetVaultPeriodBump',
-      msg: 'Cannot get vault_period bump',
+      "code": 6002,
+      "name": "CannotGetVaultPeriodBump",
+      "msg": "Cannot get vault_period bump"
     },
     {
-      code: 6003,
-      name: 'DuplicateDripError',
-      msg: 'Drip already triggered for the current period',
+      "code": 6003,
+      "name": "DuplicateDripError",
+      "msg": "Drip already triggered for the current period"
     },
     {
-      code: 6004,
-      name: 'IncompleteSwapError',
-      msg: 'Swap did not complete, either received token_b is 0, or swappd token_a is too high',
+      "code": 6004,
+      "name": "IncompleteSwapError",
+      "msg": "Swap did not complete, either received token_b is 0"
     },
     {
-      code: 6005,
-      name: 'InvalidGranularity',
-      msg: 'Granularity must be an integer larger than 0',
+      "code": 6005,
+      "name": "InvalidGranularity",
+      "msg": "Granularity must be an integer larger than 0"
     },
     {
-      code: 6006,
-      name: 'InvalidMint',
-      msg: 'Token mint does not match expected value',
+      "code": 6006,
+      "name": "InvalidMint",
+      "msg": "Token mint does not match expected value"
     },
     {
-      code: 6007,
-      name: 'InvalidSpread',
-      msg: 'Spread must be >=0 and <=10000',
+      "code": 6007,
+      "name": "InvalidSpread",
+      "msg": "Spread must be >=0 and <5000"
     },
     {
-      code: 6008,
-      name: 'InvalidSwapAccount',
-      msg: 'Token Swap is Not Whitelisted',
+      "code": 6008,
+      "name": "InvalidSwapAccount",
+      "msg": "Token Swap is Not Whitelisted"
     },
     {
-      code: 6009,
-      name: 'InvalidNumSwaps',
-      msg: 'A Vault May Limit to a Maximum of 5 Token Swaps',
+      "code": 6009,
+      "name": "InvalidNumSwaps",
+      "msg": "A Vault May Limit to a Maximum of 5 Token Swaps"
     },
     {
-      code: 6010,
-      name: 'InvalidVaultProtoConfigReference',
-      msg: 'Provided account references the wrong vault-proto-config',
+      "code": 6010,
+      "name": "InvalidVaultProtoConfigReference",
+      "msg": "Provided account references the wrong vault-proto-config"
     },
     {
-      code: 6011,
-      name: 'InvalidSwapAuthorityAccount',
-      msg: 'Invalid swap authority account',
+      "code": 6011,
+      "name": "InvalidSwapAuthorityAccount",
+      "msg": "Invalid swap authority account"
     },
     {
-      code: 6012,
-      name: 'InvalidSwapFeeAccount',
-      msg: 'Invalid swap fee account',
+      "code": 6012,
+      "name": "InvalidSwapFeeAccount",
+      "msg": "Invalid swap fee account"
     },
     {
-      code: 6013,
-      name: 'InvalidVaultPeriod',
-      msg: 'Invalid vault-period',
+      "code": 6013,
+      "name": "InvalidVaultPeriod",
+      "msg": "Invalid vault-period"
     },
     {
-      code: 6014,
-      name: 'InvalidVaultReference',
-      msg: 'Provided account references the wrong vault',
+      "code": 6014,
+      "name": "InvalidVaultReference",
+      "msg": "Provided account references the wrong vault"
     },
     {
-      code: 6015,
-      name: 'PeriodicDripAmountIsZero',
-      msg: 'Periodic drip amount == 0',
+      "code": 6015,
+      "name": "OnlyAdminCanInitVault",
+      "msg": "Only admin can init vault"
     },
     {
-      code: 6016,
-      name: 'PositionAlreadyClosed',
-      msg: 'Position is already closed',
+      "code": 6016,
+      "name": "PeriodicDripAmountIsZero",
+      "msg": "Periodic drip amount == 0"
     },
     {
-      code: 6017,
-      name: 'WithdrawableAmountIsZero',
-      msg: 'Withdrawable amount is zero',
+      "code": 6017,
+      "name": "PositionAlreadyClosed",
+      "msg": "Position is already closed"
     },
-  ],
+    {
+      "code": 6018,
+      "name": "WithdrawableAmountIsZero",
+      "msg": "Withdrawable amount is zero"
+    },
+    {
+      "code": 6019,
+      "name": "CannotInitializeVaultPeriodLessThanVaultCurrentPeriod",
+      "msg": "Cannot initialize a vault period lesser than vault's current period"
+    },
+    {
+      "code": 6020,
+      "name": "InvalidVaultMaxSlippage",
+      "msg": "Invalid value for vault.max_slippage_bps"
+    },
+    {
+      "code": 6021,
+      "name": "SwappedMoreThanVaultDripAmount",
+      "msg": "Swapped more than vault's drip amount"
+    }
+  ]
 };
