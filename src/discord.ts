@@ -7,7 +7,7 @@ const DISCORD_WEBHOOK_ALERTS_CHANNEL =
 // eslint-disable-next-line import/prefer-default-export
 export async function notifyDiscord(content: string, embeds?: unknown[]) {
   const body = {
-    name: 'Balance Summary',
+    name: 'SOL Balance Summary',
     avatar_url: 'https://pbs.twimg.com/profile_ixmages/1512938686702403603/DDObiFjj_400x400.jpg',
     content,
     embeds
