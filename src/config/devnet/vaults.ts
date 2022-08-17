@@ -60,7 +60,7 @@ export const vaults: Record<string, Vault> = {
     tokenAMint: new PublicKey('H9gBUJs5Kc5zyiKRTzZcYom4Hpj9VPHLy4VzExTVPgxa'),
     tokenBMint: new PublicKey('7ihthG4cFydyDnuA3zmJrX13ePGpLcANf3tHLmKLPN7M'),
     tokenAAccount: new PublicKey('1LPzAeHXpZVH72YpYBuNVRVYtayy6sU7Kw3gPEPd325'),
-    tokenBAccount: new PublicKey(''),
+    tokenBAccount: new PublicKey('4gPGFvRDa7FKgbN1ABbmNLAh7hUycfYQd1WW4GtyFH4i'),
     treasuryTokenBAccount: new PublicKey('HoVHHXz36nhBbXSZi7LMw8EZK76H6GrUujf1EvwxCpDA'),
   },
   GyAoXz8q1uPQLigar9nkFfXLn1nRz81o6c1fAzBdBShP: {
