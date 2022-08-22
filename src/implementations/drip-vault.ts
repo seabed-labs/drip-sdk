@@ -118,6 +118,7 @@ export class DripVaultImpl implements DripVault {
     numberOfSwaps: BN;
     vaultPeriodEnd: PublicKey;
     userPosition: PublicKey;
+    tokenAMint: PublicKey;
     userPositionNftMint: PublicKey;
     vaultTokenAAccount: PublicKey;
     userTokenAAccount: PublicKey;
@@ -224,6 +225,7 @@ export class DripVaultImpl implements DripVault {
       numberOfSwaps: new BN(preview.numberOfSwaps),
       vaultPeriodEnd: depositExpiryPeriodPubkey,
       userPosition: positionPubkey,
+      tokenAMint: vault.tokenAMint,
       userPositionNftMint: positionMintKeypair.publicKey,
       vaultTokenAAccount: vault.tokenAAccount,
       userTokenAAccount,
@@ -311,6 +313,7 @@ export class DripVaultImpl implements DripVault {
       vaultTokenAAccount,
       userTokenAAccount,
       positionNftMint,
+      tokenAMint,
       userPositionNftAccount,
       position,
       tx,
