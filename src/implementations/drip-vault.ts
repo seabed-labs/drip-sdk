@@ -329,6 +329,7 @@ export class DripVaultImpl implements DripVault {
       .accounts({
         vault: this.vaultPubkey,
         vaultPeriodEnd,
+        tokenAMint,
         userPosition,
         userPositionNftMint,
         vaultTokenAAccount,
