@@ -18,4 +18,8 @@ export const tokens: Record<string, Token> = {
     mint: new PublicKey('9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'),
     symbol: 'BTC',
   },
+  AG5j4hhrd1ReYi7d1JsZL8ZpcoHdjXvc8sdpWF74RaQh: {
+    mint: new PublicKey('AG5j4hhrd1ReYi7d1JsZL8ZpcoHdjXvc8sdpWF74RaQh'),
+    symbol: 'svtOKAY',
+  },
 };
