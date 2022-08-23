@@ -52,4 +52,25 @@ export const vaults: Record<string, Vault> = {
     tokenBAccount: new PublicKey('3GWGSESaTvHgQn1V4WhJGxvTehFUPGqNnPWeTCuy38ST'),
     treasuryTokenBAccount: new PublicKey('4E5WgXLJ4iiUw6pj2WiJDPqo2fPr4bXfG98JyPkUz2AZ'),
   },
+
+  '7yrMr3Ld9rkqNUPxcp5LXqqMWetwpHzLqkjyZi5fjiYG': {
+    // SAMO -> USDC @ daily
+    pubkey: new PublicKey('7yrMr3Ld9rkqNUPxcp5LXqqMWetwpHzLqkjyZi5fjiYG'),
+    protoConfig: new PublicKey('BK7m7aEb5SrJBSAzMBGumnRhRvF3C7j7fssUrPKPTwxG'),
+    tokenAMint: new PublicKey('7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU'),
+    tokenBMint: new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
+    tokenAAccount: new PublicKey('6x7mpGmTi1X8knsAYuFHeK1UX5W4PqFmX2XyvrMtSb2M'),
+    tokenBAccount: new PublicKey('6DqsRg6K25XiyS92LHxm5XjoXv4Sh1yxo57P3nmHxJDc'),
+    treasuryTokenBAccount: new PublicKey('97S9xrcSkat5aD7UuPhAXYHHVaWM6NAw4r6ELVYgBkuQ'),
+  },
+  J4WLLfYFJJpyBcpDeRGCfwPQgN36Ai1dfmLiRxgxSXhu: {
+    // USDC -> SAMO @ daily
+    pubkey: new PublicKey('J4WLLfYFJJpyBcpDeRGCfwPQgN36Ai1dfmLiRxgxSXhu'),
+    protoConfig: new PublicKey('BK7m7aEb5SrJBSAzMBGumnRhRvF3C7j7fssUrPKPTwxG'),
+    tokenAMint: new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
+    tokenBMint: new PublicKey('7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU'),
+    tokenAAccount: new PublicKey('9UFPCaLbsst45ytt4ksUoAnL66nic3AicpGN6yVKW9Az'),
+    tokenBAccount: new PublicKey('3W8k2S2wUkZVBmeFFS19QfMLkbbxABzjiFsYHLfZtSC4'),
+    treasuryTokenBAccount: new PublicKey('5bmpKycNDC5hkS3eGZDwYctJKJF6BtCF2ebYoVFjN3er'),
+  },
 };
