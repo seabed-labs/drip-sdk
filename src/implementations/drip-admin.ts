@@ -54,7 +54,8 @@ export class DripAdminImpl implements DripAdmin {
   public async getInitVaultProtoConfigTx(
     params: InitVaultProtoConfigParams | InitVaultProtoConfigPreview
   ): Promise<TransactionWithMetadata<{ vaultProtoConfigKeypair: Keypair }>> {
-    const { granularity, tokenADripTriggerSpread, tokenBWithdrawalSpread } = params;
+    const { granularity, tokenADripTriggerSpread, tokenBWithdrawalSpread, tokenBReferralSpread } =
+      params;
     const vaultProtoConfigKeypair = isInitVaultProtoConfigPreview(params)
       ? params.vaultProtoConfigKeypair
       : Keypair.generate();
@@ -64,6 +65,7 @@ export class DripAdminImpl implements DripAdmin {
         granularity: new BN(granularity.toString()),
         tokenADripTriggerSpread,
         tokenBWithdrawalSpread,
+        tokenBReferralSpread,
         admin: toPubkey(params.admin),
       })
       .accounts({
@@ -118,8 +120,6 @@ export class DripAdminImpl implements DripAdmin {
       .accounts({
         vaultPeriod: vaultGenesisPeriodPubkey,
         vault: vaultPubkey,
-        tokenAMint: params.tokenAMint,
-        tokenBMint: params.tokenBMint,
         vaultProtoConfig: params.protoConfig,
         creator: this.provider.wallet.publicKey,
         systemProgram: SystemProgram.programId,

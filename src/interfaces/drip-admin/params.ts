@@ -24,6 +24,10 @@ export interface InitVaultProtoConfigParams {
    */
   tokenBWithdrawalSpread: number;
   /**
+   * Withdrawal spread in basis points
+   */
+  tokenBReferralSpread: number;
+  /**
    * Vault Admin
    */
   admin: Address;

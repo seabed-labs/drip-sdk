@@ -12,7 +12,7 @@ import { Drip } from '../idl/type';
 import { DripPosition } from '../interfaces';
 import { Network } from '../models';
 import DripIDL from '../idl/idl.json';
-import { getCreateWSolAtaInstructions, getUnwrapSolInstructions, isSol, toPubkey } from '../utils';
+import { getUnwrapSolInstructions, isSol, toPubkey } from '../utils';
 import {
   calculateWithdrawTokenAAmount,
   calculateWithdrawTokenBAmount,
@@ -206,18 +206,20 @@ export class DripPositionImpl implements DripPosition {
       await this.vaultProgram.methods
         .withdrawB()
         .accounts({
-          vault: position.vault,
-          vaultProtoConfig: vault.protoConfig,
-          vaultPeriodI: periodIdIPubkey,
-          vaultPeriodJ: periodIdJPubkey,
-          userPosition: this.positionPubkey,
-          userPositionNftAccount,
-          vaultTokenBAccount: vault.tokenBAccount,
-          userTokenBAccount: userTokenBAccountPubkey,
-          vaultTreasuryTokenBAccount: vault.treasuryTokenBAccount,
-          withdrawer: this.provider.wallet.publicKey,
-          tokenProgram: TOKEN_PROGRAM_ID,
-          associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+          common: {
+            vault: position.vault,
+            vaultProtoConfig: vault.protoConfig,
+            vaultPeriodI: periodIdIPubkey,
+            vaultPeriodJ: periodIdJPubkey,
+            userPosition: this.positionPubkey,
+            userPositionNftAccount,
+            vaultTokenBAccount: vault.tokenBAccount,
+            userTokenBAccount: userTokenBAccountPubkey,
+            vaultTreasuryTokenBAccount: vault.treasuryTokenBAccount,
+            withdrawer: this.provider.wallet.publicKey,
+            referrer: position.referrer,
+            tokenProgram: TOKEN_PROGRAM_ID,
+          },
         })
         .instruction()
     );
@@ -391,22 +393,24 @@ export class DripPositionImpl implements DripPosition {
       await this.vaultProgram.methods
         .closePosition()
         .accounts({
-          vault: position.vault,
-          vaultProtoConfig: vault.protoConfig,
-          vaultPeriodI: periodIdIPubkey,
-          vaultPeriodJ: periodIdJPubkey,
+          common: {
+            vault: position.vault,
+            vaultProtoConfig: vault.protoConfig,
+            vaultPeriodI: periodIdIPubkey,
+            vaultPeriodJ: periodIdJPubkey,
+            userPosition: this.positionPubkey,
+            vaultTokenBAccount: vault.tokenBAccount,
+            vaultTreasuryTokenBAccount: vault.treasuryTokenBAccount,
+            userTokenBAccount: closePositionPreview.withdrawnToTokenBAccount,
+            userPositionNftAccount,
+            referrer: position.referrer,
+            withdrawer: this.provider.wallet.publicKey,
+            tokenProgram: TOKEN_PROGRAM_ID,
+          },
           vaultPeriodUserExpiry: periodIdKPubkey,
-          userPosition: this.positionPubkey,
           vaultTokenAAccount: vault.tokenAAccount,
-          vaultTokenBAccount: vault.tokenBAccount,
-          vaultTreasuryTokenBAccount: vault.treasuryTokenBAccount,
           userTokenAAccount: closePositionPreview.withdrawnToTokenAAccount,
-          userTokenBAccount: closePositionPreview.withdrawnToTokenBAccount,
-          userPositionNftAccount,
           userPositionNftMint: position.positionAuthority,
-          withdrawer: this.provider.wallet.publicKey,
-          tokenProgram: TOKEN_PROGRAM_ID,
-          systemProgram: SystemProgram.programId,
         })
         .instruction()
     );
