@@ -31,13 +31,19 @@ import { makeExplorerUrl } from '../utils/transaction';
 
 export class DripAdminImpl implements DripAdmin {
   private readonly vaultProgram: Program<Drip>;
+  private readonly programId: PublicKey;
 
   // For now we can do this, but we should transition to taking in a read-only connection here instead and
   // letting users only pass in signer at the end if they choose to else sign and broadcast the tx themselves
   // We should also decouple anchor from this to make it an actual SDK
-  constructor(private readonly provider: AnchorProvider, private readonly network: Network) {
+  constructor(
+    private readonly provider: AnchorProvider,
+    private readonly network: Network,
+    programId?: PublicKey
+  ) {
     const config = Configs[network];
-    this.vaultProgram = new Program(DripIDL as unknown as Drip, config.vaultProgramId, provider);
+    this.programId = programId ?? config.defaultProgramId;
+    this.vaultProgram = new Program(DripIDL as unknown as Drip, this.programId, provider);
   }
 
   public getInitVaultProtoConfigPreview(

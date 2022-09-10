@@ -5,7 +5,7 @@ import * as mainnet from './mainnet';
 import { Vault, VaultProtoConfig, Token } from './types';
 
 export interface Config {
-  vaultProgramId: PublicKey;
+  defaultProgramId: PublicKey;
   tokens: Record<string, Token>;
   vaultProtoConfigs: Record<string, VaultProtoConfig>;
   vaults: Record<string, Vault>;

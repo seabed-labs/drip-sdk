@@ -5,7 +5,7 @@ import { CONSTANT_SEEDS } from '../constants';
 import { toPubkey, toPubkeyBuffer } from '../utils';
 
 export function findVaultPubkey(
-  vaultProgramId: Address,
+  programId: Address,
   seeds: { protoConfig: Address; tokenAMint: Address; tokenBMint: Address }
 ): PublicKey {
   const [publicKey] = findProgramAddressSync(
@@ -15,14 +15,14 @@ export function findVaultPubkey(
       toPubkeyBuffer(seeds.tokenBMint),
       toPubkeyBuffer(seeds.protoConfig),
     ],
-    toPubkey(vaultProgramId)
+    toPubkey(programId)
   );
 
   return publicKey;
 }
 
 export function findVaultPeriodPubkey(
-  vaultProgramId: Address,
+  programId: Address,
   seeds: { vault: Address; periodId: BN }
 ): PublicKey {
   const [publicKey] = findProgramAddressSync(
@@ -31,19 +31,19 @@ export function findVaultPeriodPubkey(
       toPubkeyBuffer(seeds.vault),
       Buffer.from(seeds.periodId.toString()),
     ],
-    toPubkey(vaultProgramId)
+    toPubkey(programId)
   );
 
   return publicKey;
 }
 
 export function findVaultPositionPubkey(
-  vaultProgramId: Address,
+  programId: Address,
   seeds: { positionNftMint: Address }
 ): PublicKey {
   const [publicKey] = findProgramAddressSync(
     [Buffer.from(CONSTANT_SEEDS.userPosition), toPubkeyBuffer(seeds.positionNftMint)],
-    toPubkey(vaultProgramId)
+    toPubkey(programId)
   );
 
   return publicKey;

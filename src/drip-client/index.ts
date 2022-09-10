@@ -13,8 +13,14 @@ import { Network } from '../models';
 export class Drip {
   public readonly querier: DripQuerier;
   public readonly admin: DripAdmin;
+  public readonly programId: PublicKey;
 
-  public constructor(public readonly network: Network, public readonly provider: AnchorProvider) {
+  public constructor(
+    public readonly network: Network,
+    public readonly provider: AnchorProvider,
+    programId?: PublicKey
+  ) {
+    this.programId = programId ?? Configs[network].defaultProgramId;
     this.querier = new DripQuerierImpl(provider, network);
     this.admin = new DripAdminImpl(provider, network);
   }
@@ -32,6 +38,6 @@ export class Drip {
   }
 
   public getProgramId(network: Network): PublicKey {
-    return Configs[network].vaultProgramId;
+    return this.programId;
   }
 }

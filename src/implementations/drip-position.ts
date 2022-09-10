@@ -32,45 +32,51 @@ import { makeExplorerUrl } from '../utils/transaction';
 export class DripPositionImpl implements DripPosition {
   private readonly vaultProgram: Program<Drip>;
   private readonly positionPubkey: PublicKey;
+  private readonly programId: PublicKey;
 
   private constructor(
     private readonly provider: AnchorProvider,
     private readonly network: Network,
-    positionPubkey: Address
+    positionPubkey: Address,
+    programId?: PublicKey
   ) {
     const config = Configs[network];
-    this.vaultProgram = new Program(DripIDL as unknown as Drip, config.vaultProgramId, provider);
+    this.programId = programId ?? config.defaultProgramId;
+    this.vaultProgram = new Program(DripIDL as unknown as Drip, this.programId, provider);
     this.positionPubkey = toPubkey(positionPubkey);
   }
 
   public static async fromPosition(
     positionPubkey: Address,
     provider: AnchorProvider,
-    network: Network
+    network: Network,
+    programId?: PublicKey
   ): Promise<DripPositionImpl> {
     const config = Configs[network];
-    const vaultProgram = new Program(DripIDL as unknown as Drip, config.vaultProgramId, provider);
+    programId = programId ?? config.defaultProgramId;
+    const vaultProgram = new Program(DripIDL as unknown as Drip, programId, provider);
 
     const position = await vaultProgram.account.position.fetchNullable(positionPubkey);
     if (!position) {
       throw new PositionDoesNotExistError(toPubkey(positionPubkey));
     }
 
-    return new DripPositionImpl(provider, network, positionPubkey);
+    return new DripPositionImpl(provider, network, positionPubkey, programId);
   }
 
   public static async fromPositionNftMint(
     positionNftMintPubkey: Address,
     provider: AnchorProvider,
-    network: Network
+    network: Network,
+    programId?: PublicKey
   ): Promise<DripPositionImpl> {
     const config = Configs[network];
-
-    const positionPubkey = findVaultPositionPubkey(config.vaultProgramId, {
+    programId = programId ?? config.defaultProgramId;
+    const positionPubkey = findVaultPositionPubkey(programId, {
       positionNftMint: positionNftMintPubkey,
     });
 
-    return new DripPositionImpl(provider, network, positionPubkey);
+    return new DripPositionImpl(provider, network, positionPubkey, programId);
   }
 
   public async getWithdrawBPreview(): Promise<WithdrawBPreview> {
