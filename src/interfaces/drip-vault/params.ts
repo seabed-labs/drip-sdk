@@ -29,6 +29,7 @@ export function expiryToNumberOfSwaps(expiry: Date, granularity: Granularity): n
 export interface DepositParams {
   amount: BN;
   dripParams: DripParamsNumberOfSwaps | DripParamsTime;
+  referrer?: Address;
 }
 
 export interface InitVaultPeriodParams {

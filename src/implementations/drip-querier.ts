@@ -25,10 +25,12 @@ import Decimal from 'decimal.js';
 
 export class DripQuerierImpl implements DripQuerier {
   private readonly vaultProgram: Program<Drip>;
+  private readonly programId: PublicKey;
 
-  constructor(provider: AnchorProvider, private readonly network: Network) {
+  constructor(provider: AnchorProvider, private readonly network: Network, programId?: PublicKey) {
     const config = Configs[network];
-    this.vaultProgram = new Program(DripIDL as unknown as Drip, config.vaultProgramId, provider);
+    this.programId = programId ?? config.defaultProgramId;
+    this.vaultProgram = new Program(DripIDL as unknown as Drip, this.programId, provider);
   }
 
   async getAveragePrice(positionPubkey: Address, quoteToken: QuoteToken): Promise<Decimal> {

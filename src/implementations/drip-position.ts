@@ -12,7 +12,7 @@ import { Drip } from '../idl/type';
 import { DripPosition } from '../interfaces';
 import { Network } from '../models';
 import DripIDL from '../idl/idl.json';
-import { getCreateWSolAtaInstructions, getUnwrapSolInstructions, isSol, toPubkey } from '../utils';
+import { getUnwrapSolInstructions, isSol, toPubkey } from '../utils';
 import {
   calculateWithdrawTokenAAmount,
   calculateWithdrawTokenBAmount,
@@ -32,45 +32,51 @@ import { makeExplorerUrl } from '../utils/transaction';
 export class DripPositionImpl implements DripPosition {
   private readonly vaultProgram: Program<Drip>;
   private readonly positionPubkey: PublicKey;
+  private readonly programId: PublicKey;
 
   private constructor(
     private readonly provider: AnchorProvider,
     private readonly network: Network,
-    positionPubkey: Address
+    positionPubkey: Address,
+    programId?: PublicKey
   ) {
     const config = Configs[network];
-    this.vaultProgram = new Program(DripIDL as unknown as Drip, config.vaultProgramId, provider);
+    this.programId = programId ?? config.defaultProgramId;
+    this.vaultProgram = new Program(DripIDL as unknown as Drip, this.programId, provider);
     this.positionPubkey = toPubkey(positionPubkey);
   }
 
   public static async fromPosition(
     positionPubkey: Address,
     provider: AnchorProvider,
-    network: Network
+    network: Network,
+    programId?: PublicKey
   ): Promise<DripPositionImpl> {
     const config = Configs[network];
-    const vaultProgram = new Program(DripIDL as unknown as Drip, config.vaultProgramId, provider);
+    programId = programId ?? config.defaultProgramId;
+    const vaultProgram = new Program(DripIDL as unknown as Drip, programId, provider);
 
     const position = await vaultProgram.account.position.fetchNullable(positionPubkey);
     if (!position) {
       throw new PositionDoesNotExistError(toPubkey(positionPubkey));
     }
 
-    return new DripPositionImpl(provider, network, positionPubkey);
+    return new DripPositionImpl(provider, network, positionPubkey, programId);
   }
 
   public static async fromPositionNftMint(
     positionNftMintPubkey: Address,
     provider: AnchorProvider,
-    network: Network
+    network: Network,
+    programId?: PublicKey
   ): Promise<DripPositionImpl> {
     const config = Configs[network];
-
-    const positionPubkey = findVaultPositionPubkey(config.vaultProgramId, {
+    programId = programId ?? config.defaultProgramId;
+    const positionPubkey = findVaultPositionPubkey(programId, {
       positionNftMint: positionNftMintPubkey,
     });
 
-    return new DripPositionImpl(provider, network, positionPubkey);
+    return new DripPositionImpl(provider, network, positionPubkey, programId);
   }
 
   public async getWithdrawBPreview(): Promise<WithdrawBPreview> {
@@ -206,18 +212,20 @@ export class DripPositionImpl implements DripPosition {
       await this.vaultProgram.methods
         .withdrawB()
         .accounts({
-          vault: position.vault,
-          vaultProtoConfig: vault.protoConfig,
-          vaultPeriodI: periodIdIPubkey,
-          vaultPeriodJ: periodIdJPubkey,
-          userPosition: this.positionPubkey,
-          userPositionNftAccount,
-          vaultTokenBAccount: vault.tokenBAccount,
-          userTokenBAccount: userTokenBAccountPubkey,
-          vaultTreasuryTokenBAccount: vault.treasuryTokenBAccount,
-          withdrawer: this.provider.wallet.publicKey,
-          tokenProgram: TOKEN_PROGRAM_ID,
-          associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+          common: {
+            vault: position.vault,
+            vaultProtoConfig: vault.protoConfig,
+            vaultPeriodI: periodIdIPubkey,
+            vaultPeriodJ: periodIdJPubkey,
+            userPosition: this.positionPubkey,
+            userPositionNftAccount,
+            vaultTokenBAccount: vault.tokenBAccount,
+            userTokenBAccount: userTokenBAccountPubkey,
+            vaultTreasuryTokenBAccount: vault.treasuryTokenBAccount,
+            withdrawer: this.provider.wallet.publicKey,
+            referrer: position.referrer,
+            tokenProgram: TOKEN_PROGRAM_ID,
+          },
         })
         .instruction()
     );
@@ -391,22 +399,24 @@ export class DripPositionImpl implements DripPosition {
       await this.vaultProgram.methods
         .closePosition()
         .accounts({
-          vault: position.vault,
-          vaultProtoConfig: vault.protoConfig,
-          vaultPeriodI: periodIdIPubkey,
-          vaultPeriodJ: periodIdJPubkey,
+          common: {
+            vault: position.vault,
+            vaultProtoConfig: vault.protoConfig,
+            vaultPeriodI: periodIdIPubkey,
+            vaultPeriodJ: periodIdJPubkey,
+            userPosition: this.positionPubkey,
+            vaultTokenBAccount: vault.tokenBAccount,
+            vaultTreasuryTokenBAccount: vault.treasuryTokenBAccount,
+            userTokenBAccount: closePositionPreview.withdrawnToTokenBAccount,
+            userPositionNftAccount,
+            referrer: position.referrer,
+            withdrawer: this.provider.wallet.publicKey,
+            tokenProgram: TOKEN_PROGRAM_ID,
+          },
           vaultPeriodUserExpiry: periodIdKPubkey,
-          userPosition: this.positionPubkey,
           vaultTokenAAccount: vault.tokenAAccount,
-          vaultTokenBAccount: vault.tokenBAccount,
-          vaultTreasuryTokenBAccount: vault.treasuryTokenBAccount,
           userTokenAAccount: closePositionPreview.withdrawnToTokenAAccount,
-          userTokenBAccount: closePositionPreview.withdrawnToTokenBAccount,
-          userPositionNftAccount,
           userPositionNftMint: position.positionAuthority,
-          withdrawer: this.provider.wallet.publicKey,
-          tokenProgram: TOKEN_PROGRAM_ID,
-          systemProgram: SystemProgram.programId,
         })
         .instruction()
     );

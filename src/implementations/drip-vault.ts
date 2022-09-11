@@ -18,13 +18,7 @@ import {
   expiryToNumberOfSwaps,
 } from '../interfaces/drip-vault/params';
 import { DepositPreview, isDepositPreview } from '../interfaces/drip-vault/previews';
-import {
-  getCreateWSolAtaInstructions,
-  getUnwrapSolInstructions,
-  getWrapSolInstructions,
-  isSol,
-  toPubkey,
-} from '../utils';
+import { getWrapSolInstructions, isSol, toPubkey } from '../utils';
 import {
   findMPLTokenMetadataAccount,
   findVaultPeriodPubkey,
@@ -46,6 +40,7 @@ import { MPL_TOKEN_METADATA_PROGRAM } from '../utils/constants';
 export class DripVaultImpl implements DripVault {
   private readonly vaultProgram: Program<Drip>;
   private readonly vaultPubkey: PublicKey;
+  private readonly programId: PublicKey;
 
   // For now we can do this, but we should transition to taking in a read-only connection here instead and
   // letting users only pass in signer at the end if they choose to else sign and broadcast the tx themselves
@@ -53,44 +48,50 @@ export class DripVaultImpl implements DripVault {
   private constructor(
     private readonly provider: AnchorProvider,
     private readonly network: Network,
-    vaultPubkey: Address
+    vaultPubkey: Address,
+    programId?: PublicKey
   ) {
     const config = Configs[network];
-    this.vaultProgram = new Program(DripIDL as unknown as Drip, config.vaultProgramId, provider);
+    this.programId = programId ?? config.defaultProgramId;
+    this.vaultProgram = new Program(DripIDL as unknown as Drip, this.programId, provider);
     this.vaultPubkey = toPubkey(vaultPubkey);
   }
 
   public static async fromVaultSeeds(
     vaultSeeds: { protoConfig: Address; tokenAMint: Address; tokenBMint: Address },
     provider: AnchorProvider,
-    network: Network
+    network: Network,
+    programId?: PublicKey
   ): Promise<DripVaultImpl> {
-    const vaultPubkey = findVaultPubkey(Configs[network].vaultProgramId, vaultSeeds);
+    const vaultPubkey = findVaultPubkey(Configs[network].defaultProgramId, vaultSeeds);
     const config = Configs[network];
-    const vaultProgram = new Program(DripIDL as unknown as Drip, config.vaultProgramId, provider);
+    programId = programId ?? config.defaultProgramId;
+    const vaultProgram = new Program(DripIDL as unknown as Drip, programId, provider);
 
     const vault = await vaultProgram.account.vault.fetchNullable(vaultPubkey);
     if (!vault) {
       throw new VaultDoesNotExistError(vaultPubkey);
     }
 
-    return new DripVaultImpl(provider, network, vaultPubkey);
+    return new DripVaultImpl(provider, network, vaultPubkey, programId);
   }
 
   public static async fromVaultPubkey(
     vaultPubkey: Address,
     provider: AnchorProvider,
-    network: Network
+    network: Network,
+    programId?: PublicKey
   ): Promise<DripVaultImpl> {
     const config = Configs[network];
-    const vaultProgram = new Program(DripIDL as unknown as Drip, config.vaultProgramId, provider);
+    programId = programId ?? config.defaultProgramId;
+    const vaultProgram = new Program(DripIDL as unknown as Drip, programId, provider);
 
     const vault = await vaultProgram.account.vault.fetchNullable(vaultPubkey);
     if (!vault) {
       throw new VaultDoesNotExistError(toPubkey(vaultPubkey));
     }
 
-    return new DripVaultImpl(provider, network, vaultPubkey);
+    return new DripVaultImpl(provider, network, vaultPubkey, programId);
   }
 
   public async getDepositPreview(params: DepositParams): Promise<DepositPreview> {
@@ -110,6 +111,7 @@ export class DripVaultImpl implements DripVault {
       amount: params.amount,
       dripAmount,
       numberOfSwaps,
+      referrer: params.referrer,
     };
   }
 
@@ -118,13 +120,13 @@ export class DripVaultImpl implements DripVault {
     numberOfSwaps: BN;
     vaultPeriodEnd: PublicKey;
     userPosition: PublicKey;
-    tokenAMint: PublicKey;
     userPositionNftMint: PublicKey;
     vaultTokenAAccount: PublicKey;
     userTokenAAccount: PublicKey;
     userPositionNftAccount: PublicKey;
     positionNftMint: Keypair;
     position: PublicKey;
+    referrer: PublicKey;
     tx: Transaction;
   }> {
     const preview = isDepositPreview(params) ? params : await this.getDepositPreview(params);
@@ -133,6 +135,8 @@ export class DripVaultImpl implements DripVault {
     if (!vault) {
       throw new VaultDoesNotExistError(toPubkey(preview.vault));
     }
+
+    const referrer = params.referrer ? params.referrer : vault.treasuryTokenBAccount;
 
     const currentPeriodId = vault.lastDripPeriod;
     const depositExpiryPeriodId = vault.lastDripPeriod.addn(preview.numberOfSwaps);
@@ -225,13 +229,13 @@ export class DripVaultImpl implements DripVault {
       numberOfSwaps: new BN(preview.numberOfSwaps),
       vaultPeriodEnd: depositExpiryPeriodPubkey,
       userPosition: positionPubkey,
-      tokenAMint: vault.tokenAMint,
       userPositionNftMint: positionMintKeypair.publicKey,
       vaultTokenAAccount: vault.tokenAAccount,
       userTokenAAccount,
       userPositionNftAccount,
       positionNftMint: positionMintKeypair,
       position: positionPubkey,
+      referrer: toPubkey(referrer),
       tx,
     };
   }
@@ -250,6 +254,7 @@ export class DripVaultImpl implements DripVault {
       positionNftMint,
       userPositionNftAccount,
       position,
+      referrer,
       tx,
     } = await this.getDepositCommon(params);
     const depositIx = await this.vaultProgram.methods
@@ -258,18 +263,21 @@ export class DripVaultImpl implements DripVault {
         numberOfSwaps,
       })
       .accounts({
-        vault: this.vaultPubkey,
-        vaultPeriodEnd,
-        userPosition,
-        userPositionNftMint,
-        vaultTokenAAccount,
-        userTokenAAccount,
-        userPositionNftAccount,
-        depositor: this.provider.wallet.publicKey,
-        tokenProgram: TOKEN_PROGRAM_ID,
-        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-        rent: SYSVAR_RENT_PUBKEY,
-        systemProgram: SystemProgram.programId,
+        common: {
+          vault: this.vaultPubkey,
+          vaultPeriodEnd,
+          userPosition,
+          userPositionNftMint,
+          vaultTokenAAccount,
+          userTokenAAccount,
+          userPositionNftAccount,
+          depositor: this.provider.wallet.publicKey,
+          referrer,
+          tokenProgram: TOKEN_PROGRAM_ID,
+          associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+          rent: SYSVAR_RENT_PUBKEY,
+          systemProgram: SystemProgram.programId,
+        },
       })
       .instruction();
 
@@ -313,9 +321,9 @@ export class DripVaultImpl implements DripVault {
       vaultTokenAAccount,
       userTokenAAccount,
       positionNftMint,
-      tokenAMint,
       userPositionNftAccount,
       position,
+      referrer,
       tx,
     } = await this.getDepositCommon(params);
     const positionMetadataAccount = findMPLTokenMetadataAccount(MPL_TOKEN_METADATA_PROGRAM, {
@@ -327,21 +335,23 @@ export class DripVaultImpl implements DripVault {
         numberOfSwaps,
       })
       .accounts({
-        vault: this.vaultPubkey,
-        vaultPeriodEnd,
-        tokenAMint,
-        userPosition,
-        userPositionNftMint,
-        vaultTokenAAccount,
-        userTokenAAccount,
-        userPositionNftAccount,
+        common: {
+          vault: this.vaultPubkey,
+          vaultPeriodEnd,
+          userPosition,
+          userPositionNftMint,
+          vaultTokenAAccount,
+          userTokenAAccount,
+          userPositionNftAccount,
+          depositor: this.provider.wallet.publicKey,
+          referrer,
+          tokenProgram: TOKEN_PROGRAM_ID,
+          associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+          rent: SYSVAR_RENT_PUBKEY,
+          systemProgram: SystemProgram.programId,
+        },
         positionMetadataAccount,
-        depositor: this.provider.wallet.publicKey,
         metadataProgram: MPL_TOKEN_METADATA_PROGRAM,
-        tokenProgram: TOKEN_PROGRAM_ID,
-        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-        rent: SYSVAR_RENT_PUBKEY,
-        systemProgram: SystemProgram.programId,
       })
       .instruction();
 
@@ -398,10 +408,8 @@ export class DripVaultImpl implements DripVault {
         periodId,
       })
       .accounts({
-        vaultPeriod: vaultPeriodPubkey,
         vault: this.vaultPubkey,
-        tokenAMint: vault.tokenAMint,
-        tokenBMint: vault.tokenBMint,
+        vaultPeriod: vaultPeriodPubkey,
         vaultProtoConfig: vault.protoConfig,
         creator: this.provider.wallet.publicKey,
         systemProgram: SystemProgram.programId,

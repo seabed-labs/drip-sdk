@@ -25,7 +25,7 @@ export type Drip = {
         {
           name: 'params';
           type: {
-            defined: 'InitVaultProtoConfigParams';
+            defined: 'InitializeVaultProtoConfigParams';
           };
         }
       ];
@@ -40,16 +40,6 @@ export type Drip = {
         },
         {
           name: 'vault';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'tokenAMint';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'tokenBMint';
           isMut: false;
           isSigner: false;
         },
@@ -82,152 +72,74 @@ export type Drip = {
       name: 'deposit';
       accounts: [
         {
-          name: 'depositor';
-          isMut: true;
-          isSigner: true;
-        },
-        {
-          name: 'vault';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'vaultPeriodEnd';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'vaultTokenAAccount';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'userTokenAAccount';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'userPosition';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'userPositionNftMint';
-          isMut: true;
-          isSigner: true;
-        },
-        {
-          name: 'userPositionNftAccount';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'tokenProgram';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'associatedTokenProgram';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'rent';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'systemProgram';
-          isMut: false;
-          isSigner: false;
-        }
-      ];
-      args: [
-        {
-          name: 'params';
-          type: {
-            defined: 'DepositParams';
-          };
-        }
-      ];
-    },
-    {
-      name: 'depositWithMetadata';
-      accounts: [
-        {
-          name: 'vault';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'vaultPeriodEnd';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'userPosition';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'tokenAMint';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'userPositionNftMint';
-          isMut: true;
-          isSigner: true;
-        },
-        {
-          name: 'vaultTokenAAccount';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'userTokenAAccount';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'userPositionNftAccount';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'depositor';
-          isMut: true;
-          isSigner: true;
-        },
-        {
-          name: 'tokenProgram';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'associatedTokenProgram';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'rent';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'systemProgram';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'positionMetadataAccount';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'metadataProgram';
-          isMut: false;
-          isSigner: false;
+          name: 'common';
+          accounts: [
+            {
+              name: 'depositor';
+              isMut: true;
+              isSigner: true;
+            },
+            {
+              name: 'vault';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'vaultPeriodEnd';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'vaultTokenAAccount';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'userTokenAAccount';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'userPosition';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'userPositionNftMint';
+              isMut: true;
+              isSigner: true;
+            },
+            {
+              name: 'userPositionNftAccount';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'referrer';
+              isMut: false;
+              isSigner: false;
+            },
+            {
+              name: 'tokenProgram';
+              isMut: false;
+              isSigner: false;
+            },
+            {
+              name: 'associatedTokenProgram';
+              isMut: false;
+              isSigner: false;
+            },
+            {
+              name: 'rent';
+              isMut: false;
+              isSigner: false;
+            },
+            {
+              name: 'systemProgram';
+              isMut: false;
+              isSigner: false;
+            }
+          ];
         }
       ];
       args: [
@@ -243,64 +155,69 @@ export type Drip = {
       name: 'withdrawB';
       accounts: [
         {
-          name: 'withdrawer';
-          isMut: false;
-          isSigner: true;
-        },
-        {
-          name: 'vault';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'vaultProtoConfig';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'vaultPeriodI';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'vaultPeriodJ';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'userPosition';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'userPositionNftAccount';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'vaultTokenBAccount';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'vaultTreasuryTokenBAccount';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'userTokenBAccount';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'tokenProgram';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'associatedTokenProgram';
-          isMut: false;
-          isSigner: false;
+          name: 'common';
+          accounts: [
+            {
+              name: 'withdrawer';
+              isMut: false;
+              isSigner: true;
+            },
+            {
+              name: 'vault';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'vaultProtoConfig';
+              isMut: false;
+              isSigner: false;
+            },
+            {
+              name: 'vaultPeriodI';
+              isMut: false;
+              isSigner: false;
+            },
+            {
+              name: 'vaultPeriodJ';
+              isMut: false;
+              isSigner: false;
+            },
+            {
+              name: 'userPosition';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'userPositionNftAccount';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'vaultTokenBAccount';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'vaultTreasuryTokenBAccount';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'userTokenBAccount';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'referrer';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'tokenProgram';
+              isMut: false;
+              isSigner: false;
+            }
+          ];
         }
       ];
       args: [];
@@ -309,64 +226,69 @@ export type Drip = {
       name: 'closePosition';
       accounts: [
         {
-          name: 'withdrawer';
-          isMut: false;
-          isSigner: true;
-        },
-        {
-          name: 'vault';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'vaultProtoConfig';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'vaultPeriodI';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'vaultPeriodJ';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'userPosition';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'userPositionNftAccount';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'vaultTokenBAccount';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'vaultTreasuryTokenBAccount';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'userTokenBAccount';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'tokenProgram';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'systemProgram';
-          isMut: false;
-          isSigner: false;
+          name: 'common';
+          accounts: [
+            {
+              name: 'withdrawer';
+              isMut: false;
+              isSigner: true;
+            },
+            {
+              name: 'vault';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'vaultProtoConfig';
+              isMut: false;
+              isSigner: false;
+            },
+            {
+              name: 'vaultPeriodI';
+              isMut: false;
+              isSigner: false;
+            },
+            {
+              name: 'vaultPeriodJ';
+              isMut: false;
+              isSigner: false;
+            },
+            {
+              name: 'userPosition';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'userPositionNftAccount';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'vaultTokenBAccount';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'vaultTreasuryTokenBAccount';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'userTokenBAccount';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'referrer';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'tokenProgram';
+              isMut: false;
+              isSigner: false;
+            }
+          ];
         },
         {
           name: 'vaultPeriodUserExpiry';
@@ -392,77 +314,160 @@ export type Drip = {
       args: [];
     },
     {
+      name: 'depositWithMetadata';
+      accounts: [
+        {
+          name: 'common';
+          accounts: [
+            {
+              name: 'depositor';
+              isMut: true;
+              isSigner: true;
+            },
+            {
+              name: 'vault';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'vaultPeriodEnd';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'vaultTokenAAccount';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'userTokenAAccount';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'userPosition';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'userPositionNftMint';
+              isMut: true;
+              isSigner: true;
+            },
+            {
+              name: 'userPositionNftAccount';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'referrer';
+              isMut: false;
+              isSigner: false;
+            },
+            {
+              name: 'tokenProgram';
+              isMut: false;
+              isSigner: false;
+            },
+            {
+              name: 'associatedTokenProgram';
+              isMut: false;
+              isSigner: false;
+            },
+            {
+              name: 'rent';
+              isMut: false;
+              isSigner: false;
+            },
+            {
+              name: 'systemProgram';
+              isMut: false;
+              isSigner: false;
+            }
+          ];
+        },
+        {
+          name: 'positionMetadataAccount';
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: 'metadataProgram';
+          isMut: false;
+          isSigner: false;
+        }
+      ];
+      args: [
+        {
+          name: 'params';
+          type: {
+            defined: 'DepositParams';
+          };
+        }
+      ];
+    },
+    {
       name: 'dripSplTokenSwap';
       accounts: [
         {
-          name: 'dripTriggerSource';
-          isMut: false;
-          isSigner: true;
-        },
-        {
-          name: 'vault';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'vaultProtoConfig';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'lastVaultPeriod';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'currentVaultPeriod';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'vaultTokenAAccount';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'vaultTokenBAccount';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'swapTokenAAccount';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'swapTokenBAccount';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'dripFeeTokenAAccount';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'tokenProgram';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'associatedTokenProgram';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'systemProgram';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'rent';
-          isMut: false;
-          isSigner: false;
+          name: 'common';
+          accounts: [
+            {
+              name: 'dripTriggerSource';
+              isMut: false;
+              isSigner: true;
+            },
+            {
+              name: 'vault';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'vaultProtoConfig';
+              isMut: false;
+              isSigner: false;
+            },
+            {
+              name: 'lastVaultPeriod';
+              isMut: false;
+              isSigner: false;
+            },
+            {
+              name: 'currentVaultPeriod';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'vaultTokenAAccount';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'vaultTokenBAccount';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'swapTokenAAccount';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'swapTokenBAccount';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'dripFeeTokenAAccount';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'tokenProgram';
+              isMut: false;
+              isSigner: false;
+            }
+          ];
         },
         {
           name: 'swap';
@@ -496,74 +501,64 @@ export type Drip = {
       name: 'dripOrcaWhirlpool';
       accounts: [
         {
-          name: 'dripTriggerSource';
-          isMut: false;
-          isSigner: true;
-        },
-        {
-          name: 'vault';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'vaultProtoConfig';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'lastVaultPeriod';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'currentVaultPeriod';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'vaultTokenAAccount';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'vaultTokenBAccount';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'swapTokenAAccount';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'swapTokenBAccount';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'dripFeeTokenAAccount';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'tokenProgram';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'associatedTokenProgram';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'systemProgram';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'rent';
-          isMut: false;
-          isSigner: false;
+          name: 'common';
+          accounts: [
+            {
+              name: 'dripTriggerSource';
+              isMut: false;
+              isSigner: true;
+            },
+            {
+              name: 'vault';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'vaultProtoConfig';
+              isMut: false;
+              isSigner: false;
+            },
+            {
+              name: 'lastVaultPeriod';
+              isMut: false;
+              isSigner: false;
+            },
+            {
+              name: 'currentVaultPeriod';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'vaultTokenAAccount';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'vaultTokenBAccount';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'swapTokenAAccount';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'swapTokenBAccount';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'dripFeeTokenAAccount';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'tokenProgram';
+              isMut: false;
+              isSigner: false;
+            }
+          ];
         },
         {
           name: 'whirlpool';
@@ -672,7 +667,7 @@ export type Drip = {
       ];
     },
     {
-      name: 'updateVaultWhitelistedSwaps';
+      name: 'setVaultSwapWhitelist';
       accounts: [
         {
           name: 'admin';
@@ -686,11 +681,6 @@ export type Drip = {
         },
         {
           name: 'vaultProtoConfig';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'systemProgram';
           isMut: false;
           isSigner: false;
         }
@@ -717,6 +707,10 @@ export type Drip = {
           },
           {
             name: 'positionAuthority';
+            type: 'publicKey';
+          },
+          {
+            name: 'referrer';
             type: 'publicKey';
           },
           {
@@ -804,6 +798,10 @@ export type Drip = {
             type: 'u16';
           },
           {
+            name: 'tokenBReferralSpread';
+            type: 'u16';
+          },
+          {
             name: 'admin';
             type: 'publicKey';
           }
@@ -875,42 +873,6 @@ export type Drip = {
   ];
   types: [
     {
-      name: 'InitializeVaultPeriodParams';
-      type: {
-        kind: 'struct';
-        fields: [
-          {
-            name: 'periodId';
-            type: 'u64';
-          }
-        ];
-      };
-    },
-    {
-      name: 'InitVaultProtoConfigParams';
-      type: {
-        kind: 'struct';
-        fields: [
-          {
-            name: 'granularity';
-            type: 'u64';
-          },
-          {
-            name: 'tokenADripTriggerSpread';
-            type: 'u16';
-          },
-          {
-            name: 'tokenBWithdrawalSpread';
-            type: 'u16';
-          },
-          {
-            name: 'admin';
-            type: 'publicKey';
-          }
-        ];
-      };
-    },
-    {
       name: 'InitializeVaultParams';
       type: {
         kind: 'struct';
@@ -953,6 +915,46 @@ export type Drip = {
           },
           {
             name: 'numberOfSwaps';
+            type: 'u64';
+          }
+        ];
+      };
+    },
+    {
+      name: 'InitializeVaultProtoConfigParams';
+      type: {
+        kind: 'struct';
+        fields: [
+          {
+            name: 'granularity';
+            type: 'u64';
+          },
+          {
+            name: 'tokenADripTriggerSpread';
+            type: 'u16';
+          },
+          {
+            name: 'tokenBWithdrawalSpread';
+            type: 'u16';
+          },
+          {
+            name: 'tokenBReferralSpread';
+            type: 'u16';
+          },
+          {
+            name: 'admin';
+            type: 'publicKey';
+          }
+        ];
+      };
+    },
+    {
+      name: 'InitializeVaultPeriodParams';
+      type: {
+        kind: 'struct';
+        fields: [
+          {
+            name: 'periodId';
             type: 'u64';
           }
         ];
@@ -1027,7 +1029,7 @@ export type Drip = {
     {
       code: 6009;
       name: 'InvalidNumSwaps';
-      msg: 'A Vault May Limit to a Maximum of 5 Token Swaps';
+      msg: 'A Vault May Whitelist a Maximum of 5 Swap Accounts';
     },
     {
       code: 6010;
@@ -1088,6 +1090,26 @@ export type Drip = {
       code: 6021;
       name: 'SignerIsNotAdmin';
       msg: 'Signer is not admin';
+    },
+    {
+      code: 6022;
+      name: 'IncorrectVaultTokenAccount';
+      msg: 'Incorrect vault token account passed in';
+    },
+    {
+      code: 6023;
+      name: 'InvalidOwner';
+      msg: 'Account is owned by the wrong account';
+    },
+    {
+      code: 6024;
+      name: 'PositionBalanceIsZero';
+      msg: 'Position token account balance is empty';
+    },
+    {
+      code: 6025;
+      name: 'InvalidReferrer';
+      msg: 'Referrer does not match position referrer';
     }
   ];
 };
@@ -1119,7 +1141,7 @@ export const IDL: Drip = {
         {
           name: 'params',
           type: {
-            defined: 'InitVaultProtoConfigParams',
+            defined: 'InitializeVaultProtoConfigParams',
           },
         },
       ],
@@ -1134,16 +1156,6 @@ export const IDL: Drip = {
         },
         {
           name: 'vault',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'tokenAMint',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'tokenBMint',
           isMut: false,
           isSigner: false,
         },
@@ -1176,152 +1188,74 @@ export const IDL: Drip = {
       name: 'deposit',
       accounts: [
         {
-          name: 'depositor',
-          isMut: true,
-          isSigner: true,
-        },
-        {
-          name: 'vault',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'vaultPeriodEnd',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'vaultTokenAAccount',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'userTokenAAccount',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'userPosition',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'userPositionNftMint',
-          isMut: true,
-          isSigner: true,
-        },
-        {
-          name: 'userPositionNftAccount',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'tokenProgram',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'associatedTokenProgram',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'rent',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'systemProgram',
-          isMut: false,
-          isSigner: false,
-        },
-      ],
-      args: [
-        {
-          name: 'params',
-          type: {
-            defined: 'DepositParams',
-          },
-        },
-      ],
-    },
-    {
-      name: 'depositWithMetadata',
-      accounts: [
-        {
-          name: 'vault',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'vaultPeriodEnd',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'userPosition',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'tokenAMint',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'userPositionNftMint',
-          isMut: true,
-          isSigner: true,
-        },
-        {
-          name: 'vaultTokenAAccount',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'userTokenAAccount',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'userPositionNftAccount',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'depositor',
-          isMut: true,
-          isSigner: true,
-        },
-        {
-          name: 'tokenProgram',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'associatedTokenProgram',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'rent',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'systemProgram',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'positionMetadataAccount',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'metadataProgram',
-          isMut: false,
-          isSigner: false,
+          name: 'common',
+          accounts: [
+            {
+              name: 'depositor',
+              isMut: true,
+              isSigner: true,
+            },
+            {
+              name: 'vault',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'vaultPeriodEnd',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'vaultTokenAAccount',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'userTokenAAccount',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'userPosition',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'userPositionNftMint',
+              isMut: true,
+              isSigner: true,
+            },
+            {
+              name: 'userPositionNftAccount',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'referrer',
+              isMut: false,
+              isSigner: false,
+            },
+            {
+              name: 'tokenProgram',
+              isMut: false,
+              isSigner: false,
+            },
+            {
+              name: 'associatedTokenProgram',
+              isMut: false,
+              isSigner: false,
+            },
+            {
+              name: 'rent',
+              isMut: false,
+              isSigner: false,
+            },
+            {
+              name: 'systemProgram',
+              isMut: false,
+              isSigner: false,
+            },
+          ],
         },
       ],
       args: [
@@ -1337,64 +1271,69 @@ export const IDL: Drip = {
       name: 'withdrawB',
       accounts: [
         {
-          name: 'withdrawer',
-          isMut: false,
-          isSigner: true,
-        },
-        {
-          name: 'vault',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'vaultProtoConfig',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'vaultPeriodI',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'vaultPeriodJ',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'userPosition',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'userPositionNftAccount',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'vaultTokenBAccount',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'vaultTreasuryTokenBAccount',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'userTokenBAccount',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'tokenProgram',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'associatedTokenProgram',
-          isMut: false,
-          isSigner: false,
+          name: 'common',
+          accounts: [
+            {
+              name: 'withdrawer',
+              isMut: false,
+              isSigner: true,
+            },
+            {
+              name: 'vault',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'vaultProtoConfig',
+              isMut: false,
+              isSigner: false,
+            },
+            {
+              name: 'vaultPeriodI',
+              isMut: false,
+              isSigner: false,
+            },
+            {
+              name: 'vaultPeriodJ',
+              isMut: false,
+              isSigner: false,
+            },
+            {
+              name: 'userPosition',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'userPositionNftAccount',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'vaultTokenBAccount',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'vaultTreasuryTokenBAccount',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'userTokenBAccount',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'referrer',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'tokenProgram',
+              isMut: false,
+              isSigner: false,
+            },
+          ],
         },
       ],
       args: [],
@@ -1403,64 +1342,69 @@ export const IDL: Drip = {
       name: 'closePosition',
       accounts: [
         {
-          name: 'withdrawer',
-          isMut: false,
-          isSigner: true,
-        },
-        {
-          name: 'vault',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'vaultProtoConfig',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'vaultPeriodI',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'vaultPeriodJ',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'userPosition',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'userPositionNftAccount',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'vaultTokenBAccount',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'vaultTreasuryTokenBAccount',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'userTokenBAccount',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'tokenProgram',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'systemProgram',
-          isMut: false,
-          isSigner: false,
+          name: 'common',
+          accounts: [
+            {
+              name: 'withdrawer',
+              isMut: false,
+              isSigner: true,
+            },
+            {
+              name: 'vault',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'vaultProtoConfig',
+              isMut: false,
+              isSigner: false,
+            },
+            {
+              name: 'vaultPeriodI',
+              isMut: false,
+              isSigner: false,
+            },
+            {
+              name: 'vaultPeriodJ',
+              isMut: false,
+              isSigner: false,
+            },
+            {
+              name: 'userPosition',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'userPositionNftAccount',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'vaultTokenBAccount',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'vaultTreasuryTokenBAccount',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'userTokenBAccount',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'referrer',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'tokenProgram',
+              isMut: false,
+              isSigner: false,
+            },
+          ],
         },
         {
           name: 'vaultPeriodUserExpiry',
@@ -1486,77 +1430,160 @@ export const IDL: Drip = {
       args: [],
     },
     {
+      name: 'depositWithMetadata',
+      accounts: [
+        {
+          name: 'common',
+          accounts: [
+            {
+              name: 'depositor',
+              isMut: true,
+              isSigner: true,
+            },
+            {
+              name: 'vault',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'vaultPeriodEnd',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'vaultTokenAAccount',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'userTokenAAccount',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'userPosition',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'userPositionNftMint',
+              isMut: true,
+              isSigner: true,
+            },
+            {
+              name: 'userPositionNftAccount',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'referrer',
+              isMut: false,
+              isSigner: false,
+            },
+            {
+              name: 'tokenProgram',
+              isMut: false,
+              isSigner: false,
+            },
+            {
+              name: 'associatedTokenProgram',
+              isMut: false,
+              isSigner: false,
+            },
+            {
+              name: 'rent',
+              isMut: false,
+              isSigner: false,
+            },
+            {
+              name: 'systemProgram',
+              isMut: false,
+              isSigner: false,
+            },
+          ],
+        },
+        {
+          name: 'positionMetadataAccount',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'metadataProgram',
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [
+        {
+          name: 'params',
+          type: {
+            defined: 'DepositParams',
+          },
+        },
+      ],
+    },
+    {
       name: 'dripSplTokenSwap',
       accounts: [
         {
-          name: 'dripTriggerSource',
-          isMut: false,
-          isSigner: true,
-        },
-        {
-          name: 'vault',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'vaultProtoConfig',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'lastVaultPeriod',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'currentVaultPeriod',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'vaultTokenAAccount',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'vaultTokenBAccount',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'swapTokenAAccount',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'swapTokenBAccount',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'dripFeeTokenAAccount',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'tokenProgram',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'associatedTokenProgram',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'systemProgram',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'rent',
-          isMut: false,
-          isSigner: false,
+          name: 'common',
+          accounts: [
+            {
+              name: 'dripTriggerSource',
+              isMut: false,
+              isSigner: true,
+            },
+            {
+              name: 'vault',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'vaultProtoConfig',
+              isMut: false,
+              isSigner: false,
+            },
+            {
+              name: 'lastVaultPeriod',
+              isMut: false,
+              isSigner: false,
+            },
+            {
+              name: 'currentVaultPeriod',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'vaultTokenAAccount',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'vaultTokenBAccount',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'swapTokenAAccount',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'swapTokenBAccount',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'dripFeeTokenAAccount',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'tokenProgram',
+              isMut: false,
+              isSigner: false,
+            },
+          ],
         },
         {
           name: 'swap',
@@ -1590,74 +1617,64 @@ export const IDL: Drip = {
       name: 'dripOrcaWhirlpool',
       accounts: [
         {
-          name: 'dripTriggerSource',
-          isMut: false,
-          isSigner: true,
-        },
-        {
-          name: 'vault',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'vaultProtoConfig',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'lastVaultPeriod',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'currentVaultPeriod',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'vaultTokenAAccount',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'vaultTokenBAccount',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'swapTokenAAccount',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'swapTokenBAccount',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'dripFeeTokenAAccount',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'tokenProgram',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'associatedTokenProgram',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'systemProgram',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'rent',
-          isMut: false,
-          isSigner: false,
+          name: 'common',
+          accounts: [
+            {
+              name: 'dripTriggerSource',
+              isMut: false,
+              isSigner: true,
+            },
+            {
+              name: 'vault',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'vaultProtoConfig',
+              isMut: false,
+              isSigner: false,
+            },
+            {
+              name: 'lastVaultPeriod',
+              isMut: false,
+              isSigner: false,
+            },
+            {
+              name: 'currentVaultPeriod',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'vaultTokenAAccount',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'vaultTokenBAccount',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'swapTokenAAccount',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'swapTokenBAccount',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'dripFeeTokenAAccount',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'tokenProgram',
+              isMut: false,
+              isSigner: false,
+            },
+          ],
         },
         {
           name: 'whirlpool',
@@ -1766,7 +1783,7 @@ export const IDL: Drip = {
       ],
     },
     {
-      name: 'updateVaultWhitelistedSwaps',
+      name: 'setVaultSwapWhitelist',
       accounts: [
         {
           name: 'admin',
@@ -1780,11 +1797,6 @@ export const IDL: Drip = {
         },
         {
           name: 'vaultProtoConfig',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'systemProgram',
           isMut: false,
           isSigner: false,
         },
@@ -1811,6 +1823,10 @@ export const IDL: Drip = {
           },
           {
             name: 'positionAuthority',
+            type: 'publicKey',
+          },
+          {
+            name: 'referrer',
             type: 'publicKey',
           },
           {
@@ -1898,6 +1914,10 @@ export const IDL: Drip = {
             type: 'u16',
           },
           {
+            name: 'tokenBReferralSpread',
+            type: 'u16',
+          },
+          {
             name: 'admin',
             type: 'publicKey',
           },
@@ -1969,42 +1989,6 @@ export const IDL: Drip = {
   ],
   types: [
     {
-      name: 'InitializeVaultPeriodParams',
-      type: {
-        kind: 'struct',
-        fields: [
-          {
-            name: 'periodId',
-            type: 'u64',
-          },
-        ],
-      },
-    },
-    {
-      name: 'InitVaultProtoConfigParams',
-      type: {
-        kind: 'struct',
-        fields: [
-          {
-            name: 'granularity',
-            type: 'u64',
-          },
-          {
-            name: 'tokenADripTriggerSpread',
-            type: 'u16',
-          },
-          {
-            name: 'tokenBWithdrawalSpread',
-            type: 'u16',
-          },
-          {
-            name: 'admin',
-            type: 'publicKey',
-          },
-        ],
-      },
-    },
-    {
       name: 'InitializeVaultParams',
       type: {
         kind: 'struct',
@@ -2047,6 +2031,46 @@ export const IDL: Drip = {
           },
           {
             name: 'numberOfSwaps',
+            type: 'u64',
+          },
+        ],
+      },
+    },
+    {
+      name: 'InitializeVaultProtoConfigParams',
+      type: {
+        kind: 'struct',
+        fields: [
+          {
+            name: 'granularity',
+            type: 'u64',
+          },
+          {
+            name: 'tokenADripTriggerSpread',
+            type: 'u16',
+          },
+          {
+            name: 'tokenBWithdrawalSpread',
+            type: 'u16',
+          },
+          {
+            name: 'tokenBReferralSpread',
+            type: 'u16',
+          },
+          {
+            name: 'admin',
+            type: 'publicKey',
+          },
+        ],
+      },
+    },
+    {
+      name: 'InitializeVaultPeriodParams',
+      type: {
+        kind: 'struct',
+        fields: [
+          {
+            name: 'periodId',
             type: 'u64',
           },
         ],
@@ -2121,7 +2145,7 @@ export const IDL: Drip = {
     {
       code: 6009,
       name: 'InvalidNumSwaps',
-      msg: 'A Vault May Limit to a Maximum of 5 Token Swaps',
+      msg: 'A Vault May Whitelist a Maximum of 5 Swap Accounts',
     },
     {
       code: 6010,
@@ -2182,6 +2206,26 @@ export const IDL: Drip = {
       code: 6021,
       name: 'SignerIsNotAdmin',
       msg: 'Signer is not admin',
+    },
+    {
+      code: 6022,
+      name: 'IncorrectVaultTokenAccount',
+      msg: 'Incorrect vault token account passed in',
+    },
+    {
+      code: 6023,
+      name: 'InvalidOwner',
+      msg: 'Account is owned by the wrong account',
+    },
+    {
+      code: 6024,
+      name: 'PositionBalanceIsZero',
+      msg: 'Position token account balance is empty',
+    },
+    {
+      code: 6025,
+      name: 'InvalidReferrer',
+      msg: 'Referrer does not match position referrer',
     },
   ],
 };
