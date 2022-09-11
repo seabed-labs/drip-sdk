@@ -97,7 +97,8 @@ export class DripQuerierImpl implements DripQuerier {
       .div(new Decimal(10).pow(tokenB.decimals));
 
     const dripSpreadA = vaultProtoConfig.tokenADripTriggerSpread;
-    const withdrawSpreadB = vaultProtoConfig.tokenBWithdrawalSpread;
+    const withdrawSpreadB =
+      vaultProtoConfig.tokenBWithdrawalSpread + vaultProtoConfig.tokenBReferralSpread;
     const oneE4 = new Decimal(1e4);
 
     const priceMultiplierNumerator = oneE4.sub(dripSpreadA).mul(oneE4.sub(withdrawSpreadB));
