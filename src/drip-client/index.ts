@@ -21,23 +21,24 @@ export class Drip {
     programId?: PublicKey
   ) {
     this.programId = programId ?? Configs[network].defaultProgramId;
-    this.querier = new DripQuerierImpl(provider, network);
-    this.admin = new DripAdminImpl(provider, network);
+    this.querier = new DripQuerierImpl(provider, network, programId);
+    this.admin = new DripAdminImpl(provider, network, programId);
   }
 
   public async getPosition(pubkey: Address): Promise<DripPosition> {
-    return await DripPositionImpl.fromPosition(pubkey, this.provider, this.network);
+    return await DripPositionImpl.fromPosition(pubkey, this.provider, this.network, this.programId);
   }
 
   public async getPositionByMint(positionMint: Address): Promise<DripPosition> {
-    return await DripPositionImpl.fromPositionNftMint(positionMint, this.provider, this.network);
+    return await DripPositionImpl.fromPositionNftMint(
+      positionMint,
+      this.provider,
+      this.network,
+      this.programId
+    );
   }
 
   public async getVault(pubkey: Address): Promise<DripVault> {
-    return await DripVaultImpl.fromVaultPubkey(pubkey, this.provider, this.network);
-  }
-
-  public getProgramId(network: Network): PublicKey {
-    return this.programId;
+    return await DripVaultImpl.fromVaultPubkey(pubkey, this.provider, this.network, this.programId);
   }
 }

@@ -2,6 +2,7 @@ import { PublicKey } from '@solana/web3.js';
 import { Network } from '../models';
 import * as devnet from './devnet';
 import * as mainnet from './mainnet';
+import * as staging from './staging';
 import { Vault, VaultProtoConfig, Token } from './types';
 
 export interface Config {
@@ -12,8 +13,9 @@ export interface Config {
 }
 
 export const Configs: Record<Network, Config> = {
-  [Network.Mainnet]: mainnet,
-  [Network.Devnet]: devnet,
+  [Network.MainnetProd]: mainnet,
+  [Network.DevnetProd]: devnet,
+  [Network.DevnetStaging]: staging,
 };
 
 export * from './types';

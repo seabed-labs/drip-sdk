@@ -1,4 +1,5 @@
 export enum Network {
-  Mainnet,
-  Devnet,
+  MainnetProd,
+  DevnetProd,
+  DevnetStaging,
 }
