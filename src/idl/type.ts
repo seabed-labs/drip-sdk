@@ -159,7 +159,7 @@ export type Drip = {
           accounts: [
             {
               name: 'withdrawer';
-              isMut: false;
+              isMut: true;
               isSigner: true;
             },
             {
@@ -230,7 +230,7 @@ export type Drip = {
           accounts: [
             {
               name: 'withdrawer';
-              isMut: false;
+              isMut: true;
               isSigner: true;
             },
             {
@@ -1275,7 +1275,7 @@ export const IDL: Drip = {
           accounts: [
             {
               name: 'withdrawer',
-              isMut: false,
+              isMut: true,
               isSigner: true,
             },
             {
@@ -1346,7 +1346,7 @@ export const IDL: Drip = {
           accounts: [
             {
               name: 'withdrawer',
-              isMut: false,
+              isMut: true,
               isSigner: true,
             },
             {
