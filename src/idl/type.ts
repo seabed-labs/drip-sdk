@@ -44,11 +44,6 @@ export type Drip = {
           isSigner: false;
         },
         {
-          name: 'vaultProtoConfig';
-          isMut: false;
-          isSigner: false;
-        },
-        {
           name: 'creator';
           isMut: true;
           isSigner: true;
@@ -1156,11 +1151,6 @@ export const IDL: Drip = {
         },
         {
           name: 'vault',
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: 'vaultProtoConfig',
           isMut: false,
           isSigner: false,
         },
