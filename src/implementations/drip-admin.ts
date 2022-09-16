@@ -126,7 +126,6 @@ export class DripAdminImpl implements DripAdmin {
       .accounts({
         vaultPeriod: vaultGenesisPeriodPubkey,
         vault: vaultPubkey,
-        vaultProtoConfig: params.protoConfig,
         creator: this.provider.wallet.publicKey,
         systemProgram: SystemProgram.programId,
       })
