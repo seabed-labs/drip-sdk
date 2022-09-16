@@ -410,7 +410,6 @@ export class DripVaultImpl implements DripVault {
       .accounts({
         vault: this.vaultPubkey,
         vaultPeriod: vaultPeriodPubkey,
-        vaultProtoConfig: vault.protoConfig,
         creator: this.provider.wallet.publicKey,
         systemProgram: SystemProgram.programId,
       })
