@@ -1,5 +1,4 @@
 import { Address, BN, Program, AnchorProvider } from '@project-serum/anchor';
-import { Configs } from '../config';
 import { Drip } from '../idl/type';
 import { DripVault } from '../interfaces';
 import { Network } from '../models';
@@ -40,7 +39,6 @@ import { MPL_TOKEN_METADATA_PROGRAM } from '../utils/constants';
 export class DripVaultImpl implements DripVault {
   private readonly vaultProgram: Program<Drip>;
   private readonly vaultPubkey: PublicKey;
-  private readonly programId: PublicKey;
 
   // For now we can do this, but we should transition to taking in a read-only connection here instead and
   // letting users only pass in signer at the end if they choose to else sign and broadcast the tx themselves
@@ -48,24 +46,20 @@ export class DripVaultImpl implements DripVault {
   private constructor(
     private readonly provider: AnchorProvider,
     private readonly network: Network,
-    vaultPubkey: Address,
-    programId?: PublicKey
+    private readonly programId: PublicKey,
+    vaultPubkey: Address
   ) {
-    const config = Configs[network];
-    this.programId = programId ?? config.defaultProgramId;
     this.vaultProgram = new Program(DripIDL as unknown as Drip, this.programId, provider);
     this.vaultPubkey = toPubkey(vaultPubkey);
   }
 
   public static async fromVaultSeeds(
-    vaultSeeds: { protoConfig: Address; tokenAMint: Address; tokenBMint: Address },
     provider: AnchorProvider,
     network: Network,
-    programId?: PublicKey
+    programId: Address,
+    vaultSeeds: { protoConfig: Address; tokenAMint: Address; tokenBMint: Address }
   ): Promise<DripVaultImpl> {
-    const vaultPubkey = findVaultPubkey(Configs[network].defaultProgramId, vaultSeeds);
-    const config = Configs[network];
-    programId = programId ?? config.defaultProgramId;
+    const vaultPubkey = findVaultPubkey(programId, vaultSeeds);
     const vaultProgram = new Program(DripIDL as unknown as Drip, programId, provider);
 
     const vault = await vaultProgram.account.vault.fetchNullable(vaultPubkey);
@@ -73,17 +67,15 @@ export class DripVaultImpl implements DripVault {
       throw new VaultDoesNotExistError(vaultPubkey);
     }
 
-    return new DripVaultImpl(provider, network, vaultPubkey, programId);
+    return new DripVaultImpl(provider, network, toPubkey(programId), vaultPubkey);
   }
 
   public static async fromVaultPubkey(
-    vaultPubkey: Address,
     provider: AnchorProvider,
     network: Network,
-    programId?: PublicKey
+    programId: Address,
+    vaultPubkey: Address
   ): Promise<DripVaultImpl> {
-    const config = Configs[network];
-    programId = programId ?? config.defaultProgramId;
     const vaultProgram = new Program(DripIDL as unknown as Drip, programId, provider);
 
     const vault = await vaultProgram.account.vault.fetchNullable(vaultPubkey);
@@ -91,7 +83,7 @@ export class DripVaultImpl implements DripVault {
       throw new VaultDoesNotExistError(toPubkey(vaultPubkey));
     }
 
-    return new DripVaultImpl(provider, network, vaultPubkey, programId);
+    return new DripVaultImpl(provider, network, toPubkey(programId), vaultPubkey);
   }
 
   public async getDepositPreview(params: DepositParams): Promise<DepositPreview> {

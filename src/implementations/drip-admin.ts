@@ -6,7 +6,6 @@ import {
   SYSVAR_RENT_PUBKEY,
   Transaction,
 } from '@solana/web3.js';
-import { Configs } from '../config';
 import { Drip } from '../idl/type';
 import DripIDL from '../idl/idl.json';
 import { DripAdmin } from '../interfaces';
@@ -28,10 +27,10 @@ import {
 } from '@solana/spl-token';
 import { findVaultPeriodPubkey, findVaultPubkey } from '../helpers';
 import { makeExplorerUrl } from '../utils/transaction';
+import { Config } from '../config';
 
 export class DripAdminImpl implements DripAdmin {
   private readonly vaultProgram: Program<Drip>;
-  private readonly programId: PublicKey;
 
   // For now we can do this, but we should transition to taking in a read-only connection here instead and
   // letting users only pass in signer at the end if they choose to else sign and broadcast the tx themselves
@@ -39,10 +38,8 @@ export class DripAdminImpl implements DripAdmin {
   constructor(
     private readonly provider: AnchorProvider,
     private readonly network: Network,
-    programId?: PublicKey
+    private readonly programId: PublicKey
   ) {
-    const config = Configs[network];
-    this.programId = programId ?? config.defaultProgramId;
     this.vaultProgram = new Program(DripIDL as unknown as Drip, this.programId, provider);
   }
 

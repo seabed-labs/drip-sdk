@@ -1,6 +1,5 @@
 import { Address, AnchorProvider } from '@project-serum/anchor';
-import { PublicKey } from '@solana/web3.js';
-import { Configs } from '../config';
+import { Config } from '../config';
 import {
   DripAdminImpl,
   DripPositionImpl,
@@ -13,32 +12,40 @@ import { Network } from '../models';
 export class Drip {
   public readonly querier: DripQuerier;
   public readonly admin: DripAdmin;
-  public readonly programId: PublicKey;
 
   public constructor(
     public readonly network: Network,
     public readonly provider: AnchorProvider,
-    programId?: PublicKey
+    public readonly config: Config
   ) {
-    this.programId = programId ?? Configs[network].defaultProgramId;
-    this.querier = new DripQuerierImpl(provider, network, programId);
-    this.admin = new DripAdminImpl(provider, network, programId);
+    this.querier = new DripQuerierImpl(this.provider, config);
+    this.admin = new DripAdminImpl(provider, network, config.programId);
   }
 
   public async getPosition(pubkey: Address): Promise<DripPosition> {
-    return await DripPositionImpl.fromPosition(pubkey, this.provider, this.network, this.programId);
+    return await DripPositionImpl.fromPosition(
+      this.provider,
+      this.network,
+      this.config.programId,
+      pubkey
+    );
   }
 
   public async getPositionByMint(positionMint: Address): Promise<DripPosition> {
     return await DripPositionImpl.fromPositionNftMint(
-      positionMint,
       this.provider,
       this.network,
-      this.programId
+      this.config.programId,
+      positionMint
     );
   }
 
   public async getVault(pubkey: Address): Promise<DripVault> {
-    return await DripVaultImpl.fromVaultPubkey(pubkey, this.provider, this.network, this.programId);
+    return await DripVaultImpl.fromVaultPubkey(
+      this.provider,
+      this.network,
+      this.config.programId,
+      pubkey
+    );
   }
 }
