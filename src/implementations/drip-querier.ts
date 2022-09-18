@@ -1,8 +1,7 @@
 import { Address, Program, AnchorProvider, BN } from '@project-serum/anchor';
 import { PublicKey } from '@solana/web3.js';
 import { Vault, Token, VaultProtoConfig } from '../config/types';
-import { Drip } from '../idl/type';
-import DripIDL from '../idl/idl.json';
+import { IDL, Drip } from '../idl/type';
 import { DripQuerier, QuoteToken } from '../interfaces';
 import {
   VaultAccount,
@@ -26,7 +25,7 @@ export class DripQuerierImpl implements DripQuerier {
   private readonly vaultProgram: Program<Drip>;
 
   constructor(provider: AnchorProvider, private readonly config: Config) {
-    this.vaultProgram = new Program(DripIDL as unknown as Drip, config.programId, provider);
+    this.vaultProgram = new Program(IDL, config.programId, provider);
   }
 
   async getAveragePrice(positionPubkey: Address, quoteToken: QuoteToken): Promise<Decimal> {

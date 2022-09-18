@@ -6,8 +6,7 @@ import {
   SYSVAR_RENT_PUBKEY,
   Transaction,
 } from '@solana/web3.js';
-import { Drip } from '../idl/type';
-import DripIDL from '../idl/idl.json';
+import { IDL, Drip } from '../idl/type';
 import { DripAdmin } from '../interfaces';
 import { InitVaultProtoConfigParams, InitVaultParams } from '../interfaces/drip-admin/params';
 import { Network } from '../models';
@@ -40,7 +39,7 @@ export class DripAdminImpl implements DripAdmin {
     private readonly network: Network,
     private readonly programId: PublicKey
   ) {
-    this.vaultProgram = new Program(DripIDL as unknown as Drip, this.programId, provider);
+    this.vaultProgram = new Program(IDL, this.programId, provider);
   }
 
   public getInitVaultProtoConfigPreview(

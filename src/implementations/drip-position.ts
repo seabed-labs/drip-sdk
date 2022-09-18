@@ -7,10 +7,9 @@ import {
   TokenAccountNotFoundError,
   TokenInvalidAccountOwnerError,
 } from '@solana/spl-token';
-import { Drip } from '../idl/type';
+import { IDL, Drip } from '../idl/type';
 import { DripPosition } from '../interfaces';
 import { Network } from '../models';
-import DripIDL from '../idl/idl.json';
 import { getUnwrapSolInstructions, isSol, toPubkey } from '../utils';
 import {
   calculateWithdrawTokenAAmount,
@@ -38,7 +37,7 @@ export class DripPositionImpl implements DripPosition {
     private readonly programId: PublicKey,
     positionPubkey: Address
   ) {
-    this.vaultProgram = new Program(DripIDL as unknown as Drip, this.programId, provider);
+    this.vaultProgram = new Program(IDL, this.programId, provider);
     this.positionPubkey = toPubkey(positionPubkey);
   }
 
@@ -48,7 +47,7 @@ export class DripPositionImpl implements DripPosition {
     programId: Address,
     positionPubkey: Address
   ): Promise<DripPositionImpl> {
-    const vaultProgram = new Program(DripIDL as unknown as Drip, programId, provider);
+    const vaultProgram = new Program(IDL, programId, provider);
 
     const position = await vaultProgram.account.position.fetchNullable(positionPubkey);
     if (!position) {

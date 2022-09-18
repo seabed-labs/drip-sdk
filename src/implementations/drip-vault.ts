@@ -1,8 +1,7 @@
 import { Address, BN, Program, AnchorProvider } from '@project-serum/anchor';
-import { Drip } from '../idl/type';
+import { IDL, Drip } from '../idl/type';
 import { DripVault } from '../interfaces';
 import { Network } from '../models';
-import DripIDL from '../idl/idl.json';
 import {
   Keypair,
   PublicKey,
@@ -49,7 +48,7 @@ export class DripVaultImpl implements DripVault {
     private readonly programId: PublicKey,
     vaultPubkey: Address
   ) {
-    this.vaultProgram = new Program(DripIDL as unknown as Drip, this.programId, provider);
+    this.vaultProgram = new Program(IDL, this.programId, provider);
     this.vaultPubkey = toPubkey(vaultPubkey);
   }
 
@@ -60,7 +59,7 @@ export class DripVaultImpl implements DripVault {
     vaultSeeds: { protoConfig: Address; tokenAMint: Address; tokenBMint: Address }
   ): Promise<DripVaultImpl> {
     const vaultPubkey = findVaultPubkey(programId, vaultSeeds);
-    const vaultProgram = new Program(DripIDL as unknown as Drip, programId, provider);
+    const vaultProgram = new Program(IDL, programId, provider);
 
     const vault = await vaultProgram.account.vault.fetchNullable(vaultPubkey);
     if (!vault) {
@@ -76,7 +75,7 @@ export class DripVaultImpl implements DripVault {
     programId: Address,
     vaultPubkey: Address
   ): Promise<DripVaultImpl> {
-    const vaultProgram = new Program(DripIDL as unknown as Drip, programId, provider);
+    const vaultProgram = new Program(IDL, programId, provider);
 
     const vault = await vaultProgram.account.vault.fetchNullable(vaultPubkey);
     if (!vault) {
