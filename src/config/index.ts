@@ -11,7 +11,12 @@ export interface Config {
   vaultProtoConfigs: Record<string, VaultProtoConfig>;
   vaults: Record<string, Vault>;
 }
-
+/*
+Valid Pairs: 
+- (Devnet, Staging)
+- (Devnet, Production)
+- (Mainnet, _), the same program on mainnet is used in all clientEnv's
+*/
 export function getConfig(network: Network, clientEnv: ClientEnv): Config {
   switch (network) {
     case Network.Mainnet:
