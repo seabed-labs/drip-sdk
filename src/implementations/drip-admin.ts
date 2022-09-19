@@ -1,4 +1,4 @@
-import { Program, AnchorProvider } from '@project-serum/anchor';
+import { Program, AnchorProvider, Address } from '@project-serum/anchor';
 import {
   Keypair,
   PublicKey,
@@ -26,7 +26,6 @@ import {
 } from '@solana/spl-token';
 import { findVaultPeriodPubkey, findVaultPubkey } from '../helpers';
 import { makeExplorerUrl } from '../utils/transaction';
-import { Config } from '../config';
 
 export class DripAdminImpl implements DripAdmin {
   private readonly vaultProgram: Program<Drip>;
@@ -37,7 +36,7 @@ export class DripAdminImpl implements DripAdmin {
   constructor(
     private readonly provider: AnchorProvider,
     private readonly network: Network,
-    private readonly programId: PublicKey
+    private readonly programId: Address
   ) {
     this.vaultProgram = new Program(IDL, this.programId, provider);
   }
