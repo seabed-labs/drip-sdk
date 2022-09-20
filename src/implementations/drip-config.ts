@@ -20,11 +20,11 @@ function getApiUrl(network: Network, clientEnv: ClientEnv): string {
 }
 
 export class DripConfigImpl implements DripConfig {
-  private readonly DripApi: DefaultApi;
+  private readonly dripApi: DefaultApi;
 
   constructor(url: string) {
     const config = new Configuration({ basePath: url });
-    this.DripApi = new DefaultApi(config);
+    this.dripApi = new DefaultApi(config);
   }
 
   public static fromNetworkClient(network: Network, clientEnv: ClientEnv): DripConfigImpl {
@@ -32,7 +32,7 @@ export class DripConfigImpl implements DripConfig {
   }
 
   public async getAllTokenAs(givenTokenB?: Address): Promise<Record<string, Token>> {
-    const apiTokenAs = await this.DripApi.v1VaultTokensGet({
+    const apiTokenAs = await this.dripApi.v1VaultTokensGet({
       tokenB: givenTokenB ? givenTokenB.toString() : undefined,
     });
     const tokens: Record<string, Token> = {};
@@ -46,7 +46,7 @@ export class DripConfigImpl implements DripConfig {
   }
 
   public async getAllTokenBs(givenTokenA?: Address): Promise<Record<string, Token>> {
-    const apiTokenBs = await this.DripApi.v1VaultTokensGet({
+    const apiTokenBs = await this.dripApi.v1VaultTokensGet({
       tokenA: givenTokenA ? givenTokenA.toString() : undefined,
     });
     const tokens: Record<string, Token> = {};
@@ -63,7 +63,7 @@ export class DripConfigImpl implements DripConfig {
     tokenA: Address,
     tokenB: Address
   ): Promise<VaultProtoConfig[]> {
-    const apiVaultProtoConfigs = await this.DripApi.v1ProtoconfigsGet({
+    const apiVaultProtoConfigs = await this.dripApi.v1ProtoconfigsGet({
       tokenA: tokenA ? tokenA.toString() : undefined,
       tokenB: tokenB ? tokenB.toString() : undefined,
     });
@@ -80,7 +80,7 @@ export class DripConfigImpl implements DripConfig {
     givenTokenB?: Address,
     givenVaultProtoConfig?: Address
   ): Promise<Record<string, Vault>> {
-    const apiVaults = await this.DripApi.v1VaultsGet({
+    const apiVaults = await this.dripApi.v1VaultsGet({
       tokenA: givenTokenA ? givenTokenA.toString() : undefined,
       tokenB: givenTokenB ? givenTokenB.toString() : undefined,
       protoConfig: givenVaultProtoConfig ? givenVaultProtoConfig.toString() : undefined,
