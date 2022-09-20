@@ -12,32 +12,38 @@ import { ClientEnv, Network } from '../models';
 export class Drip {
   public readonly querier: DripQuerier;
   public readonly admin: DripAdmin;
-  public readonly config: DripConfig;
 
   public constructor(
     public readonly network: Network,
     public readonly provider: AnchorProvider,
     public readonly programId: Address,
-    configUrlParams:
-      | {
-          clientEnv: ClientEnv;
-          url?: string;
-        }
-      | {
-          clientEnv?: ClientEnv;
-          url: string;
-        }
+    public readonly config: DripConfig
   ) {
     this.querier = new DripQuerierImpl(this.provider, this.programId);
     this.admin = new DripAdminImpl(provider, network, this.programId);
-    if (configUrlParams.url) {
-      this.config = new DripConfigImpl(configUrlParams.url);
-    } else {
-      if (!configUrlParams.clientEnv) {
-        throw new Error(`if 'url' is not specified, then 'clientEnv' MUST be specified`);
-      }
-      this.config = DripConfigImpl.fromNetworkClient(network, configUrlParams.clientEnv);
-    }
+  }
+
+  public static fromNetworkClient(
+    network: Network,
+    provider: AnchorProvider,
+    programId: Address,
+    clientEnv: ClientEnv
+  ): Drip {
+    return new Drip(
+      network,
+      provider,
+      programId,
+      DripConfigImpl.fromNetworkClient(network, clientEnv)
+    );
+  }
+
+  public static fromConfigUrl(
+    network: Network,
+    provider: AnchorProvider,
+    programId: Address,
+    url: string
+  ): Drip {
+    return new Drip(network, provider, programId, new DripConfigImpl(url));
   }
 
   public async getPosition(pubkey: Address): Promise<DripPosition> {
