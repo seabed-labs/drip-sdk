@@ -1,5 +1,5 @@
 import { PublicKey } from '@solana/web3.js';
-import { Token } from '../types';
+import { Token } from '../../types';
 
 export const tokens: Record<string, Token> = {
   H9gBUJs5Kc5zyiKRTzZcYom4Hpj9VPHLy4VzExTVPgxa: {

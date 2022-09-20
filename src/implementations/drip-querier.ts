@@ -1,9 +1,7 @@
 import { Address, Program, AnchorProvider, BN } from '@project-serum/anchor';
 import { PublicKey } from '@solana/web3.js';
-import { Configs } from '../config';
 import { Vault, Token, VaultProtoConfig } from '../config/types';
-import { Drip } from '../idl/type';
-import DripIDL from '../idl/idl.json';
+import { IDL, Drip } from '../idl/type';
 import { DripQuerier, QuoteToken } from '../interfaces';
 import {
   VaultAccount,
@@ -11,7 +9,6 @@ import {
   VaultPositionAccount,
   VaultProtoConfigAccount,
 } from '../interfaces/drip-querier/results';
-import { Network } from '../models';
 import { toPubkey } from '../utils';
 import { getMint, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { findVaultPeriodPubkey, findVaultPositionPubkey } from '../helpers';
@@ -22,15 +19,13 @@ import {
   VaultProtoConfigDoesNotExistError,
 } from '../errors';
 import Decimal from 'decimal.js';
+import { Config } from '../config';
 
 export class DripQuerierImpl implements DripQuerier {
   private readonly vaultProgram: Program<Drip>;
-  private readonly programId: PublicKey;
 
-  constructor(provider: AnchorProvider, private readonly network: Network, programId?: PublicKey) {
-    const config = Configs[network];
-    this.programId = programId ?? config.defaultProgramId;
-    this.vaultProgram = new Program(DripIDL as unknown as Drip, this.programId, provider);
+  constructor(provider: AnchorProvider, private readonly config: Config) {
+    this.vaultProgram = new Program(IDL, config.programId, provider);
   }
 
   async getAveragePrice(positionPubkey: Address, quoteToken: QuoteToken): Promise<Decimal> {
@@ -119,7 +114,7 @@ export class DripQuerierImpl implements DripQuerier {
 
   public async getAllVaults(): Promise<Record<string, Vault>> {
     // test
-    return Configs[this.network].vaults;
+    return this.config.vaults;
   }
 
   public async getAllPositions(user: Address): Promise<Record<string, VaultPositionAccount>> {
@@ -158,7 +153,7 @@ export class DripQuerierImpl implements DripQuerier {
   }
 
   public async getAllTokenAs(givenTokenB?: PublicKey): Promise<Record<string, Token>> {
-    const vaults = Configs[this.network].vaults;
+    const vaults = this.config.vaults;
     const tokenAPubkeys = (
       givenTokenB
         ? Object.values(vaults).filter((vault) => vault.tokenBMint.equals(givenTokenB))
@@ -168,14 +163,14 @@ export class DripQuerierImpl implements DripQuerier {
     return tokenAPubkeys.reduce(
       (map, tokenPubkey) => ({
         ...map,
-        [tokenPubkey.toBase58()]: Configs[this.network].tokens[tokenPubkey.toBase58()],
+        [tokenPubkey.toBase58()]: this.config.tokens[tokenPubkey.toBase58()],
       }),
       {} as Record<string, Token>
     );
   }
 
   public async getAllTokenBs(givenTokenA?: PublicKey): Promise<Record<string, Token>> {
-    const vaults = Configs[this.network].vaults;
+    const vaults = this.config.vaults;
     const tokenBPubkeys = (
       givenTokenA
         ? Object.values(vaults).filter((vault) => vault.tokenAMint.equals(givenTokenA))
@@ -185,7 +180,7 @@ export class DripQuerierImpl implements DripQuerier {
     return tokenBPubkeys.reduce(
       (map, tokenPubkey) => ({
         ...map,
-        [tokenPubkey.toBase58()]: Configs[this.network].tokens[tokenPubkey.toBase58()],
+        [tokenPubkey.toBase58()]: this.config.tokens[tokenPubkey.toBase58()],
       }),
       {} as Record<string, Token>
     );
@@ -195,7 +190,7 @@ export class DripQuerierImpl implements DripQuerier {
     tokenA: Address,
     tokenB: Address
   ): Promise<VaultProtoConfig[]> {
-    const vaults = Configs[this.network].vaults;
+    const vaults = this.config.vaults;
     const vaultsForPair = Object.values(vaults).filter(
       (vault) =>
         vault.tokenAMint.equals(toPubkey(tokenA)) && vault.tokenBMint.equals(toPubkey(tokenB))
@@ -209,7 +204,7 @@ export class DripQuerierImpl implements DripQuerier {
       {} as Partial<Record<string, boolean>>
     );
 
-    const vaultProtoConfigs = Configs[this.network].vaultProtoConfigs;
+    const vaultProtoConfigs = this.config.vaultProtoConfigs;
 
     return Object.values(vaultProtoConfigs).filter(
       (vaultProtoConfig) => !!vaultProtoConfigKeysForPairMap[vaultProtoConfig.pubkey.toBase58()]

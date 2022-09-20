@@ -1,5 +1,5 @@
 import { PublicKey } from '@solana/web3.js';
-import { VaultProtoConfig } from '../types';
+import { VaultProtoConfig } from '../../types';
 
 export const vaultProtoConfigs: Record<string, VaultProtoConfig> = {
   Et3bqQq32LPkrndf8gU9gRqfL4S13ubdUuiqBE1jjrgr: {

@@ -1,5 +1,5 @@
 import { PublicKey } from '@solana/web3.js';
-import { Vault } from '../types';
+import { Vault } from '../../types';
 
 export const vaults: Record<string, Vault> = {
   Bqkkq8AsaAyhgL53zEazJ1wYMqiHjEdF7osA8XAREE2q: {
