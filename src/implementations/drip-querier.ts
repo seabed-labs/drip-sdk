@@ -1,6 +1,5 @@
 import { Address, Program, AnchorProvider, BN } from '@project-serum/anchor';
 import { PublicKey } from '@solana/web3.js';
-import { Vault, Token, VaultProtoConfig } from '../config/types';
 import { IDL, Drip } from '../idl/type';
 import { DripQuerier, QuoteToken } from '../interfaces';
 import {
@@ -19,13 +18,12 @@ import {
   VaultProtoConfigDoesNotExistError,
 } from '../errors';
 import Decimal from 'decimal.js';
-import { Config } from '../config';
 
 export class DripQuerierImpl implements DripQuerier {
   private readonly vaultProgram: Program<Drip>;
 
-  constructor(provider: AnchorProvider, private readonly config: Config) {
-    this.vaultProgram = new Program(IDL, config.programId, provider);
+  constructor(provider: AnchorProvider, programId: Address) {
+    this.vaultProgram = new Program(IDL, programId, provider);
   }
 
   async getAveragePrice(positionPubkey: Address, quoteToken: QuoteToken): Promise<Decimal> {
@@ -112,11 +110,6 @@ export class DripQuerierImpl implements DripQuerier {
     }
   }
 
-  public async getAllVaults(): Promise<Record<string, Vault>> {
-    // test
-    return this.config.vaults;
-  }
-
   public async getAllPositions(user: Address): Promise<Record<string, VaultPositionAccount>> {
     const userPubkey = toPubkey(user);
     const userTokenAccounts =
@@ -149,65 +142,6 @@ export class DripQuerierImpl implements DripQuerier {
         ...(position ? { [userPossiblePositionAccounts[i].toBase58()]: position } : {}),
       }),
       {}
-    );
-  }
-
-  public async getAllTokenAs(givenTokenB?: PublicKey): Promise<Record<string, Token>> {
-    const vaults = this.config.vaults;
-    const tokenAPubkeys = (
-      givenTokenB
-        ? Object.values(vaults).filter((vault) => vault.tokenBMint.equals(givenTokenB))
-        : Object.values(vaults)
-    ).map((vault) => vault.tokenAMint);
-
-    return tokenAPubkeys.reduce(
-      (map, tokenPubkey) => ({
-        ...map,
-        [tokenPubkey.toBase58()]: this.config.tokens[tokenPubkey.toBase58()],
-      }),
-      {} as Record<string, Token>
-    );
-  }
-
-  public async getAllTokenBs(givenTokenA?: PublicKey): Promise<Record<string, Token>> {
-    const vaults = this.config.vaults;
-    const tokenBPubkeys = (
-      givenTokenA
-        ? Object.values(vaults).filter((vault) => vault.tokenAMint.equals(givenTokenA))
-        : Object.values(vaults)
-    ).map((vault) => vault.tokenBMint);
-
-    return tokenBPubkeys.reduce(
-      (map, tokenPubkey) => ({
-        ...map,
-        [tokenPubkey.toBase58()]: this.config.tokens[tokenPubkey.toBase58()],
-      }),
-      {} as Record<string, Token>
-    );
-  }
-
-  public async getSupportedVaultProtoConfigsForPair(
-    tokenA: Address,
-    tokenB: Address
-  ): Promise<VaultProtoConfig[]> {
-    const vaults = this.config.vaults;
-    const vaultsForPair = Object.values(vaults).filter(
-      (vault) =>
-        vault.tokenAMint.equals(toPubkey(tokenA)) && vault.tokenBMint.equals(toPubkey(tokenB))
-    );
-
-    const vaultProtoConfigKeysForPairMap = vaultsForPair.reduce(
-      (acc, vault) => ({
-        ...acc,
-        [vault.protoConfig.toBase58()]: true,
-      }),
-      {} as Partial<Record<string, boolean>>
-    );
-
-    const vaultProtoConfigs = this.config.vaultProtoConfigs;
-
-    return Object.values(vaultProtoConfigs).filter(
-      (vaultProtoConfig) => !!vaultProtoConfigKeysForPairMap[vaultProtoConfig.pubkey.toBase58()]
     );
   }
 
