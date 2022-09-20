@@ -4,6 +4,9 @@ on:
   pull_request:
   push: { branches: main }
 
+env:
+  NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+
 jobs:
   build:
     name: Build
@@ -11,12 +14,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      # - name: Cache Modules
-      #   id: cache-modules
-      #   uses: actions/cache@v1
-      #   with:
-      #     path: node_modules
-      #     key: ${{ matrix.node-version }}-${{ runner.OS }}-build-${{ hashFiles('package.json') }}
+      - name: Cache Modules
+        id: cache-modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ matrix.node-version }}-${{ runner.OS }}-build-${{ hashFiles('package.json') }}
 
       - name: Setup Node
         uses: actions/setup-node@v3
@@ -24,7 +27,7 @@ jobs:
           node-version: 16
 
       - name: Install
-        # if: steps.cache-modules.outputs.cache-hit != 'true'
+        if: steps.cache-modules.outputs.cache-hit != 'true'
         run: yarn
 
       - name: Build
