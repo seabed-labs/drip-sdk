@@ -147,6 +147,99 @@ export type Drip = {
       ];
     },
     {
+      name: 'depositWithMetadata';
+      accounts: [
+        {
+          name: 'common';
+          accounts: [
+            {
+              name: 'depositor';
+              isMut: true;
+              isSigner: true;
+            },
+            {
+              name: 'vault';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'vaultPeriodEnd';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'vaultTokenAAccount';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'userTokenAAccount';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'userPosition';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'userPositionNftMint';
+              isMut: true;
+              isSigner: true;
+            },
+            {
+              name: 'userPositionNftAccount';
+              isMut: true;
+              isSigner: false;
+            },
+            {
+              name: 'referrer';
+              isMut: false;
+              isSigner: false;
+            },
+            {
+              name: 'tokenProgram';
+              isMut: false;
+              isSigner: false;
+            },
+            {
+              name: 'associatedTokenProgram';
+              isMut: false;
+              isSigner: false;
+            },
+            {
+              name: 'rent';
+              isMut: false;
+              isSigner: false;
+            },
+            {
+              name: 'systemProgram';
+              isMut: false;
+              isSigner: false;
+            }
+          ];
+        },
+        {
+          name: 'positionMetadataAccount';
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: 'metadataProgram';
+          isMut: false;
+          isSigner: false;
+        }
+      ];
+      args: [
+        {
+          name: 'params';
+          type: {
+            defined: 'DepositParams';
+          };
+        }
+      ];
+    },
+    {
       name: 'withdrawB';
       accounts: [
         {
@@ -307,99 +400,6 @@ export type Drip = {
         }
       ];
       args: [];
-    },
-    {
-      name: 'depositWithMetadata';
-      accounts: [
-        {
-          name: 'common';
-          accounts: [
-            {
-              name: 'depositor';
-              isMut: true;
-              isSigner: true;
-            },
-            {
-              name: 'vault';
-              isMut: true;
-              isSigner: false;
-            },
-            {
-              name: 'vaultPeriodEnd';
-              isMut: true;
-              isSigner: false;
-            },
-            {
-              name: 'vaultTokenAAccount';
-              isMut: true;
-              isSigner: false;
-            },
-            {
-              name: 'userTokenAAccount';
-              isMut: true;
-              isSigner: false;
-            },
-            {
-              name: 'userPosition';
-              isMut: true;
-              isSigner: false;
-            },
-            {
-              name: 'userPositionNftMint';
-              isMut: true;
-              isSigner: true;
-            },
-            {
-              name: 'userPositionNftAccount';
-              isMut: true;
-              isSigner: false;
-            },
-            {
-              name: 'referrer';
-              isMut: false;
-              isSigner: false;
-            },
-            {
-              name: 'tokenProgram';
-              isMut: false;
-              isSigner: false;
-            },
-            {
-              name: 'associatedTokenProgram';
-              isMut: false;
-              isSigner: false;
-            },
-            {
-              name: 'rent';
-              isMut: false;
-              isSigner: false;
-            },
-            {
-              name: 'systemProgram';
-              isMut: false;
-              isSigner: false;
-            }
-          ];
-        },
-        {
-          name: 'positionMetadataAccount';
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'metadataProgram';
-          isMut: false;
-          isSigner: false;
-        }
-      ];
-      args: [
-        {
-          name: 'params';
-          type: {
-            defined: 'DepositParams';
-          };
-        }
-      ];
     },
     {
       name: 'dripSplTokenSwap';
@@ -1258,6 +1258,99 @@ export const IDL: Drip = {
       ],
     },
     {
+      name: 'depositWithMetadata',
+      accounts: [
+        {
+          name: 'common',
+          accounts: [
+            {
+              name: 'depositor',
+              isMut: true,
+              isSigner: true,
+            },
+            {
+              name: 'vault',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'vaultPeriodEnd',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'vaultTokenAAccount',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'userTokenAAccount',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'userPosition',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'userPositionNftMint',
+              isMut: true,
+              isSigner: true,
+            },
+            {
+              name: 'userPositionNftAccount',
+              isMut: true,
+              isSigner: false,
+            },
+            {
+              name: 'referrer',
+              isMut: false,
+              isSigner: false,
+            },
+            {
+              name: 'tokenProgram',
+              isMut: false,
+              isSigner: false,
+            },
+            {
+              name: 'associatedTokenProgram',
+              isMut: false,
+              isSigner: false,
+            },
+            {
+              name: 'rent',
+              isMut: false,
+              isSigner: false,
+            },
+            {
+              name: 'systemProgram',
+              isMut: false,
+              isSigner: false,
+            },
+          ],
+        },
+        {
+          name: 'positionMetadataAccount',
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: 'metadataProgram',
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [
+        {
+          name: 'params',
+          type: {
+            defined: 'DepositParams',
+          },
+        },
+      ],
+    },
+    {
       name: 'withdrawB',
       accounts: [
         {
@@ -1418,99 +1511,6 @@ export const IDL: Drip = {
         },
       ],
       args: [],
-    },
-    {
-      name: 'depositWithMetadata',
-      accounts: [
-        {
-          name: 'common',
-          accounts: [
-            {
-              name: 'depositor',
-              isMut: true,
-              isSigner: true,
-            },
-            {
-              name: 'vault',
-              isMut: true,
-              isSigner: false,
-            },
-            {
-              name: 'vaultPeriodEnd',
-              isMut: true,
-              isSigner: false,
-            },
-            {
-              name: 'vaultTokenAAccount',
-              isMut: true,
-              isSigner: false,
-            },
-            {
-              name: 'userTokenAAccount',
-              isMut: true,
-              isSigner: false,
-            },
-            {
-              name: 'userPosition',
-              isMut: true,
-              isSigner: false,
-            },
-            {
-              name: 'userPositionNftMint',
-              isMut: true,
-              isSigner: true,
-            },
-            {
-              name: 'userPositionNftAccount',
-              isMut: true,
-              isSigner: false,
-            },
-            {
-              name: 'referrer',
-              isMut: false,
-              isSigner: false,
-            },
-            {
-              name: 'tokenProgram',
-              isMut: false,
-              isSigner: false,
-            },
-            {
-              name: 'associatedTokenProgram',
-              isMut: false,
-              isSigner: false,
-            },
-            {
-              name: 'rent',
-              isMut: false,
-              isSigner: false,
-            },
-            {
-              name: 'systemProgram',
-              isMut: false,
-              isSigner: false,
-            },
-          ],
-        },
-        {
-          name: 'positionMetadataAccount',
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: 'metadataProgram',
-          isMut: false,
-          isSigner: false,
-        },
-      ],
-      args: [
-        {
-          name: 'params',
-          type: {
-            defined: 'DepositParams',
-          },
-        },
-      ],
     },
     {
       name: 'dripSplTokenSwap',
