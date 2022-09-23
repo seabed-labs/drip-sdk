@@ -39,7 +39,9 @@ export class DripConfigImpl implements DripConfig {
     apiTokenAs.forEach((apiToken) => {
       tokens[apiToken.pubkey] = {
         mint: new PublicKey(apiToken.pubkey),
+        decimals: apiToken.decimals,
         symbol: apiToken.symbol,
+        iconUrl: apiToken.iconUrl,
       };
     });
     return tokens;
@@ -53,7 +55,9 @@ export class DripConfigImpl implements DripConfig {
     apiTokenBs.forEach((apiToken) => {
       tokens[apiToken.pubkey] = {
         mint: new PublicKey(apiToken.pubkey),
+        decimals: apiToken.decimals,
         symbol: apiToken.symbol,
+        iconUrl: apiToken.iconUrl,
       };
     });
     return tokens;

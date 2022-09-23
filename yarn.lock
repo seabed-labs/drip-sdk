@@ -30,10 +30,10 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@dcaf-labs/drip-ts@0.0.0-alpha.13":
-  version "0.0.0-alpha.13"
-  resolved "https://npm.pkg.github.com/download/@dcaf-labs/drip-ts/0.0.0-alpha.13/135f2af5d24663bba26b0d49974b5cd12e7b59a4#135f2af5d24663bba26b0d49974b5cd12e7b59a4"
-  integrity sha512-fMMS26yu8UtzCHTxF+IsUrf+xUh0ITW0JvypmVRyFwDI1rLNFdoM7Jlv+Aub3ByyzR8SDCklnvT3OG719tMS4A==
+"@dcaf-labs/drip-ts@0.0.0-alpha.14":
+  version "0.0.0-alpha.14"
+  resolved "https://npm.pkg.github.com/download/@dcaf-labs/drip-ts/0.0.0-alpha.14/3b601c52533879479f2e8434f36581cad9e340fe#3b601c52533879479f2e8434f36581cad9e340fe"
+  integrity sha512-A/Zegv8CYFczmYbnFqlw2rrpsiu6eSzCVuzwl8yejbzDXdKGkalzUFRQIKln0dmtLZLT2d3kAG/XjaOeg+Y1xg==
 
 "@eslint/eslintrc@^0.4.3":
   version "0.4.3"

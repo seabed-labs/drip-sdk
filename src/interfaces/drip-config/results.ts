@@ -2,7 +2,9 @@ import { PublicKey } from '@solana/web3.js';
 
 export interface Token {
   mint: PublicKey;
+  decimals: number;
   symbol?: string;
+  iconUrl?: string;
 }
 
 export interface VaultProtoConfig {
