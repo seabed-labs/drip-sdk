@@ -31,7 +31,7 @@ export interface VaultPeriodAccount {
   periodId: BN;
   dar: BN;
   twap: BN;
-  dripTimestamp: number;
+  dripTimestamp: BN;
   bump: number;
 }
 
