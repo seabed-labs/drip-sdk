@@ -2,6 +2,7 @@ import { Address } from '@project-serum/anchor';
 import Decimal from 'decimal.js';
 import {
   VaultAccount,
+  VaultOracleConfigAccount,
   VaultPeriodAccount,
   VaultPositionAccount,
   VaultProtoConfigAccount,
@@ -19,6 +20,7 @@ export interface DripQuerier {
   getAveragePrice(position: Address, quoteToken: QuoteToken): Promise<Decimal>;
   fetchVaultProtoConfigAccounts(...pubkeys: Address[]): Promise<(VaultProtoConfigAccount | null)[]>;
   fetchVaultAccounts(...pubkeys: Address[]): Promise<(VaultAccount | null)[]>;
+  fetchOracleConfigAccounts(...pubkeys: Address[]): Promise<(VaultOracleConfigAccount | null)[]>;
   fetchVaultPeriodAccounts(...pubkeys: Address[]): Promise<(VaultPeriodAccount | null)[]>;
   fetchVaultPositionAccounts(...pubkeys: Address[]): Promise<(VaultPositionAccount | null)[]>;
 }

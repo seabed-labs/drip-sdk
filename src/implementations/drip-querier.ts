@@ -4,6 +4,7 @@ import { IDL, Drip } from '../idl/drip';
 import { DripQuerier, QuoteToken } from '../interfaces';
 import {
   VaultAccount,
+  VaultOracleConfigAccount,
   VaultPeriodAccount,
   VaultPositionAccount,
   VaultProtoConfigAccount,
@@ -148,30 +149,32 @@ export class DripQuerierImpl implements DripQuerier {
   public async fetchVaultProtoConfigAccounts(
     ...pubkeys: Address[]
   ): Promise<(VaultProtoConfigAccount | null)[]> {
-    return (await this.vaultProgram.account.vaultProtoConfig.fetchMultiple(
-      pubkeys
-    )) as (VaultProtoConfigAccount | null)[];
+    return await this.fetchMultiple<VaultProtoConfigAccount>(...pubkeys);
   }
 
   public async fetchVaultAccounts(...pubkeys: Address[]): Promise<(VaultAccount | null)[]> {
-    return (await this.vaultProgram.account.vault.fetchMultiple(
-      pubkeys
-    )) as (VaultAccount | null)[];
+    return await this.fetchMultiple<VaultAccount>(...pubkeys);
   }
 
   public async fetchVaultPeriodAccounts(
     ...pubkeys: Address[]
   ): Promise<(VaultPeriodAccount | null)[]> {
-    return (await this.vaultProgram.account.vaultPeriod.fetchMultiple(
-      pubkeys
-    )) as (VaultPeriodAccount | null)[];
+    return await this.fetchMultiple<VaultPeriodAccount>(...pubkeys);
   }
 
   public async fetchVaultPositionAccounts(
     ...pubkeys: Address[]
   ): Promise<(VaultPositionAccount | null)[]> {
-    return (await this.vaultProgram.account.position.fetchMultiple(
-      pubkeys
-    )) as (VaultPositionAccount | null)[];
+    return await this.fetchMultiple<VaultPositionAccount>(...pubkeys);
+  }
+
+  async fetchOracleConfigAccounts(
+    ...pubkeys: Address[]
+  ): Promise<(VaultOracleConfigAccount | null)[]> {
+    return await this.fetchMultiple<VaultOracleConfigAccount>(...pubkeys);
+  }
+
+  async fetchMultiple<T>(...pubkeys: Address[]): Promise<(T | null)[]> {
+    return (await this.vaultProgram.account.position.fetchMultiple(pubkeys)) as (T | null)[];
   }
 }
