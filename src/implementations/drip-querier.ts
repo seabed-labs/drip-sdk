@@ -1,6 +1,6 @@
 import { Address, Program, AnchorProvider, BN } from '@project-serum/anchor';
 import { PublicKey } from '@solana/web3.js';
-import { IDL, Drip } from '../idl/type';
+import { IDL, Drip } from '../idl/drip';
 import { DripQuerier, QuoteToken } from '../interfaces';
 import {
   VaultAccount,

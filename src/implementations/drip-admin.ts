@@ -6,7 +6,7 @@ import {
   SYSVAR_RENT_PUBKEY,
   Transaction,
 } from '@solana/web3.js';
-import { IDL, Drip } from '../idl/type';
+import { IDL, Drip } from '../idl/drip';
 import { DripAdmin } from '../interfaces';
 import { InitVaultProtoConfigParams, InitVaultParams } from '../interfaces/drip-admin/params';
 import { Network } from '../models';
