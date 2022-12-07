@@ -1,6 +1,6 @@
 {
   "name": "@dcaf-labs/drip-sdk",
-  "version": "0.0.0-alpha.76",
+  "version": "0.0.0-alpha.77",
   "description": "SDK to interact with Drip smart contracts",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
