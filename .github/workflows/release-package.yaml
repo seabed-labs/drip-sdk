@@ -1,12 +1,17 @@
 name: Publish SDK
 
 on:
-  push: { branches: main }
+  pull_request:
+    branches:
+      - main
+    types: [closed]
+
 env:
   NPM_TOKEN: ${{secrets.NPM_TOKEN}}
 
 jobs:
   publish-gpr:
+    if: github.event.pull_request.merged == true
     name: Publish
     runs-on: ubuntu-latest
     permissions:
