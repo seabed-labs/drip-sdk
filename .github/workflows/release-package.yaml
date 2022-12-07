@@ -21,6 +21,10 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      - uses: de-vri-es/setup-git-credentials@v2
+        with:
+          credentials: ${{secrets.GA_TOKEN}}
+
       - name: setup git
         shell: bash
         run: |
