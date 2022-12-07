@@ -53,3 +53,8 @@ export interface InitOracleConfigParams {
   enabled: boolean;
   source: number;
 }
+
+export interface SetVaultOracleConfigParams {
+  vault: Address;
+  newOracleConfig: Address;
+}

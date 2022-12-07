@@ -1,6 +1,11 @@
 import { Keypair, PublicKey } from '@solana/web3.js';
 import { BroadcastTransactionWithMetadata, TransactionWithMetadata } from '../../types';
-import { InitOracleConfigParams, InitVaultParams, InitVaultProtoConfigParams } from './params';
+import {
+  InitOracleConfigParams,
+  InitVaultParams,
+  InitVaultProtoConfigParams,
+  SetVaultOracleConfigParams,
+} from './params';
 import { InitOracleConfigPreview, InitVaultProtoConfigPreview } from './previews';
 
 export * from './params';
@@ -22,6 +27,23 @@ export interface DripAdmin {
   initOracleConfig(params: InitOracleConfigParams | InitOracleConfigPreview): Promise<
     BroadcastTransactionWithMetadata<{
       oracleConfigKeypair: Keypair;
+    }>
+  >;
+
+  getSetVaultOracleConfigTx(params: SetVaultOracleConfigParams): Promise<
+    TransactionWithMetadata<{
+      vaultPubkey: PublicKey;
+      vaultProtoConfig: PublicKey;
+      existingOracleConfig: PublicKey;
+      newOracleConfig: PublicKey;
+    }>
+  >;
+  setVaultOracleConfig(params: SetVaultOracleConfigParams): Promise<
+    BroadcastTransactionWithMetadata<{
+      vaultPubkey: PublicKey;
+      vaultProtoConfig: PublicKey;
+      existingOracleConfig: PublicKey;
+      newOracleConfig: PublicKey;
     }>
   >;
 
