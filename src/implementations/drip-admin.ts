@@ -8,10 +8,16 @@ import {
 } from '@solana/web3.js';
 import { IDL, Drip } from '../idl/drip';
 import { DripAdmin } from '../interfaces';
-import { InitVaultProtoConfigParams, InitVaultParams } from '../interfaces/drip-admin/params';
+import {
+  InitVaultProtoConfigParams,
+  InitVaultParams,
+  InitOracleConfigParams,
+} from '../interfaces/drip-admin/params';
 import { Network } from '../models';
 import {
+  InitOracleConfigPreview,
   InitVaultProtoConfigPreview,
+  isInitOracleConfigPreview,
   isInitVaultProtoConfigPreview,
 } from '../interfaces/drip-admin/previews';
 import { BroadcastTransactionWithMetadata, TransactionWithMetadata } from '../types';
@@ -41,11 +47,67 @@ export class DripAdminImpl implements DripAdmin {
     this.vaultProgram = new Program(IDL, this.programId, provider);
   }
 
+  public getInitOracleConfigPreview(params: InitOracleConfigParams): InitOracleConfigPreview {
+    const oracleConfigKeypair = Keypair.generate();
+    return {
+      ...params,
+      oracleConfigKeypair,
+    };
+  }
+
+  public async getInitOracleProtoConfigTx(
+    params: InitOracleConfigParams | InitOracleConfigPreview
+  ): Promise<TransactionWithMetadata<{ oracleConfigKeypair: Keypair }>> {
+    const oracleConfigKeypair = isInitOracleConfigPreview(params)
+      ? params.oracleConfigKeypair
+      : Keypair.generate();
+    const ixParams = {
+      enabled: params.enabled,
+      source: params.source,
+      updateAuthority: toPubkey(params.updateAuthority),
+    };
+    const ixAccounts = {
+      oracleConfig: oracleConfigKeypair.publicKey,
+      tokenAMint: toPubkey(params.tokenAMint),
+      tokenAPrice: toPubkey(params.tokenAPrice),
+      tokenBMint: toPubkey(params.tokenBMint),
+      tokenBPrice: toPubkey(params.tokenBPrice),
+      creator: this.provider.wallet.publicKey,
+    };
+    const tx = await this.vaultProgram.methods
+      .initOracleConfig({
+        ...ixParams,
+      })
+      .accounts({
+        ...ixAccounts,
+      })
+      .signers([oracleConfigKeypair])
+      .transaction();
+
+    return {
+      tx,
+      metadata: {
+        oracleConfigKeypair,
+      },
+    };
+  }
+
+  public async initOracleConfig(
+    params: InitOracleConfigParams | InitOracleConfigPreview
+  ): Promise<BroadcastTransactionWithMetadata<{ oracleConfigKeypair: Keypair }>> {
+    const { tx, metadata } = await this.getInitOracleProtoConfigTx(params);
+    const txHash = await this.provider.sendAndConfirm(tx, [metadata.oracleConfigKeypair]);
+    return {
+      id: txHash,
+      explorer: makeExplorerUrl(txHash, this.network),
+      metadata,
+    };
+  }
+
   public getInitVaultProtoConfigPreview(
     params: InitVaultProtoConfigParams
   ): InitVaultProtoConfigPreview {
     const vaultProtoConfigKeypair = Keypair.generate();
-
     return {
       ...params,
       vaultProtoConfigKeypair,
