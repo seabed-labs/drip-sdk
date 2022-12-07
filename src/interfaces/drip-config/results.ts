@@ -20,4 +20,7 @@ export interface Vault {
   tokenAAccount: PublicKey;
   tokenBAccount: PublicKey;
   treasuryTokenBAccount: PublicKey;
+  oracleConfig?: PublicKey;
+  maxSlippageBps: number;
+  maxPriceDeviationBps: number;
 }

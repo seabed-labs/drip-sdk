@@ -1,4 +1,5 @@
 import { Address } from '@project-serum/anchor';
+import { Keypair, PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
 
 export enum Granularity {
@@ -40,4 +41,20 @@ export interface InitVaultParams {
   tokenBFeeTreasury: Address;
   whitelistedSwaps: Address[];
   maxSlippageBps: number;
+}
+
+export interface InitOracleConfigParams {
+  tokenAMint: Address;
+  tokenAPrice: Address;
+  tokenBMint: Address;
+  tokenBPrice: Address;
+  updateAuthority: Address;
+
+  enabled: boolean;
+  source: number;
+}
+
+export interface SetVaultOracleConfigParams {
+  vault: Address;
+  newOracleConfig: Address;
 }

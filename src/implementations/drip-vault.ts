@@ -1,5 +1,5 @@
 import { Address, BN, Program, AnchorProvider } from '@project-serum/anchor';
-import { IDL, Drip } from '../idl/type';
+import { IDL, Drip } from '../idl/drip';
 import { DripVault } from '../interfaces';
 import { Network } from '../models';
 import {

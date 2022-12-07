@@ -7,7 +7,7 @@ import {
   TokenAccountNotFoundError,
   TokenInvalidAccountOwnerError,
 } from '@solana/spl-token';
-import { IDL, Drip } from '../idl/type';
+import { IDL, Drip } from '../idl/drip';
 import { DripPosition } from '../interfaces';
 import { Network } from '../models';
 import { getUnwrapSolInstructions, isSol, toPubkey } from '../utils';

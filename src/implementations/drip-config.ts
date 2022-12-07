@@ -3,6 +3,7 @@ import { PublicKey } from '@solana/web3.js';
 import { DripConfig, Token, Vault, VaultProtoConfig } from '../interfaces';
 import { ClientEnv, Network } from '../models';
 import { Configuration, DefaultApi } from '@dcaf-labs/drip-ts';
+import { BN } from 'bn.js';
 
 function getApiUrl(network: Network, clientEnv: ClientEnv): string {
   switch (network) {
@@ -99,6 +100,9 @@ export class DripConfigImpl implements DripConfig {
         tokenAAccount: new PublicKey(apiVault.tokenAAccount),
         tokenBAccount: new PublicKey(apiVault.tokenBAccount),
         treasuryTokenBAccount: new PublicKey(apiVault.treasuryTokenBAccount),
+        oracleConfig: apiVault.oracleConfig ? new PublicKey(apiVault.oracleConfig) : undefined,
+        maxSlippageBps: apiVault.maxSlippageBps,
+        maxPriceDeviationBps: apiVault.maxPriceDeviationBps,
       };
     });
     return vaults;

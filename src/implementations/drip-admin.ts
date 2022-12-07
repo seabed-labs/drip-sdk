@@ -6,12 +6,19 @@ import {
   SYSVAR_RENT_PUBKEY,
   Transaction,
 } from '@solana/web3.js';
-import { IDL, Drip } from '../idl/type';
+import { IDL, Drip } from '../idl/drip';
 import { DripAdmin } from '../interfaces';
-import { InitVaultProtoConfigParams, InitVaultParams } from '../interfaces/drip-admin/params';
+import {
+  InitVaultProtoConfigParams,
+  InitVaultParams,
+  InitOracleConfigParams,
+  SetVaultOracleConfigParams,
+} from '../interfaces/drip-admin/params';
 import { Network } from '../models';
 import {
+  InitOracleConfigPreview,
   InitVaultProtoConfigPreview,
+  isInitOracleConfigPreview,
   isInitVaultProtoConfigPreview,
 } from '../interfaces/drip-admin/previews';
 import { BroadcastTransactionWithMetadata, TransactionWithMetadata } from '../types';
@@ -41,11 +48,143 @@ export class DripAdminImpl implements DripAdmin {
     this.vaultProgram = new Program(IDL, this.programId, provider);
   }
 
+  public async getSetVaultOracleConfigTx(params: SetVaultOracleConfigParams): Promise<
+    TransactionWithMetadata<{
+      vaultPubkey: PublicKey;
+      vaultProtoConfig: PublicKey;
+      existingOracleConfig: PublicKey;
+      newOracleConfig: PublicKey;
+    }>
+  > {
+    const vaultAccount = await this.vaultProgram.account.vault.fetchNullable(
+      toPubkey(params.vault)
+    );
+    if (!vaultAccount) {
+      throw new Error(`vault ${params.vault.toString()} does not exist`);
+    }
+    const vaultProtoConfigAccount = await this.vaultProgram.account.vaultProtoConfig.fetchNullable(
+      vaultAccount.protoConfig
+    );
+    if (!vaultProtoConfigAccount) {
+      throw new Error(`vault proto config ${vaultAccount.protoConfig.toString()} does not exist`);
+    }
+    if (this.provider.wallet.publicKey.toString() !== vaultProtoConfigAccount.admin.toString()) {
+      throw new Error(
+        `current provider wallet ${this.provider.wallet.publicKey.toString()} does not match proto config admin ${vaultProtoConfigAccount.admin.toString()}`
+      );
+    }
+    const oracleConfigAccount = await this.vaultProgram.account.oracleConfig.fetchNullable(
+      toPubkey(params.newOracleConfig)
+    );
+    if (!oracleConfigAccount) {
+      throw new Error(
+        `new vault oracle config ${vaultAccount.oracleConfig.toString()} does not exist`
+      );
+    }
+    const ixAccounts = {
+      vaultUpdateCommonAccounts: {
+        vault: toPubkey(params.vault),
+        vaultProtoConfig: vaultAccount.protoConfig,
+        admin: this.provider.wallet.publicKey,
+      },
+      newOracleConfig: params.newOracleConfig,
+    };
+    const tx = await this.vaultProgram.methods
+      .setVaultOracleConfig()
+      .accounts({
+        ...ixAccounts,
+      })
+      .transaction();
+    return {
+      tx,
+      metadata: {
+        vaultPubkey: toPubkey(params.vault),
+        vaultProtoConfig: vaultAccount.protoConfig,
+        existingOracleConfig: vaultAccount.oracleConfig,
+        newOracleConfig: toPubkey(params.newOracleConfig),
+      },
+    };
+  }
+
+  public async setVaultOracleConfig(params: SetVaultOracleConfigParams): Promise<
+    BroadcastTransactionWithMetadata<{
+      vaultPubkey: PublicKey;
+      vaultProtoConfig: PublicKey;
+      existingOracleConfig: PublicKey;
+      newOracleConfig: PublicKey;
+    }>
+  > {
+    const { tx, metadata } = await this.getSetVaultOracleConfigTx(params);
+    const txHash = await this.provider.sendAndConfirm(tx);
+
+    return {
+      id: txHash,
+      explorer: makeExplorerUrl(txHash, this.network),
+      metadata,
+    };
+  }
+
+  public getInitOracleConfigPreview(params: InitOracleConfigParams): InitOracleConfigPreview {
+    const oracleConfigKeypair = Keypair.generate();
+    return {
+      ...params,
+      oracleConfigKeypair,
+    };
+  }
+
+  public async getInitOracleProtoConfigTx(
+    params: InitOracleConfigParams | InitOracleConfigPreview
+  ): Promise<TransactionWithMetadata<{ oracleConfigKeypair: Keypair }>> {
+    const oracleConfigKeypair = isInitOracleConfigPreview(params)
+      ? params.oracleConfigKeypair
+      : Keypair.generate();
+    const ixParams = {
+      enabled: params.enabled,
+      source: params.source,
+      updateAuthority: toPubkey(params.updateAuthority),
+    };
+    const ixAccounts = {
+      oracleConfig: oracleConfigKeypair.publicKey,
+      tokenAMint: toPubkey(params.tokenAMint),
+      tokenAPrice: toPubkey(params.tokenAPrice),
+      tokenBMint: toPubkey(params.tokenBMint),
+      tokenBPrice: toPubkey(params.tokenBPrice),
+      creator: this.provider.wallet.publicKey,
+    };
+    const tx = await this.vaultProgram.methods
+      .initOracleConfig({
+        ...ixParams,
+      })
+      .accounts({
+        ...ixAccounts,
+      })
+      .signers([oracleConfigKeypair])
+      .transaction();
+
+    return {
+      tx,
+      metadata: {
+        oracleConfigKeypair,
+      },
+    };
+  }
+
+  public async initOracleConfig(
+    params: InitOracleConfigParams | InitOracleConfigPreview
+  ): Promise<BroadcastTransactionWithMetadata<{ oracleConfigKeypair: Keypair }>> {
+    const { tx, metadata } = await this.getInitOracleProtoConfigTx(params);
+    const txHash = await this.provider.sendAndConfirm(tx, [metadata.oracleConfigKeypair]);
+    return {
+      id: txHash,
+      explorer: makeExplorerUrl(txHash, this.network),
+      metadata,
+    };
+  }
+
   public getInitVaultProtoConfigPreview(
     params: InitVaultProtoConfigParams
   ): InitVaultProtoConfigPreview {
     const vaultProtoConfigKeypair = Keypair.generate();
-
     return {
       ...params,
       vaultProtoConfigKeypair,
