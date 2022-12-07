@@ -70,6 +70,10 @@ jobs:
           git config --global user.name "Drip Dcaf"
           git config --global user.email "drip@dcaf.so"
 
+      - name: Fix git permissions
+        run: |
+          sudo chmod -R ugo+rwX .
+
       - name: Publish
         run: yarn publish --non-interactive --new-version ${{ steps.bump-semver.outputs.new_version }}
         env:
