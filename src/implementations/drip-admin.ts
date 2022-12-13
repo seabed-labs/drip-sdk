@@ -138,25 +138,20 @@ export class DripAdminImpl implements DripAdmin {
     const oracleConfigKeypair = isInitOracleConfigPreview(params)
       ? params.oracleConfigKeypair
       : Keypair.generate();
-    const ixParams = {
-      enabled: params.enabled,
-      source: params.source,
-      updateAuthority: toPubkey(params.updateAuthority),
-    };
-    const ixAccounts = {
-      oracleConfig: oracleConfigKeypair.publicKey,
-      tokenAMint: toPubkey(params.tokenAMint),
-      tokenAPrice: toPubkey(params.tokenAPrice),
-      tokenBMint: toPubkey(params.tokenBMint),
-      tokenBPrice: toPubkey(params.tokenBPrice),
-      creator: this.provider.wallet.publicKey,
-    };
     const tx = await this.vaultProgram.methods
       .initOracleConfig({
-        ...ixParams,
+        enabled: params.enabled,
+        source: params.source,
+        updateAuthority: toPubkey(params.updateAuthority),
       })
       .accounts({
-        ...ixAccounts,
+        oracleConfig: oracleConfigKeypair.publicKey,
+        tokenAMint: toPubkey(params.tokenAMint),
+        tokenAPrice: toPubkey(params.tokenAPrice),
+        tokenBMint: toPubkey(params.tokenBMint),
+        tokenBPrice: toPubkey(params.tokenBPrice),
+        creator: this.provider.wallet.publicKey,
+        systemProgram: SystemProgram.programId,
       })
       .signers([oracleConfigKeypair])
       .transaction();
