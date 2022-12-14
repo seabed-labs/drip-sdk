@@ -5,6 +5,7 @@ import {
   InitVaultParams,
   InitVaultProtoConfigParams,
   SetVaultOracleConfigParams,
+  SetVaultSwapWhitelistParams,
 } from './params';
 import { InitOracleConfigPreview, InitVaultProtoConfigPreview } from './previews';
 
@@ -27,6 +28,23 @@ export interface DripAdmin {
   initOracleConfig(params: InitOracleConfigParams | InitOracleConfigPreview): Promise<
     BroadcastTransactionWithMetadata<{
       oracleConfigKeypair: Keypair;
+    }>
+  >;
+
+  getSetVaultSwapWhitelistTx(params: SetVaultSwapWhitelistParams): Promise<
+    TransactionWithMetadata<{
+      vaultPubkey: PublicKey;
+      vaultProtoConfig: PublicKey;
+      existingWhitelist: PublicKey[];
+      newWhitelist: PublicKey[];
+    }>
+  >;
+  setVaultSwapWhitelist(params: SetVaultSwapWhitelistParams): Promise<
+    BroadcastTransactionWithMetadata<{
+      vaultPubkey: PublicKey;
+      vaultProtoConfig: PublicKey;
+      existingWhitelist: PublicKey[];
+      newWhitelist: PublicKey[];
     }>
   >;
 

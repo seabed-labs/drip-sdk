@@ -58,3 +58,8 @@ export interface SetVaultOracleConfigParams {
   vault: Address;
   newOracleConfig: Address;
 }
+
+export interface SetVaultSwapWhitelistParams {
+  vault: Address;
+  whitelistedSwaps: Address[];
+}
