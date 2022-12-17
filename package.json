@@ -1,11 +1,11 @@
 {
   "name": "@dcaf-labs/drip-sdk",
   "version": "0.0.0-alpha.79",
-  "description": "SDK to interact with Drip smart contracts",
+  "description": "SDK to interact with the Drip program on the Solana blockchain.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": "git://github.com/dcaf-labs/drip-sdk.git",
-  "author": "Dcaf",
+  "author": "Dcaf Labs",
   "license": "UNLICENSED",
   "private": false,
   "scripts": {
@@ -27,14 +27,11 @@
     "typescript": "^4.6.3"
   },
   "dependencies": {
-    "@dcaf-labs/drip-ts": "0.0.0-alpha.23",
+    "@dcaf-labs/drip-ts": "0.3.0",
     "@project-serum/anchor": "^0.25.0",
     "@solana/spl-token": "^0.2.0",
     "@solana/web3.js": "^1.37.0",
     "bn.js": "^5.2.0",
     "decimal.js": "^10.3.1"
-  },
-  "publishConfig": {
-    "@dcaf-labs:registry": "https://npm.pkg.github.com"
   }
 }
