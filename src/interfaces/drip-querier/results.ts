@@ -9,21 +9,6 @@ export interface VaultProtoConfigAccount {
   admin: PublicKey;
 }
 
-export enum OracleSource {
-  PYTH,
-}
-
-export interface VaultOracleConfigAccount {
-  pubkey: PublicKey;
-  enabled: boolean;
-  source: OracleSource;
-  updateAuthority: PublicKey;
-  tokenAMint: PublicKey;
-  tokenAPrice: PublicKey;
-  tokenBMint: PublicKey;
-  tokenBPrice: PublicKey;
-}
-
 export interface VaultAccount {
   protoConfig: PublicKey;
   tokenAMint: PublicKey;
@@ -39,8 +24,6 @@ export interface VaultAccount {
   bump: number;
   limitSwaps: boolean;
   maxSlippageBps: number;
-  oracleConfig: PublicKey;
-  maxPriceDeviationBps: PublicKey;
 }
 
 export interface VaultPeriodAccount {

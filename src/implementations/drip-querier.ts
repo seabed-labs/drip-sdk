@@ -1,10 +1,8 @@
 import { Address, Program, AnchorProvider, BN } from '@project-serum/anchor';
 import { PublicKey } from '@solana/web3.js';
-import { IDL, Drip } from '../idl/drip';
 import { DripQuerier, QuoteToken } from '../interfaces';
 import {
   VaultAccount,
-  VaultOracleConfigAccount,
   VaultPeriodAccount,
   VaultPositionAccount,
   VaultProtoConfigAccount,
@@ -19,6 +17,7 @@ import {
   VaultProtoConfigDoesNotExistError,
 } from '../errors';
 import Decimal from 'decimal.js';
+import { Drip, IDL } from '../idl/drip';
 
 export class DripQuerierImpl implements DripQuerier {
   private readonly vaultProgram: Program<Drip>;
@@ -166,12 +165,6 @@ export class DripQuerierImpl implements DripQuerier {
     ...pubkeys: Address[]
   ): Promise<(VaultPositionAccount | null)[]> {
     return await this.fetchMultiple<VaultPositionAccount>(...pubkeys);
-  }
-
-  async fetchOracleConfigAccounts(
-    ...pubkeys: Address[]
-  ): Promise<(VaultOracleConfigAccount | null)[]> {
-    return await this.fetchMultiple<VaultOracleConfigAccount>(...pubkeys);
   }
 
   async fetchMultiple<T>(...pubkeys: Address[]): Promise<(T | null)[]> {
