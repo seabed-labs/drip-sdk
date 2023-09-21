@@ -1,13 +1,7 @@
 import { Keypair, PublicKey } from '@solana/web3.js';
 import { BroadcastTransactionWithMetadata, TransactionWithMetadata } from '../../types';
-import {
-  InitOracleConfigParams,
-  InitVaultParams,
-  InitVaultProtoConfigParams,
-  SetVaultOracleConfigParams,
-  SetVaultSwapWhitelistParams,
-} from './params';
-import { InitOracleConfigPreview, InitVaultProtoConfigPreview } from './previews';
+import { InitVaultParams, InitVaultProtoConfigParams, SetVaultSwapWhitelistParams } from './params';
+import { InitVaultProtoConfigPreview } from './previews';
 
 export * from './params';
 export * from './previews';
@@ -20,16 +14,6 @@ export interface DripAdmin {
   initVaultProtoConfig(
     params: InitVaultProtoConfigParams | InitVaultProtoConfigPreview
   ): Promise<BroadcastTransactionWithMetadata<{ vaultProtoConfigKeypair: Keypair }>>;
-
-  getInitOracleConfigPreview(params: InitOracleConfigParams): InitOracleConfigPreview;
-  getInitOracleProtoConfigTx(
-    params: InitOracleConfigParams | InitOracleConfigPreview
-  ): Promise<TransactionWithMetadata<{ oracleConfigKeypair: Keypair }>>;
-  initOracleConfig(params: InitOracleConfigParams | InitOracleConfigPreview): Promise<
-    BroadcastTransactionWithMetadata<{
-      oracleConfigKeypair: Keypair;
-    }>
-  >;
 
   getSetVaultSwapWhitelistTx(params: SetVaultSwapWhitelistParams): Promise<
     TransactionWithMetadata<{
@@ -45,23 +29,6 @@ export interface DripAdmin {
       vaultProtoConfig: PublicKey;
       existingWhitelist: PublicKey[];
       newWhitelist: PublicKey[];
-    }>
-  >;
-
-  getSetVaultOracleConfigTx(params: SetVaultOracleConfigParams): Promise<
-    TransactionWithMetadata<{
-      vaultPubkey: PublicKey;
-      vaultProtoConfig: PublicKey;
-      existingOracleConfig: PublicKey;
-      newOracleConfig: PublicKey;
-    }>
-  >;
-  setVaultOracleConfig(params: SetVaultOracleConfigParams): Promise<
-    BroadcastTransactionWithMetadata<{
-      vaultPubkey: PublicKey;
-      vaultProtoConfig: PublicKey;
-      existingOracleConfig: PublicKey;
-      newOracleConfig: PublicKey;
     }>
   >;
 

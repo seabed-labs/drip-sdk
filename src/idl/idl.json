@@ -64,54 +64,6 @@
       ]
     },
     {
-      "name": "initOracleConfig",
-      "accounts": [
-        {
-          "name": "oracleConfig",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "tokenAMint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenAPrice",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenBMint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenBPrice",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "creator",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "InitializeOracleConfigParams"
-          }
-        }
-      ]
-    },
-    {
       "name": "deposit",
       "accounts": [
         {
@@ -475,132 +427,6 @@
       "args": []
     },
     {
-      "name": "dripV2OrcaWhirlpool",
-      "accounts": [
-        {
-          "name": "common",
-          "accounts": [
-            {
-              "name": "dripTriggerSource",
-              "isMut": false,
-              "isSigner": true
-            },
-            {
-              "name": "vault",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "vaultProtoConfig",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "lastVaultPeriod",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "currentVaultPeriod",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "vaultTokenAAccount",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "vaultTokenBAccount",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "swapTokenAAccount",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "swapTokenBAccount",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "dripFeeTokenAAccount",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "tokenProgram",
-              "isMut": false,
-              "isSigner": false
-            }
-          ]
-        },
-        {
-          "name": "oracleCommon",
-          "accounts": [
-            {
-              "name": "oracleConfig",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "tokenAMint",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "tokenAPrice",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "tokenBMint",
-              "isMut": false,
-              "isSigner": false
-            },
-            {
-              "name": "tokenBPrice",
-              "isMut": false,
-              "isSigner": false
-            }
-          ]
-        },
-        {
-          "name": "whirlpool",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tickArray0",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tickArray1",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tickArray2",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "oracle",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "whirlpoolProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
       "name": "withdrawB",
       "accounts": [
         {
@@ -836,183 +662,71 @@
       ]
     },
     {
-      "name": "updateOracleConfig",
+      "name": "setVaultSwapWhitelist",
       "accounts": [
         {
-          "name": "oracleConfig",
+          "name": "admin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "vault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "newTokenAMint",
+          "name": "vaultProtoConfig",
           "isMut": false,
           "isSigner": false
-        },
+        }
+      ],
+      "args": [
         {
-          "name": "newTokenAPrice",
-          "isMut": false,
-          "isSigner": false
-        },
+          "name": "params",
+          "type": {
+            "defined": "UpdateVaultWhitelistedSwapsParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "withdrawA",
+      "accounts": [
         {
-          "name": "newTokenBMint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "newTokenBPrice",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "currentUpdateAuthority",
-          "isMut": false,
+          "name": "admin",
+          "isMut": true,
           "isSigner": true
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "UpdateOracleConfigParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "setVaultSwapWhitelist",
-      "accounts": [
-        {
-          "name": "vaultUpdateCommonAccounts",
-          "accounts": [
-            {
-              "name": "admin",
-              "isMut": true,
-              "isSigner": true
-            },
-            {
-              "name": "vault",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "vaultProtoConfig",
-              "isMut": false,
-              "isSigner": false
-            }
-          ]
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "SetVaultWhitelistedSwapsParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "setVaultOracleConfig",
-      "accounts": [
-        {
-          "name": "vaultUpdateCommonAccounts",
-          "accounts": [
-            {
-              "name": "admin",
-              "isMut": true,
-              "isSigner": true
-            },
-            {
-              "name": "vault",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "vaultProtoConfig",
-              "isMut": false,
-              "isSigner": false
-            }
-          ]
         },
         {
-          "name": "newOracleConfig",
+          "name": "vault",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "vaultTokenAAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "adminTokenAAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "vaultProtoConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
         }
       ],
       "args": []
-    },
-    {
-      "name": "setVaultMaxPriceDeviationBps",
-      "accounts": [
-        {
-          "name": "vaultUpdateCommonAccounts",
-          "accounts": [
-            {
-              "name": "admin",
-              "isMut": true,
-              "isSigner": true
-            },
-            {
-              "name": "vault",
-              "isMut": true,
-              "isSigner": false
-            },
-            {
-              "name": "vaultProtoConfig",
-              "isMut": false,
-              "isSigner": false
-            }
-          ]
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "SetVaultMaxPriceDeviationBpsParams"
-          }
-        }
-      ]
     }
   ],
   "accounts": [
-    {
-      "name": "OracleConfig",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "enabled",
-            "type": "bool"
-          },
-          {
-            "name": "source",
-            "type": "u8"
-          },
-          {
-            "name": "updateAuthority",
-            "type": "publicKey"
-          },
-          {
-            "name": "tokenAMint",
-            "type": "publicKey"
-          },
-          {
-            "name": "tokenAPrice",
-            "type": "publicKey"
-          },
-          {
-            "name": "tokenBMint",
-            "type": "publicKey"
-          },
-          {
-            "name": "tokenBPrice",
-            "type": "publicKey"
-          }
-        ]
-      }
-    },
     {
       "name": "Position",
       "type": {
@@ -1183,14 +897,6 @@
           {
             "name": "maxSlippageBps",
             "type": "u16"
-          },
-          {
-            "name": "oracleConfig",
-            "type": "publicKey"
-          },
-          {
-            "name": "maxPriceDeviationBps",
-            "type": "u16"
           }
         ]
       }
@@ -1228,7 +934,7 @@
       }
     },
     {
-      "name": "SetVaultWhitelistedSwapsParams",
+      "name": "UpdateVaultWhitelistedSwapsParams",
       "type": {
         "kind": "struct",
         "fields": [
@@ -1237,38 +943,6 @@
             "type": {
               "vec": "publicKey"
             }
-          }
-        ]
-      }
-    },
-    {
-      "name": "SetVaultMaxPriceDeviationBpsParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "maxPriceDeviation",
-            "type": "u16"
-          }
-        ]
-      }
-    },
-    {
-      "name": "UpdateOracleConfigParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "enabled",
-            "type": "bool"
-          },
-          {
-            "name": "source",
-            "type": "u8"
-          },
-          {
-            "name": "newUpdateAuthority",
-            "type": "publicKey"
           }
         ]
       }
@@ -1325,26 +999,6 @@
           {
             "name": "periodId",
             "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "InitializeOracleConfigParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "enabled",
-            "type": "bool"
-          },
-          {
-            "name": "source",
-            "type": "u8"
-          },
-          {
-            "name": "updateAuthority",
-            "type": "publicKey"
           }
         ]
       }
@@ -1502,33 +1156,13 @@
     },
     {
       "code": 6026,
-      "name": "InvalidOracleSource",
-      "msg": "Supplied oracle Source is not supported"
+      "name": "CannotWithdrawAWithNonZeroDripAmount",
+      "msg": "Admin cannot withdraw A if drip amount is non-zero"
     },
     {
       "code": 6027,
-      "name": "V1DripOracleNotSupported",
-      "msg": "Oracle enabled vaults must use a drip_XXX_v2 ix"
-    },
-    {
-      "code": 6028,
-      "name": "V2DripInvalidOracleAccount",
-      "msg": "Oracle enabled vaults must provide a valid oracle config"
-    },
-    {
-      "code": 6029,
-      "name": "FailedToReadOracle",
-      "msg": "Failed to read oracle price data"
-    },
-    {
-      "code": 6030,
-      "name": "SwapPricePastMaxDeviation",
-      "msg": "Deviation between swap price and oracle is higher then allowed"
-    },
-    {
-      "code": 6031,
-      "name": "OracleIsOffline",
-      "msg": "Oracle is offline"
+      "name": "VaultTokenAAccountIsEmpty",
+      "msg": "Vault Token A Account is empty"
     }
   ]
 }
