@@ -1,6 +1,6 @@
 {
   "name": "@dcaf-labs/drip-sdk",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "SDK to interact with the Drip program on the Solana blockchain.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
